@@ -1,0 +1,16 @@
+# 所有易变配置参数在此定义
+myprops:
+  defaultZone: http://localhost:10100/eureka/
+  port: 10112
+
+spring:
+  application:
+    name: firmware_analyze
+
+server:
+  port: ${myprops.port}
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${myprops.defaultZone}
