@@ -6,11 +6,15 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="aqmp_bus" />
+        <module name="bend_server" />
         <module name="firmware_analyze" />
         <module name="firmware_fetch" />
         <module name="register_server" />
         <module name="serv_client" />
         <module name="system_code" />
+        <module name="system_log" />
+        <module name="unify_auth" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

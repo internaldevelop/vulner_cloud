@@ -5,7 +5,7 @@ myprops:
 
 spring:
   application:
-    name: system_code
+    name: system-code
 
 server:
   port: ${myprops.port}

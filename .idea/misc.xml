@@ -10,6 +10,10 @@
         <option value="$PROJECT_DIR$/firmware_fetch/pom.xml" />
         <option value="$PROJECT_DIR$/firmware_analyze/pom.xml" />
         <option value="$PROJECT_DIR$/system_code/pom.xml" />
+        <option value="$PROJECT_DIR$/unify_auth/pom.xml" />
+        <option value="$PROJECT_DIR$/aqmp_bus/pom.xml" />
+        <option value="$PROJECT_DIR$/system_log/pom.xml" />
+        <option value="$PROJECT_DIR$/bend_server/pom.xml" />
       </list>
     </option>
   </component>

@@ -17,7 +17,13 @@ public class SystemApi {
 
     @RequestMapping(value = "/actuator/info", method = RequestMethod.GET)
     @ResponseBody
-    public Object echo() {
+    public Object actuatorInfo() {
         return appName + " is running on port: " + port + ". Register server is: " + defaultZone;
+    }
+
+    @RequestMapping(value = "/sys_code/run_status", method = RequestMethod.GET)
+    @ResponseBody
+    public Object runStatus() {
+        return actuatorInfo();
     }
 }

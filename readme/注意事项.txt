@@ -1,0 +1,13 @@
+1. 注册服务器的spring.application.name只能设置为eureka，其他值运行报错
+    在application.yml中：
+    spring:
+        application:
+            name: eureka
+
+2. FeignClient注解不接受下划线，建议用“-”代替
+    @FeignClient(value = "system-code")
+
+3. 所有模块对外开放的 http 请求，路径中需加上缩写，比如：
+    @RequestMapping(value = "/uni_auth/run_status", method = RequestMethod.GET)
+    请参考 controller.SystemApi.runStatus() 函数。
+

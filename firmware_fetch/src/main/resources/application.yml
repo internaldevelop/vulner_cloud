@@ -5,7 +5,7 @@ myprops:
 
 spring:
   application:
-    name: firmware_fetch
+    name: firmware-fetch
 
 server:
   port: ${myprops.port}

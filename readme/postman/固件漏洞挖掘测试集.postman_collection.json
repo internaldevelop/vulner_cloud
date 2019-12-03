@@ -1,0 +1,176 @@
+{
+	"info": {
+		"_postman_id": "0dbe0ab0-4338-4a0e-8d4f-708475713360",
+		"name": "固件漏洞挖掘测试集",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. System",
+			"item": [
+				{
+					"name": "1.1 运行状态自检",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{base_url}}/actuator/info",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"actuator",
+								"info"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.2 检查服务: ErrorCode",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{base_url}}/echo/errcode",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"echo",
+								"errcode"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.3 检查服务: fwfetch",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{base_url}}/echo/fwfetch",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"echo",
+								"fwfetch"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.4 检查服务: fwanalyze",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{base_url}}/echo/fwanalyze",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"echo",
+								"fwanalyze"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.5 检查服务: mqbus",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{base_url}}/echo/mqbus",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"echo",
+								"mqbus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.6 检查服务: syslog",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{base_url}}/echo/syslog",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"echo",
+								"syslog"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.7 检查服务: uniauth",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{base_url}}/echo/uniauth",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"echo",
+								"uniauth"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"id": "c4c31362-cea7-433c-96fe-23ab22d3808f",
+			"key": "base_url",
+			"value": "http://localhost:10901",
+			"type": "string"
+		}
+	]
+}
