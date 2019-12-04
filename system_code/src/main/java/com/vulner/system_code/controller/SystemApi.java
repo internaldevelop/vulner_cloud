@@ -20,12 +20,12 @@ public class SystemApi {
     @ResponseBody
     public Object actuatorInfo() {
         String runInfo = appName + " is running on port: " + port + ". Register server is: " + defaultZone;
-        return ResponseHelper.error("111", runInfo);
+        return ResponseHelper.success(runInfo);
     }
 
     @RequestMapping(value = "/sys_code/run_status", method = RequestMethod.GET)
     @ResponseBody
     public Object runStatus() {
-        return actuatorInfo();
+        return ResponseHelper.success(actuatorInfo());
     }
 }

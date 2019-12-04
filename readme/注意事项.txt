@@ -11,3 +11,15 @@
     @RequestMapping(value = "/uni_auth/run_status", method = RequestMethod.GET)
     请参考 controller.SystemApi.runStatus() 函数。
 
+4. maven仓库加速
+    在<User>/.m2目录下，新建settings.xml文件，添加以下配置：
+    <configrations>
+    	<mirrors>
+    		<mirror>
+    			<id>aliyunmaven</id>
+    			<mirrorOf>*</mirrorOf>
+    			<name>阿里云公共仓库</name>
+    			<url>https://maven.aliyun.com/repository/public</url>
+    		</mirror>
+    	</mirrors>
+    </configrations>
