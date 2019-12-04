@@ -6,7 +6,6 @@
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/register_server/pom.xml" />
-        <option value="$PROJECT_DIR$/serv_client/pom.xml" />
         <option value="$PROJECT_DIR$/firmware_fetch/pom.xml" />
         <option value="$PROJECT_DIR$/firmware_analyze/pom.xml" />
         <option value="$PROJECT_DIR$/system_code/pom.xml" />

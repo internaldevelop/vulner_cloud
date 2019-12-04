@@ -12,7 +12,6 @@
         <module name="firmware_analyze" />
         <module name="firmware_fetch" />
         <module name="register_server" />
-        <module name="serv_client" />
         <module name="system_code" />
         <module name="system_log" />
         <module name="unify_auth" />
@@ -20,6 +19,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="baseconfig" target="1.8" />
+      <module name="serv_client" target="1.8" />
       <module name="vulner_eureka_server" target="1.8" />
     </bytecodeTargetLevel>
   </component>
