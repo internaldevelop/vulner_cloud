@@ -1,5 +1,6 @@
 package com.vulner.system_code.controller;
 
+import com.vulner.common.response.ResponseHelper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,7 +19,8 @@ public class SystemApi {
     @RequestMapping(value = "/actuator/info", method = RequestMethod.GET)
     @ResponseBody
     public Object actuatorInfo() {
-        return appName + " is running on port: " + port + ". Register server is: " + defaultZone;
+        String runInfo = appName + " is running on port: " + port + ". Register server is: " + defaultZone;
+        return ResponseHelper.error("111", runInfo);
     }
 
     @RequestMapping(value = "/sys_code/run_status", method = RequestMethod.GET)
