@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="aqmp_bus" />
         <module name="bend_server" />
+        <module name="common" />
         <module name="firmware_analyze" />
         <module name="firmware_fetch" />
         <module name="register_server" />
@@ -19,7 +20,6 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="baseconfig" target="1.8" />
-      <module name="common" target="1.8" />
       <module name="vulner_eureka_server" target="1.8" />
     </bytecodeTargetLevel>
   </component>

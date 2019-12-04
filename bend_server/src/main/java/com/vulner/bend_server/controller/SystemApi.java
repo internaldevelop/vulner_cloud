@@ -1,6 +1,7 @@
 package com.vulner.bend_server.controller;
 
 import com.vulner.bend_server.service.*;
+import com.vulner.common.response.ResponseHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -22,7 +23,8 @@ public class SystemApi {
     @ResponseBody
     @RequestMapping(value = "/actuator/info", method = RequestMethod.GET)
     public Object actuatorInfo() {
-        return appName + " is running on port: " + port + ". Register server is: " + defaultZone;
+        String runStatus = appName + " is running on port: " + port + ". Register server is: " + defaultZone;
+        return ResponseHelper.error("111", runStatus);
     }
 
     @Autowired
