@@ -16,7 +16,7 @@ public class ResponseHelper {
         // 未获取到错误代码列表
         if (errorCodeList == null) {
             ErrorCodeDto errorCodeDto = new ErrorCodeDto();
-            errorCodeDto.setName("ERROR_SYS_CODE_UNREACHABLE");
+            errorCodeDto.setCode("ERROR_SYS_CODE_UNREACHABLE");
             errorCodeDto.setId(1);
             errorCodeDto.setConcept("系统编码微服务不可访问，无法识别该错误代码");
             errorCodeDto.setGroup("network");
@@ -25,14 +25,14 @@ public class ResponseHelper {
 
         // 从列表中匹配错误代码
         for (ErrorCodeDto errorCode: errorCodeList) {
-            if (errorCode.getName().equalsIgnoreCase(err)) {
+            if (errorCode.getCode().equalsIgnoreCase(err)) {
                 return errorCode;
             }
         }
 
         // 匹配不到的错误代码，返回未知错误
         ErrorCodeDto errorUnknown = new ErrorCodeDto();
-        errorUnknown.setName("ERROR_UNKNOWN");
+        errorUnknown.setCode("ERROR_UNKNOWN");
         errorUnknown.setId(2);
         errorUnknown.setConcept("未知错误");
         errorUnknown.setGroup("general");
@@ -46,7 +46,8 @@ public class ResponseHelper {
     public static ResponseBean error(String err, Object data) {
         ErrorCodeDto error = getError(err);
         ResponseBean responseBean = new ResponseBean();
-        responseBean.setCode(error.getId());
+        responseBean.setCode(error.getCode());
+        responseBean.setId(error.getId());
         responseBean.setError(error.getConcept());
         responseBean.setTimeStamp(TimeUtils.getCurrentSystemTimestamp());
         responseBean.setPayload(data);
@@ -62,6 +63,6 @@ public class ResponseHelper {
     }
 
     public static boolean isSuccess(ResponseBean response) {
-        return ( response.getCode() == 0);
+        return ( response.getId() == 0);
     }
 }

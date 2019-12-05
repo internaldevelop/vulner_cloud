@@ -5,7 +5,8 @@ import lombok.Data;
 
 @Data
 public class ResponseBean {
-    private int code;
+    private String code;
+    private int id;
     private String error;
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private java.sql.Timestamp timeStamp;

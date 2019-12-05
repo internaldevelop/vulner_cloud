@@ -6,7 +6,7 @@ import lombok.Data;
 public class ErrorCodeDto {
     private int id;
 
-    private String name;
+    private String code;
 
     private String group;
 
