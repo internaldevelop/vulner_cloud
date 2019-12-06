@@ -10,9 +10,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication(scanBasePackages = {"com.vulner.bend_server.controller", "com.vulner.bend_server.service", })
-//@SpringBootApplication
 @EnableEurekaClient
-@EnableDiscoveryClient
+//@EnableDiscoveryClient
 @EnableFeignClients
 public class BendServerApplication {
 
