@@ -1,5 +1,6 @@
 package com.vulner.system_log.controller;
 
+import com.vulner.common.response.ResponseHelper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,6 +25,6 @@ public class SystemApi {
     @RequestMapping(value = "/sys_log/run_status", method = RequestMethod.GET)
     @ResponseBody
     public Object runStatus() {
-        return actuatorInfo();
+        return ResponseHelper.success(actuatorInfo());
     }
 }
