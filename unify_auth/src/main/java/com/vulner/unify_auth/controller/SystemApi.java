@@ -2,6 +2,7 @@ package com.vulner.unify_auth.controller;
 
 import com.vulner.unify_auth.service.ErrorCodeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.vulner.common.response.ResponseHelper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,7 +27,7 @@ public class SystemApi {
     @RequestMapping(value = "/uni_auth/run_status", method = RequestMethod.GET)
     @ResponseBody
     public Object runStatus() {
-        return actuatorInfo();
+        return ResponseHelper.success(actuatorInfo());
     }
 
     @Autowired

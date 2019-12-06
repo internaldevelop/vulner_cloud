@@ -12,25 +12,16 @@ public class ResponseHelper {
         errorCodeList = ObjUtils.deepCopyList(errList, ErrorCodeDto.class);
     }
 
-    public static ErrorCodeDto getError(String err) {
-        // 未获取到错误代码列表
-        if (errorCodeList == null) {
-            ErrorCodeDto errorCodeDto = new ErrorCodeDto();
-            errorCodeDto.setCode("ERROR_SYS_CODE_UNREACHABLE");
-            errorCodeDto.setId(1);
-            errorCodeDto.setConcept("系统编码微服务不可访问，无法识别该错误代码");
-            errorCodeDto.setGroup("network");
-            return errorCodeDto;
-        }
+    public static ErrorCodeDto getErrorCodesUnavail() {
+        ErrorCodeDto errorCodeDto = new ErrorCodeDto();
+        errorCodeDto.setCode("ERROR_SYS_CODE_UNREACHABLE");
+        errorCodeDto.setId(1);
+        errorCodeDto.setConcept("系统编码微服务不可访问，无法识别该错误代码");
+        errorCodeDto.setGroup("network");
+        return errorCodeDto;
+    }
 
-        // 从列表中匹配错误代码
-        for (ErrorCodeDto errorCode: errorCodeList) {
-            if (errorCode.getCode().equalsIgnoreCase(err)) {
-                return errorCode;
-            }
-        }
-
-        // 匹配不到的错误代码，返回未知错误
+    public static ErrorCodeDto getErrorUnknown() {
         ErrorCodeDto errorUnknown = new ErrorCodeDto();
         errorUnknown.setCode("ERROR_UNKNOWN");
         errorUnknown.setId(2);
@@ -39,12 +30,46 @@ public class ResponseHelper {
         return errorUnknown;
     }
 
-    public static ResponseBean error(String err) {
-        return  error(err, null);
+    public static ErrorCodeDto getErrorByCode(String errCode) {
+        // 未获取到错误代码列表
+        if (errorCodeList == null) {
+            return getErrorCodesUnavail();
+        }
+
+        // 从列表中匹配错误代码
+        for (ErrorCodeDto errorCode: errorCodeList) {
+            if (errorCode.getCode().equalsIgnoreCase(errCode)) {
+                return errorCode;
+            }
+        }
+
+        // 匹配不到的错误代码，返回未知错误
+        return getErrorUnknown();
     }
 
-    public static ResponseBean error(String err, Object data) {
-        ErrorCodeDto error = getError(err);
+    public static ErrorCodeDto getErrorById(int id) {
+        // 未获取到错误代码列表
+        if (errorCodeList == null) {
+            return getErrorCodesUnavail();
+        }
+
+        // 从列表中匹配错误代码
+        for (ErrorCodeDto errorCode: errorCodeList) {
+            if (errorCode.getId() == id) {
+                return errorCode;
+            }
+        }
+
+        // 匹配不到的错误代码，返回未知错误
+        return getErrorUnknown();
+    }
+
+    public static ResponseBean error(String errCode) {
+        return  error(errCode, null);
+    }
+
+    public static ResponseBean error(String errCode, Object data) {
+        ErrorCodeDto error = getErrorByCode(errCode);
         ResponseBean responseBean = new ResponseBean();
         responseBean.setCode(error.getCode());
         responseBean.setId(error.getId());

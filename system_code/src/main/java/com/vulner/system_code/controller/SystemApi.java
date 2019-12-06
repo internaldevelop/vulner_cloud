@@ -2,10 +2,7 @@ package com.vulner.system_code.controller;
 
 import com.vulner.common.response.ResponseHelper;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class SystemApi {
@@ -16,14 +13,14 @@ public class SystemApi {
     @Value("${myprops.defaultZone}")
     String defaultZone;
 
-    @RequestMapping(value = "/actuator/info", method = RequestMethod.GET)
+    @GetMapping(value = "/actuator/info")
     @ResponseBody
     public Object actuatorInfo() {
         String runInfo = appName + " is running on port: " + port + ". Register server is: " + defaultZone;
-        return ResponseHelper.success(runInfo);
+        return runInfo;
     }
 
-    @RequestMapping(value = "/sys_code/run_status", method = RequestMethod.GET)
+    @GetMapping(value = "/sys_code/run_status")
     @ResponseBody
     public Object runStatus() {
         return ResponseHelper.success(actuatorInfo());

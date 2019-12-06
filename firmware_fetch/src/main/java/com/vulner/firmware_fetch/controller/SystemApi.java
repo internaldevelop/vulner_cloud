@@ -2,6 +2,7 @@ package com.vulner.firmware_fetch.controller;
 
 import com.vulner.firmware_fetch.service.ErrorCodeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.vulner.common.response.ResponseHelper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,7 @@ public class SystemApi {
     @RequestMapping(value = "/fw_fetch/run_status", method = RequestMethod.GET)
     @ResponseBody
     public Object runStatus() {
-        return actuatorInfo();
+        return ResponseHelper.success(actuatorInfo());
     }
 
     @Autowired

@@ -9,7 +9,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.vulner.bend_server.controller", "com.vulner.bend_server.service", })
+//@SpringBootApplication
 @EnableEurekaClient
 @EnableDiscoveryClient
 @EnableFeignClients

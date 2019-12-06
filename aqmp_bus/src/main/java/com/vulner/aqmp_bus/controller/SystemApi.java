@@ -1,5 +1,6 @@
 package com.vulner.aqmp_bus.controller;
 
+import com.vulner.common.response.ResponseHelper;
 import com.vulner.aqmp_bus.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +27,7 @@ public class SystemApi {
     @RequestMapping(value = "/mq_bus/run_status", method = RequestMethod.GET)
     @ResponseBody
     public Object runStatus() {
-        return actuatorInfo();
+        return ResponseHelper.success(actuatorInfo());
     }
 
     @Autowired

@@ -2,6 +2,7 @@ package com.vulner.firmware_analyze.controller;
 
 import com.vulner.firmware_analyze.service.ErrorCodeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.vulner.common.response.ResponseHelper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,7 +27,7 @@ public class SystemApi {
     @RequestMapping(value = "/fw_analyze/run_status", method = RequestMethod.GET)
     @ResponseBody
     public Object runStatus() {
-        return actuatorInfo();
+        return ResponseHelper.success(actuatorInfo());
     }
 
     @Autowired

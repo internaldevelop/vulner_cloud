@@ -23,3 +23,11 @@
     		</mirror>
     	</mirrors>
     </configrations>
+
+5. @FeignClient调用远程服务返回数据存在中文乱码问题，一种解决方式是：
+    SpringBootApplication 注解中增加 scanBasePackages 设置：（试出来，原因未知）
+    @SpringBootApplication(scanBasePackages = {"com.vulner.bend_server.controller", "com.vulner.bend_server.service", })
+
+6. IDEA 不能 autowire @FeignClient 注解的类，解决方案是：
+    增加一个 @RestController 注解
+
