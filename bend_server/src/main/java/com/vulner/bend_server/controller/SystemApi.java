@@ -18,7 +18,7 @@ public class SystemApi {
     String defaultZone;
 
     @ResponseBody
-    @RequestMapping(value = "/actuator/info", method = RequestMethod.GET)
+    @GetMapping(value = "/actuator/info")
     public Object actuatorInfo() {
         String runStatus = appName + " is running on port: " + port + ". Register server is: " + defaultZone;
         return runStatus;
@@ -26,15 +26,19 @@ public class SystemApi {
 
     @Autowired
     ErrorCodeService errorCodeService;
-    @RequestMapping(value = "/echo/errcode", method = RequestMethod.GET)
+    @Autowired
+    SysLogService sysLogService;
+
+    @GetMapping(value = "/echo/errcode")
     @ResponseBody
     public Object echoErrorCode() {
+        sysLogService.addLog("back-end-server", "123", 2, "echoErrorCode", "echoErrorCode", "");
         return errorCodeService.runStatus();
     }
 
     @Autowired
     FirmwareFetchService fwFetchService;
-    @RequestMapping(value = "/echo/fwfetch", method = RequestMethod.GET)
+    @GetMapping(value = "/echo/fwfetch")
     @ResponseBody
     public Object echoFwFetch() {
         return fwFetchService.runStatus();
@@ -42,7 +46,7 @@ public class SystemApi {
 
     @Autowired
     FirmwareAnalyzeService fwAnalyzeService;
-    @RequestMapping(value = "/echo/fwanalyze", method = RequestMethod.GET)
+    @GetMapping(value = "/echo/fwanalyze")
     @ResponseBody
     public Object echoFwAnalyze() {
         return fwAnalyzeService.runStatus();
@@ -50,15 +54,13 @@ public class SystemApi {
 
     @Autowired
     MqBusService mqBusService;
-    @RequestMapping(value = "/echo/mqbus", method = RequestMethod.GET)
+    @GetMapping(value = "/echo/mqbus")
     @ResponseBody
     public Object echoMqBus() {
         return mqBusService.runStatus();
     }
 
-    @Autowired
-    SysLogService sysLogService;
-    @RequestMapping(value = "/echo/syslog", method = RequestMethod.GET)
+    @GetMapping(value = "/echo/syslog")
     @ResponseBody
     public Object echoSysLog() {
         return sysLogService.runStatus();
@@ -66,7 +68,7 @@ public class SystemApi {
 
     @Autowired
     UniAuthService uniAuthService;
-    @RequestMapping(value = "/echo/uniauth", method = RequestMethod.GET)
+    @GetMapping(value = "/echo/uniauth")
     @ResponseBody
     public Object echoUniAuth() {
         return uniAuthService.runStatus();
