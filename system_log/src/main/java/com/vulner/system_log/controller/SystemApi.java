@@ -1,5 +1,7 @@
 package com.vulner.system_log.controller;
 
+import com.vulner.system_log.service.ErrorCodeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,5 +27,13 @@ public class SystemApi {
     @ResponseBody
     public Object runStatus() {
         return actuatorInfo();
+    }
+
+    @Autowired
+    ErrorCodeService errorCodeService;
+    @RequestMapping(value = "/sys_log/errcode", method = RequestMethod.GET)
+    @ResponseBody
+    public Object mqbusErrorCode() {
+        return errorCodeService.runStatus();
     }
 }

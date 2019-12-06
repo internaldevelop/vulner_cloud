@@ -1,5 +1,5 @@
 
-# 所有易变配置参数在此定义
+# 锟斤拷锟斤拷锟阶憋拷锟斤拷锟矫诧拷锟斤拷锟节此讹拷锟斤拷
 myprops:
   defaultZone: http://localhost:10100/eureka/
   port: 10901

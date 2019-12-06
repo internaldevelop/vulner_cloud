@@ -1,5 +1,7 @@
 package com.vulner.aqmp_bus.controller;
 
+import com.vulner.aqmp_bus.service.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,5 +27,13 @@ public class SystemApi {
     @ResponseBody
     public Object runStatus() {
         return actuatorInfo();
+    }
+
+    @Autowired
+    ErrorCodeService errorCodeService;
+    @RequestMapping(value = "/mq_bus/errcode", method = RequestMethod.GET)
+    @ResponseBody
+    public Object mqbusErrorCode() {
+        return errorCodeService.runStatus();
     }
 }

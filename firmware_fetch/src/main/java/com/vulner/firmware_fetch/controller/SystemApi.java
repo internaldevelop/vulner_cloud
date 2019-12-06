@@ -1,5 +1,7 @@
 package com.vulner.firmware_fetch.controller;
 
+import com.vulner.firmware_fetch.service.ErrorCodeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,5 +24,13 @@ public class SystemApi {
     @ResponseBody
     public Object runStatus() {
         return actuatorInfo();
+    }
+
+    @Autowired
+    ErrorCodeService errorCodeService;
+    @RequestMapping(value = "/fw_fetch/errcode", method = RequestMethod.GET)
+    @ResponseBody
+    public Object mqbusErrorCode() {
+        return errorCodeService.runStatus();
     }
 }
