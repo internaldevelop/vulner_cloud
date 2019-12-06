@@ -15,23 +15,15 @@ public class SystemApi {
     @Value("${myprops.defaultZone}")
     String defaultZone;
 
-    @RequestMapping(value = "/actuator/info", method = RequestMethod.GET)
+    @GetMapping(value = "/actuator/info")
     @ResponseBody
     public Object actuatorInfo() {
         return appName + " is running on port: " + port + ". Register server is: " + defaultZone;
     }
 
-    @RequestMapping(value = "/sys_log/run_status", method = RequestMethod.GET)
+    @GetMapping(value = "/sys_log/run_status")
     @ResponseBody
     public Object runStatus() {
         return ResponseHelper.success(actuatorInfo());
-    }
-
-    @Autowired
-    ErrorCodeService errorCodeService;
-    @RequestMapping(value = "/sys_log/errcode", method = RequestMethod.GET)
-    @ResponseBody
-    public Object mqbusErrorCode() {
-        return errorCodeService.runStatus();
     }
 }
