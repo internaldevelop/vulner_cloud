@@ -1,12 +1,17 @@
 package com.vulner.bend_server.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.vulner.bend_server.global.SysLogger;
 import com.vulner.bend_server.service.*;
+import com.vulner.common.response.ResponseBean;
 import com.vulner.common.response.ResponseHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.LinkedHashMap;
 
 @RestController
 public class SystemApi {
@@ -28,12 +33,20 @@ public class SystemApi {
     ErrorCodeService errorCodeService;
     @Autowired
     SysLogService sysLogService;
+    @Autowired
+    SysLogger sysLogger;
 
     @GetMapping(value = "/echo/errcode")
     @ResponseBody
     public Object echoErrorCode() {
-        sysLogService.addLog("back-end-server", "123", 2, "echoErrorCode", "echoErrorCode", "");
-        return errorCodeService.runStatus();
+        Object response = errorCodeService.runStatus();
+        ResponseBean responseBean = JSON.parseObject(JSON.toJSONString(response), ResponseBean.class);
+        if (ResponseHelper.isSuccess(responseBean)) {
+            sysLogger.success("echoErrorCode", JSON.toJSONString(responseBean.getPayload()), "");
+        } else {
+            sysLogger.fail("echoErrorCode", "获取错误码服务状态失败", JSON.toJSONString(responseBean));
+        }
+        return response;
     }
 
     @Autowired

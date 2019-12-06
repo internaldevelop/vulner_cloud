@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @FeignClient(value = "system-code")
 public interface ErrorCodeService {
     @GetMapping(value = "/sys_code/run_status")
-    String runStatus();
+    ResponseBean runStatus();
 
     @GetMapping(value = "/sys_code/err_codes/all")
     ResponseBean allErrorCodes();

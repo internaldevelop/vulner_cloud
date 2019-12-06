@@ -12,7 +12,8 @@ import org.springframework.web.client.RestTemplate;
 
 //@SpringBootApplication(scanBasePackages = {"com.vulner.bend_server.controller", "com.vulner.bend_server.service", },
 //        exclude = DataSourceAutoConfiguration.class)
-@SpringBootApplication(scanBasePackages = {"com.vulner.bend_server.controller", "com.vulner.bend_server.service", })
+@SpringBootApplication(scanBasePackages = {"com.vulner.bend_server.controller", "com.vulner.bend_server.service",
+    "com.vulner.bend_server.global"})
 @EnableEurekaClient
 //@EnableDiscoveryClient
 @EnableFeignClients
