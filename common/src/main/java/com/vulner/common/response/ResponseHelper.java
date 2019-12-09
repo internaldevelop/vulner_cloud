@@ -11,6 +11,9 @@ public class ResponseHelper {
     public static void setErrorCodeList(List<ErrorCodeDto> errList) {
         errorCodeList = ObjUtils.deepCopyList(errList, ErrorCodeDto.class);
     }
+    public static List<ErrorCodeDto> getErrorCodeList() {
+        return ObjUtils.deepCopyList(errorCodeList, ErrorCodeDto.class);
+    }
 
     public static ErrorCodeDto getErrorCodesUnavail() {
         ErrorCodeDto errorCodeDto = new ErrorCodeDto();
