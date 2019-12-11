@@ -1,15 +1,13 @@
 package com.vulner.aqmp_bus.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.vulner.aqmp_bus.global.RabbitConfig;
+import com.vulner.aqmp_bus.service.ErrorCodeService;
 import com.vulner.aqmp_bus.service.mq.TopicSender;
-//import com.vulner.aqmp_bus.service.mq.Sender;
 import com.vulner.common.response.ResponseHelper;
-import com.vulner.aqmp_bus.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+
+//import com.vulner.aqmp_bus.service.mq.Sender;
 
 @RestController
 public class SystemApi {
@@ -49,6 +47,30 @@ public class SystemApi {
     @ResponseBody
     public Object mqbusSendDataMQ(@RequestParam("msg") Object msg) {
         topicSender.sendFanout(msg);
+        return errorCodeService.runStatus();
+    }
+
+    /**
+     * 删除队列
+     * @param queueName
+     * @return
+     */
+    @GetMapping(value = "/mq_bus/del_queue")
+    @ResponseBody
+    public Object delQueuea(@RequestParam("queue_name") String queueName) {
+        topicSender.delQueue(queueName);
+        return errorCodeService.runStatus();
+    }
+
+    /**
+     * 清空队列
+     * @param queueName
+     * @return
+     */
+    @GetMapping(value = "/mq_bus/clear_queue")
+    @ResponseBody
+    public Object clearQueuea(@RequestParam("queue_name") String queueName) {
+        topicSender.clearQueue(queueName);
         return errorCodeService.runStatus();
     }
 

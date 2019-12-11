@@ -7,11 +7,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitConfig {
 
-    public static final String MAIN_EXCHANGE = "main-mq-exchange";
+    public static final String MAIN_EXCHANGE = "main-mq-exchange";  // 交换机
 
-    public static final String DEFAULT_TOPIC = "topic.main";
+    public static final String DEFAULT_TOPIC = "topic.main";  // 缺省队列
 
-    public static final String MAIN_FANOUT_EXCHANGE = "main-fanout-exchange";
+    public static final String MAIN_FANOUT_EXCHANGE = "main-fanout-exchange";  // 广播交换机
 
     /**
      * 针对消费者配置
