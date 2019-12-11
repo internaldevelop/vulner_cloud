@@ -6,7 +6,16 @@ myprops:
 spring:
   application:
     name: aqmp-bus
-
+  rabbitmq:
+    host: 192.168.1.41
+    port: 5672
+    username: guest
+    password: 123456
+  cloud:
+    bus:
+      enabled: true
+    trace:
+      enabled: true
 server:
   port: ${myprops.port}
 
@@ -14,3 +23,9 @@ eureka:
   client:
     serviceUrl:
       defaultZone: ${myprops.defaultZone}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: bus-refresh

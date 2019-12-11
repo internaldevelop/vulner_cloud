@@ -7,6 +7,16 @@ myprops:
 spring:
   application:
     name: fw_bend_server
+  rabbitmq:
+    host: 192.168.1.41
+    port: 5672
+    username: guest
+    password: 123456
+  cloud:
+    bus:
+      enabled: true
+    trace:
+      enabled: true
 
 server:
   port: ${myprops.port}
