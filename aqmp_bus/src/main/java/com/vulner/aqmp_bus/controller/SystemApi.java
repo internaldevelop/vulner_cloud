@@ -1,5 +1,6 @@
 package com.vulner.aqmp_bus.controller;
 
+import com.vulner.aqmp_bus.global.RabbitConfig;
 import com.vulner.aqmp_bus.service.ErrorCodeService;
 import com.vulner.aqmp_bus.service.mq.TopicSender;
 import com.vulner.common.response.ResponseHelper;
@@ -51,14 +52,26 @@ public class SystemApi {
     }
 
     /**
-     * 删除队列
+     * 创建交换机
+     * @param exchangeName
+     * @return
+     */
+    @GetMapping(value = "/mq_bus/add_exchange")
+    @ResponseBody
+    public Object addExchange(@RequestParam("exchange_name") String exchangeName) {
+        topicSender.addExchange(exchangeName);
+        return errorCodeService.runStatus();
+    }
+
+    /**
+     * 创建队列并绑定到APP交换机
      * @param queueName
      * @return
      */
-    @GetMapping(value = "/mq_bus/del_queue")
+    @GetMapping(value = "/mq_bus/create_queue")
     @ResponseBody
-    public Object delQueuea(@RequestParam("queue_name") String queueName) {
-        topicSender.delQueue(queueName);
+    public Object createQueue(@RequestParam("queue_name") String queueName) {
+        topicSender.addQueueBinding(queueName, RabbitConfig.MAIN_APP_EXCHANGE);   //队列绑定到交换机
         return errorCodeService.runStatus();
     }
 
@@ -73,6 +86,19 @@ public class SystemApi {
         topicSender.clearQueue(queueName);
         return errorCodeService.runStatus();
     }
+
+    /**
+     * 删除队列
+     * @param queueName
+     * @return
+     */
+    @GetMapping(value = "/mq_bus/del_queue")
+    @ResponseBody
+    public Object delQueuea(@RequestParam("queue_name") String queueName) {
+        topicSender.delQueue(queueName);
+        return errorCodeService.runStatus();
+    }
+
 
 
 }

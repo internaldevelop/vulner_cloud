@@ -2,15 +2,17 @@
 myprops:
   defaultZone: http://localhost:10100/eureka/
   port: 10115
+  defaultIp: 192.168.1.41
 
 spring:
   application:
     name: aqmp-bus
   rabbitmq:
-    host: 192.168.1.41
+    host: ${myprops.defaultIp}
     port: 5672
     username: guest
     password: 123456
+    virtual-host: /
   cloud:
     bus:
       enabled: true

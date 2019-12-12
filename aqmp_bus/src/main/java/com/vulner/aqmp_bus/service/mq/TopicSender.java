@@ -3,11 +3,10 @@ package com.vulner.aqmp_bus.service.mq;
 import com.vulner.aqmp_bus.global.RabbitConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.core.MessageProperties;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -47,6 +46,33 @@ public class TopicSender {
 
     public RabbitAdmin rabbitAdmin() {
         return  new RabbitAdmin(rabbitTemplate);
+    }
+
+    /**
+     * 创建Exchange
+     * @param exchangeName
+     */
+    public void addExchange(String exchangeName){
+        rabbitAdmin().declareExchange(new TopicExchange(exchangeName));
+    }
+
+    /**
+     * 创建队列
+     * @param queueName
+     * @return
+     */
+    public String addQueue(String queueName) {
+        return rabbitAdmin().declareQueue(new Queue(queueName));
+    }
+
+    /**
+     * 绑定一个队列到一个匹配型交换器使用一个routingKey
+     * @param queueName
+     */
+    public void addQueueBinding(String queueName, String exchangeName){
+        addQueue(queueName);  // 创建队列
+        Binding binding = BindingBuilder.bind(new Queue(queueName)).to(new TopicExchange(exchangeName)).with(queueName);  // 队列绑定到交换机
+        rabbitAdmin().declareBinding(binding);
     }
 
     /**

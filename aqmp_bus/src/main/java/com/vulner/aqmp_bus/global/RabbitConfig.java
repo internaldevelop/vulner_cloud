@@ -13,6 +13,8 @@ public class RabbitConfig {
 
     public static final String MAIN_FANOUT_EXCHANGE = "main-fanout-exchange";  // 广播交换机
 
+    public static final String MAIN_APP_EXCHANGE = "main-app-exchange";  // APP交换机
+
     /**
      * 针对消费者配置
      * 1. 设置交换机类型
@@ -25,6 +27,11 @@ public class RabbitConfig {
     @Bean
     public TopicExchange defaultExchange() {
         return new TopicExchange(MAIN_EXCHANGE);
+    }
+
+    @Bean
+    public TopicExchange appExchange() {
+        return new TopicExchange(MAIN_APP_EXCHANGE);
     }
 
     /**
