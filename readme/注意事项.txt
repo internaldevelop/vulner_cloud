@@ -31,3 +31,7 @@
 6. IDEA 不能 autowire @FeignClient 注解的类，解决方案是：
     增加一个 @RestController 注解
 
+7. SpringCloud教程参考
+    方志朋的专栏: https://www.fangzhipeng.com/spring-cloud.html
+    myCat的博客: https://blog.csdn.net/wya1993/category_7701476.html
+

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @FeignClient(value = "system-code")
 public interface ErrorCodeService {
-    @RequestMapping(value = "/sys_code/run_status", method = RequestMethod.GET)
+    @GetMapping(value = "/sys_code/run_status")
     String runStatus();
 
     @GetMapping(value = "/sys_code/err_codes/all")
