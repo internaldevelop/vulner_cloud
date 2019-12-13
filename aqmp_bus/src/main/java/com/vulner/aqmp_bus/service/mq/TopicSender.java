@@ -1,6 +1,7 @@
 package com.vulner.aqmp_bus.service.mq;
 
 import com.vulner.aqmp_bus.global.RabbitConfig;
+import com.vulner.common.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.*;
@@ -16,19 +17,24 @@ public class TopicSender {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
+
     /**
      * 发消息
      * @param topic
      * @param msg
      */
-    public void send(String topic, String msg) {
+    public void send(String exchangeName, String topic, String msg) {
         logger.info("---> send MQ Topic: " + topic);
         logger.info("---> send message: " + msg);
-        this.rabbitTemplate.convertAndSend(RabbitConfig.MAIN_EXCHANGE, topic, msg);
+        if (!StringUtils.isValid(exchangeName)){
+            exchangeName = RabbitConfig.MAIN_EXCHANGE;
+        }
+
+        this.rabbitTemplate.convertAndSend(exchangeName, topic, msg);
     }
 
-    public void sendMainTopic(String msg) {
-        send(RabbitConfig.DEFAULT_TOPIC, msg);
+    public void sendMainTopic(String exchangeName, String msg) {
+        send(exchangeName, RabbitConfig.DEFAULT_TOPIC, msg);
     }
 
     /**

@@ -12,6 +12,7 @@
         <module name="firmware_analyze" />
         <module name="firmware_fetch" />
         <module name="gateway_server" />
+        <module name="gateway_zuul" />
         <module name="register_server" />
         <module name="system_code" />
         <module name="system_log" />
@@ -20,6 +21,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="baseconfig" target="1.8" />
+      <module name="gateway_server" target="1.8" />
       <module name="vulner_eureka_server" target="1.8" />
     </bytecodeTargetLevel>
   </component>
@@ -31,6 +33,7 @@
       <module name="firmware_analyze" options="-parameters" />
       <module name="firmware_fetch" options="-parameters" />
       <module name="gateway_server" options="-parameters" />
+      <module name="gateway_zuul" options="-parameters" />
       <module name="register_server" options="-parameters" />
       <module name="system_code" options="-parameters" />
       <module name="system_log" options="-parameters" />

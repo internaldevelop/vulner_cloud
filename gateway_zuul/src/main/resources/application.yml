@@ -1,0 +1,28 @@
+myprops:
+  defaultZone: http://localhost:10100/eureka/
+  port: 10110
+
+server:
+  port: ${myprops.port}
+
+spring:
+  application:
+    name: gateway-zuul
+eureka:
+  client:
+    service-url:
+      defaultZone: ${myprops.defaultZone}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,hystrix.stream,routes
+zuul:
+  prefix: /
+  routes:
+    fw_bend_server: /**
+    aqmp-bus: /**
+    firmware-analyze: /**
+    firmware-fetch: /**
+    system-log: /**
+    unified-auth: /**

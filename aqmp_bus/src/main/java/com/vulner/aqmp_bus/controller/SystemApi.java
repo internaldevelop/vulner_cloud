@@ -52,6 +52,18 @@ public class SystemApi {
     }
 
     /**
+     * 发消息
+     * @param msg
+     * @return
+     */
+    @GetMapping(value = "/mq_bus/send_data")
+    @ResponseBody
+    public Object sendData(@RequestParam("exchange_name")String exchangeName, @RequestParam("topic")String topic, @RequestParam("msg") String msg) {
+        topicSender.send(exchangeName, topic, msg);
+        return errorCodeService.runStatus();
+    }
+
+    /**
      * 创建交换机
      * @param exchangeName
      * @return
