@@ -14,6 +14,7 @@
         <option value="$PROJECT_DIR$/system_log/pom.xml" />
         <option value="$PROJECT_DIR$/bend_server/pom.xml" />
         <option value="$PROJECT_DIR$/common/pom.xml" />
+        <option value="$PROJECT_DIR$/gateway_server/pom.xml" />
       </list>
     </option>
   </component>

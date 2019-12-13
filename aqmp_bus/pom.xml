@@ -15,4 +15,12 @@
     <name>aqmp_bus</name>
     <description>MQ bus for other modules in sending and receiving messages.</description>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bus-amqp</artifactId>
+        </dependency>
+
+    </dependencies>
+
 </project>

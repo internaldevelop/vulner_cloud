@@ -11,6 +11,7 @@
         <module name="common" />
         <module name="firmware_analyze" />
         <module name="firmware_fetch" />
+        <module name="gateway_server" />
         <module name="register_server" />
         <module name="system_code" />
         <module name="system_log" />
@@ -29,6 +30,7 @@
       <module name="common" options="-parameters" />
       <module name="firmware_analyze" options="-parameters" />
       <module name="firmware_fetch" options="-parameters" />
+      <module name="gateway_server" options="-parameters" />
       <module name="register_server" options="-parameters" />
       <module name="system_code" options="-parameters" />
       <module name="system_log" options="-parameters" />
