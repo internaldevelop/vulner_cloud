@@ -14,4 +14,12 @@
     <name>bend_server</name>
     <description>Back-end server for FW analyze project.</description>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bus-amqp</artifactId>
+        </dependency>
+
+    </dependencies>
+
 </project>
