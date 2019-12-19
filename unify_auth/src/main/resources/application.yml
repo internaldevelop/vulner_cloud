@@ -7,7 +7,7 @@ myprops:
     port: 13306
   redis:
     ip: 192.168.182.88
-    port: 6379
+    port: 16379
 
 spring:
   application:
@@ -16,7 +16,7 @@ spring:
     database: 0
     host: ${myprops.redis.ip}
     port: ${myprops.redis.port}
-    password:
+    password: 123456
     jedis:
       pool:
         max-active: 8
@@ -25,7 +25,7 @@ spring:
   datasource:
     # mysql database config
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${myprops.mysql.ip}:${myprops.mysql.port}/system_log?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&useSSL=false
+    url: jdbc:mysql://${myprops.mysql.ip}:${myprops.mysql.port}/uni_auth_db?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&useSSL=false
     username: root
     password: 123456
     # 下面为连接池的补充设置，应用到上面所有数据源中

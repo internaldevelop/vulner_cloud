@@ -16,11 +16,10 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import java.io.IOException;
 
 /**
- * 对web响应异常的转译
- *
  * @author Jason
  * @create 2019/12/13
  * @since 1.0.0
+ * @description 对web响应异常的转译
  */
 public class MyWebResponseExceptionTranslator implements WebResponseExceptionTranslator {
     private ThrowableAnalyzer throwableAnalyzer = new DefaultThrowableAnalyzer();
@@ -36,24 +35,28 @@ public class MyWebResponseExceptionTranslator implements WebResponseExceptionTra
             return handleOAuth2Exception((OAuth2Exception) ase);
         }
 
+        // Exception: 401
         ase = (AuthenticationException) throwableAnalyzer.getFirstThrowableOfType(AuthenticationException.class,
                 causeChain);
         if (ase != null) {
             return handleOAuth2Exception(new MyWebResponseExceptionTranslator.UnauthorizedException(e.getMessage(), e));
         }
 
+        // Exception: 403
         ase = (AccessDeniedException) throwableAnalyzer
                 .getFirstThrowableOfType(AccessDeniedException.class, causeChain);
         if (ase instanceof AccessDeniedException) {
             return handleOAuth2Exception(new MyWebResponseExceptionTranslator.ForbiddenException(ase.getMessage(), ase));
         }
 
+        // Exception: 405
         ase = (HttpRequestMethodNotSupportedException) throwableAnalyzer.getFirstThrowableOfType(
                 HttpRequestMethodNotSupportedException.class, causeChain);
         if (ase instanceof HttpRequestMethodNotSupportedException) {
             return handleOAuth2Exception(new MyWebResponseExceptionTranslator.MethodNotAllowed(ase.getMessage(), ase));
         }
 
+        // Exception: 500
         return handleOAuth2Exception(new MyWebResponseExceptionTranslator.ServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), e));
 
     }
@@ -61,16 +64,17 @@ public class MyWebResponseExceptionTranslator implements WebResponseExceptionTra
     private ResponseEntity<OAuth2Exception> handleOAuth2Exception(OAuth2Exception e) throws IOException {
 
         int status = e.getHttpErrorCode();
-        String error = e.getOAuth2ErrorCode();
-        String summary = e.getSummary();
         HttpHeaders headers = new HttpHeaders();
         headers.set("Cache-Control", "no-store");
         headers.set("Pragma", "no-cache");
         if (status == HttpStatus.UNAUTHORIZED.value() || (e instanceof InsufficientScopeException)) {
             headers.set("WWW-Authenticate", String.format("%s %s", OAuth2AccessToken.BEARER_TYPE, e.getSummary()));
         }
+        String message=e.getMessage();
+        MyOAuth2Exception exception = new MyOAuth2Exception(message,e);
 
-        ResponseEntity<OAuth2Exception> response = new ResponseEntity<OAuth2Exception>(e, headers, HttpStatus.valueOf(status));
+        ResponseEntity<OAuth2Exception> response = new ResponseEntity<OAuth2Exception>(exception, headers, HttpStatus.valueOf(status));
+
         return response;
 
     }

@@ -9,13 +9,15 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-@EnableGlobalMethodSecurity(proxyTargetClass = true, prePostEnabled = true)
+@EnableWebSecurity
+//@EnableGlobalMethodSecurity(proxyTargetClass = true, prePostEnabled = true)
 //@Order(org.springframework.boot.autoconfigure.security.SecurityProperties.ACCESS_OVERRIDE_ORDER)
 @Order(2)
 public class UniWebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -36,6 +38,16 @@ public class UniWebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/oauth/**").authenticated()
                 .and()
                 .csrf().disable();
+        http.httpBasic()
+                .authenticationEntryPoint((request, response, authException) -> {
+                    response.setContentType("application/json;charset=utf-8");
+//                })
+//                .and()
+//                .formLogin()
+//                .permitAll()
+//                .failureHandler((request, response, authException) -> {
+//                    response.setContentType("application/json;charset=utf-8");
+                });
     }
 
     @Override
