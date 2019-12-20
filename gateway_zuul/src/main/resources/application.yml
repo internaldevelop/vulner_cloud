@@ -8,15 +8,18 @@ server:
 spring:
   application:
     name: gateway-zuul
+
 eureka:
   client:
     service-url:
       defaultZone: ${myprops.defaultZone}
+
 management:
   endpoints:
     web:
       exposure:
         include: health,info,hystrix.stream,routes
+
 zuul:
   prefix: /
   routes:
@@ -24,11 +27,22 @@ zuul:
       path: /fw-bend-server/**
       serviceId: fw-bend-server
       sensitiveHeaders: "*"
-    aqmp-bus: /**
-    firmware-analyze: /**
-    firmware-fetch: /**
-    system-log: /**
-#    unified-auth: /**
+    aqmp-bus:
+      path: /aqmp-bus/**
+      serviceId: aqmp-bus
+      sensitiveHeaders: "*"
+    firmware-analyze:
+      path: /firmware-analyze/**
+      serviceId: firmware-analyze
+      sensitiveHeaders: "*"
+    firmware-fetch:
+      path: /firmware-fetch/**
+      serviceId: firmware-fetch
+      sensitiveHeaders: "*"
+    system-log:
+      path: /system-log/**
+      serviceId: system-log
+      sensitiveHeaders: "*"
     unified-auth:
       path: /unified-auth/**
       serviceId: unified-auth
@@ -39,6 +53,6 @@ zuul:
     eager-load:
       enabled: true
   host:
-    connect-timeout-millis: 3000
-    socket-timeout-millis: 3000
+    connect-timeout-millis: 30000
+    socket-timeout-millis: 30000
   add-proxy-headers: true
