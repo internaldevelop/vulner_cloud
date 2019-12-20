@@ -1,4 +1,4 @@
-package com.vulner.bend_server.interceptor;
+package com.vulner.bend_server.configuration.interceptor;
 
 
 import com.vulner.bend_server.global.Const;

@@ -20,9 +20,25 @@ management:
 zuul:
   prefix: /
   routes:
-    fw_bend_server: /**
+    fw-bend-server:
+      path: /fw-bend-server/**
+      serviceId: fw-bend-server
+      sensitiveHeaders: "*"
     aqmp-bus: /**
     firmware-analyze: /**
     firmware-fetch: /**
     system-log: /**
-    unified-auth: /**
+#    unified-auth: /**
+    unified-auth:
+      path: /unified-auth/**
+      serviceId: unified-auth
+      sensitiveHeaders: "*"
+  retryable: false
+  ignored-services: "*"
+  ribbon:
+    eager-load:
+      enabled: true
+  host:
+    connect-timeout-millis: 3000
+    socket-timeout-millis: 3000
+  add-proxy-headers: true

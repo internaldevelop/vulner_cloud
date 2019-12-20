@@ -1,17 +1,18 @@
 
-# �����ױ����ò����ڴ˶���
+# 后台服务
 myprops:
   defaultZone: http://localhost:10100/eureka/
+  gateway: http://localhost:10110/
   port: 10901
 
 spring:
   application:
-    name: fw_bend_server
+    name: fw-bend-server
   rabbitmq:
-    host: 192.168.1.41
+    host: 192.168.182.88
     port: 5672
-    username: guest
-    password: 123456
+    username: admin
+    password: admin
   cloud:
     bus:
       enabled: true
@@ -22,6 +23,17 @@ server:
   port: ${myprops.port}
 
 eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
   client:
     serviceUrl:
       defaultZone: ${myprops.defaultZone}
+
+security:
+  oauth2:
+    resource:
+      id: fw-bend-server
+      user-info-uri: http://localhost:10110/unified-auth/uni_auth/user
+#      user-info-uri: http://localhost:1203/api/member
+      prefer-token-info: false

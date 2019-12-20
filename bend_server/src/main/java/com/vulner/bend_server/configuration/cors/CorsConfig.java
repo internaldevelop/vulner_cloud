@@ -1,4 +1,4 @@
-package com.vulner.bend_server.filter;
+package com.vulner.bend_server.configuration.cors;
 
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;

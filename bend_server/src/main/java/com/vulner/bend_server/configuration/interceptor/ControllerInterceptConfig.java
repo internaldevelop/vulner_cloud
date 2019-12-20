@@ -1,4 +1,4 @@
-package com.vulner.bend_server.interceptor;
+package com.vulner.bend_server.configuration.interceptor;
 
 
 import org.springframework.beans.factory.annotation.Autowired;

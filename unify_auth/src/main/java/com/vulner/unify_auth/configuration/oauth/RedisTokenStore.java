@@ -15,11 +15,10 @@ import org.springframework.security.oauth2.provider.token.store.redis.RedisToken
 import java.util.*;
 
 /**
- * 在redis中，用临时内存方式保存令牌
- *
  * @author Jason
  * @create 2019/12/13
  * @since 1.0.0
+ * @description 在redis中，用临时内存方式保存令牌
  */
 public class RedisTokenStore implements TokenStore {
 

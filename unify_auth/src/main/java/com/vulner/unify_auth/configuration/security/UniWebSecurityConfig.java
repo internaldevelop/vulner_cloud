@@ -15,6 +15,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+/**
+ * @author Jason
+ * @create 2019/12/19
+ * @since 1.0.0
+ * @description 安全认证配置
+ */
 @Configuration
 @EnableWebSecurity
 //@EnableGlobalMethodSecurity(proxyTargetClass = true, prePostEnabled = true)

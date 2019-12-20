@@ -23,7 +23,12 @@ import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 
 import javax.sql.DataSource;
 
-
+/**
+ * @author Jason
+ * @create 2019/12/19
+ * @since 1.0.0
+ * @description 认证服务配置
+ */
 @Configuration
 @EnableAuthorizationServer
 public class UniAuthServerConfig extends AuthorizationServerConfigurerAdapter {
