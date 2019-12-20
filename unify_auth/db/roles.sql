@@ -11,7 +11,7 @@
  Target Server Version : 80016
  File Encoding         : 65001
 
- Date: 12/12/2019 15:20:15
+ Date: 20/12/2019 16:59:37
 */
 
 SET NAMES utf8mb4;
@@ -29,12 +29,14 @@ CREATE TABLE `roles`  (
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建日期',
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新日期',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of roles
 -- ----------------------------
 INSERT INTO `roles` VALUES (1, 'b977008f-1caf-11ea-b42f-0242ac110003', 'ROLE_ADMIN', 1, '2018-12-14 09:46:01', '2018-12-14 09:46:03');
 INSERT INTO `roles` VALUES (2, 'b977a0ff-1caf-11ea-b42f-0242ac110003', 'ROLE_USER', 1, '2018-12-14 09:46:16', '2018-12-14 09:46:18');
+INSERT INTO `roles` VALUES (3, 'b989e0fd-1caf-11ea-b42f-0242ac110003', 'ROLE_AUDIT', 1, '2018-12-14 09:46:16', '2018-12-14 09:46:18');
+INSERT INTO `roles` VALUES (4, 'b88910ea-1caf-11ea-b42f-0242ac110003', 'ROLE_GUEST', 1, '2018-12-14 09:46:16', '2018-12-14 09:46:18');
 
 SET FOREIGN_KEY_CHECKS = 1;

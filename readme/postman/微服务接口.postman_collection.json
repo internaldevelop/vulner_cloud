@@ -616,7 +616,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:1202/auth/api/member?access_token=74a281b5-8aa3-4c69-97c2-502beaab6553",
+							"raw": "localhost:1202/auth/api/member?access_token=d401c995-8dea-4279-878b-b20f8d6cfad1",
 							"host": [
 								"localhost"
 							],
@@ -629,7 +629,7 @@
 							"query": [
 								{
 									"key": "access_token",
-									"value": "74a281b5-8aa3-4c69-97c2-502beaab6553"
+									"value": "d401c995-8dea-4279-878b-b20f8d6cfad1"
 								}
 							]
 						},
@@ -638,21 +638,45 @@
 					"response": []
 				},
 				{
-					"name": "1.1 密码模式获取令牌",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
+					"name": "示例-成员登出",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:1202/auth/api/exit?access_token=d401c995-8dea-4279-878b-b20f8d6cfad1",
+							"host": [
+								"localhost"
+							],
+							"port": "1202",
+							"path": [
+								"auth",
+								"api",
+								"exit"
+							],
+							"query": [
+								{
+									"key": "access_token",
+									"value": "d401c995-8dea-4279-878b-b20f8d6cfad1"
+								}
+							]
+						},
+						"description": "参考：SpringCloud+SpringBoot+OAuth2+Spring Security+Redis实现的微服务统一认证授权\r\n    https://blog.csdn.net/WYA1993/article/details/85050120\r\n    对应源码：https://github.com/WYA1993/springcloud_oauth2.0"
 					},
+					"response": []
+				},
+				{
+					"name": "3.1 密码模式获取令牌",
 					"request": {
 						"auth": {
 							"type": "basic",
 							"basic": [
 								{
-									"key": "password",
+									"key": "username",
 									"value": "android",
 									"type": "string"
 								},
 								{
-									"key": "username",
+									"key": "password",
 									"value": "android",
 									"type": "string"
 								}
@@ -666,12 +690,13 @@
 								"type": "text",
 								"value": "application/x-www-form-urlencoded",
 								"disabled": true
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
 							}
 						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": []
-						},
 						"url": {
 							"raw": "{{UNI_AUTH_URL}}/oauth/token?grant_type=password&username=user_1&password=12345678",
 							"host": [
@@ -700,18 +725,18 @@
 					"response": []
 				},
 				{
-					"name": "1.2 基本验证令牌",
+					"name": "3.2 验证令牌",
 					"request": {
 						"auth": {
 							"type": "basic",
 							"basic": [
 								{
-									"key": "password",
+									"key": "username",
 									"value": "android",
 									"type": "string"
 								},
 								{
-									"key": "username",
+									"key": "password",
 									"value": "android",
 									"type": "string"
 								}
@@ -721,18 +746,18 @@
 						"header": [
 							{
 								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
+								"type": "text",
+								"value": "application/json"
 							},
 							{
 								"key": "Accept1",
-								"value": "application/json",
 								"type": "text",
+								"value": "application/json",
 								"disabled": true
 							}
 						],
 						"url": {
-							"raw": "{{UNI_AUTH_URL}}/oauth/check_token?token=88b2064a-4f79-4907-9b27-8f44706b1af7",
+							"raw": "{{UNI_AUTH_URL}}/oauth/check_token?token=443325dd-c3ca-4db1-8bbb-db0ab34bfca2",
 							"host": [
 								"{{UNI_AUTH_URL}}"
 							],
@@ -743,7 +768,7 @@
 							"query": [
 								{
 									"key": "token",
-									"value": "88b2064a-4f79-4907-9b27-8f44706b1af7"
+									"value": "443325dd-c3ca-4db1-8bbb-db0ab34bfca2"
 								}
 							]
 						}
@@ -751,7 +776,7 @@
 					"response": []
 				},
 				{
-					"name": "1.3 注销",
+					"name": "3.3 注销",
 					"request": {
 						"auth": {
 							"type": "noauth"
@@ -771,7 +796,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{UNI_AUTH_URL}}/uni_auth/exit?access_token=88b2064a-4f79-4907-9b27-8f44706b1af7",
+							"raw": "{{UNI_AUTH_URL}}/uni_auth/exit?access_token=73724078-3205-432b-8b01-bd58eb50ecc7",
 							"host": [
 								"{{UNI_AUTH_URL}}"
 							],
@@ -782,7 +807,46 @@
 							"query": [
 								{
 									"key": "access_token",
-									"value": "88b2064a-4f79-4907-9b27-8f44706b1af7"
+									"value": "73724078-3205-432b-8b01-bd58eb50ecc7"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3.4 当前用户",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept1",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{UNI_AUTH_URL}}/uni_auth/user?access_token=d31eb17f-19e9-4a02-8efd-3efb7e692b07",
+							"host": [
+								"{{UNI_AUTH_URL}}"
+							],
+							"path": [
+								"uni_auth",
+								"user"
+							],
+							"query": [
+								{
+									"key": "access_token",
+									"value": "d31eb17f-19e9-4a02-8efd-3efb7e692b07"
 								}
 							]
 						}
@@ -817,19 +881,19 @@
 	],
 	"variable": [
 		{
-			"id": "602484ce-62e9-4d42-84f3-d11dfd852ca1",
+			"id": "0ac74ea4-80f6-4ab0-a618-a050b1257cb1",
 			"key": "SYS_CODE_URL",
 			"value": "http://localhost:10113/sys_code",
 			"type": "string"
 		},
 		{
-			"id": "234e5bf5-5e06-4650-a7c9-10fd853042a1",
+			"id": "96f8e1e2-a1c1-4736-8b49-2e1fe53a8741",
 			"key": "SYS_LOG_URL",
 			"value": "http://localhost:10116/sys_log",
 			"type": "string"
 		},
 		{
-			"id": "1cd63cd8-b5d3-47fe-82bd-2b1468427039",
+			"id": "33577b8d-a620-443a-aa9a-4154d47664db",
 			"key": "UNI_AUTH_URL",
 			"value": "http://localhost:10114",
 			"type": "string"

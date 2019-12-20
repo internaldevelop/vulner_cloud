@@ -13,10 +13,6 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{base_url}}/actuator/info",
 							"host": [
@@ -34,11 +30,13 @@
 					"name": "1.2 检查服务: ErrorCode",
 					"request": {
 						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
 						"url": {
 							"raw": "{{base_url}}/echo/errcode",
 							"host": [
@@ -57,10 +55,6 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{base_url}}/echo/fwfetch",
 							"host": [
@@ -79,10 +73,6 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{base_url}}/echo/fwanalyze",
 							"host": [
@@ -101,10 +91,6 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{base_url}}/echo/mqbus",
 							"host": [
@@ -123,10 +109,6 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{base_url}}/echo/syslog",
 							"host": [
@@ -145,10 +127,6 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{base_url}}/echo/uniauth",
 							"host": [
@@ -163,11 +141,256 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "2. 测试",
+			"item": [
+				{
+					"name": "示例-当前成员 Copy",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:10901/api/current?",
+							"host": [
+								"localhost"
+							],
+							"port": "10901",
+							"path": [
+								"api",
+								"current"
+							],
+							"query": [
+								{
+									"key": "access_token",
+									"value": "d31eb17f-19e9-4a02-8efd-3efb7e692b07",
+									"disabled": true
+								}
+							]
+						},
+						"description": "参考：SpringCloud+SpringBoot+OAuth2+Spring Security+Redis实现的微服务统一认证授权\r\n    https://blog.csdn.net/WYA1993/article/details/85050120\r\n    对应源码：https://github.com/WYA1993/springcloud_oauth2.0"
+					},
+					"response": []
+				},
+				{
+					"name": "1.4 当前用户 Copy",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept1",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "localhost:10901/test/oath?access_token=d31eb17f-19e9-4a02-8efd-3efb7e692b07",
+							"host": [
+								"localhost"
+							],
+							"port": "10901",
+							"path": [
+								"test",
+								"oath"
+							],
+							"query": [
+								{
+									"key": "access_token",
+									"value": "d31eb17f-19e9-4a02-8efd-3efb7e692b07"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "网关-当前用户",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:10110/fw-bend-server/test/current_user?access_token=d31eb17f-19e9-4a02-8efd-3efb7e692b07",
+							"host": [
+								"localhost"
+							],
+							"port": "10110",
+							"path": [
+								"fw-bend-server",
+								"test",
+								"current_user"
+							],
+							"query": [
+								{
+									"key": "access_token",
+									"value": "d31eb17f-19e9-4a02-8efd-3efb7e692b07"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.1 hello",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Accept-Language",
+								"value": "zh-CN,zh;q=0.9",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/test/hello?access_token=3833d8a9-39ec-425a-bf3c-713207afa041",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"test",
+								"hello"
+							],
+							"query": [
+								{
+									"key": "access_token",
+									"value": "3833d8a9-39ec-425a-bf3c-713207afa041"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.2 当前用户",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/test/current_user?access_token=3833d8a9-39ec-425a-bf3c-713207afa041",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"test",
+								"current_user"
+							],
+							"query": [
+								{
+									"key": "access_token",
+									"value": "3833d8a9-39ec-425a-bf3c-713207afa041"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.3 校验query权限",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/test/query?access_token=3833d8a9-39ec-425a-bf3c-713207afa041",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"test",
+								"query"
+							],
+							"query": [
+								{
+									"key": "access_token",
+									"value": "3833d8a9-39ec-425a-bf3c-713207afa041"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ccd9574c-09e9-43c9-9088-b4940617c7ca",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "469d09e1-051b-4616-ba26-f76527d1075c",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
 		}
 	],
 	"variable": [
 		{
-			"id": "c4c31362-cea7-433c-96fe-23ab22d3808f",
+			"id": "4ee117ba-997d-4461-a496-eb35c80e2514",
 			"key": "base_url",
 			"value": "http://localhost:10901",
 			"type": "string"

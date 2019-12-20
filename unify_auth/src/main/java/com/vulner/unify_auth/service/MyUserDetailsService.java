@@ -53,7 +53,7 @@ public class MyUserDetailsService implements UserDetailsService {
             // 获取当前角色的所有权限
             List<RolePermissionDto> permissionsList = rolePermissionsDao.getPermissions(role.getRole_uuid());
             for (RolePermissionDto permission : permissionsList) {
-                GrantedAuthority authority = new SimpleGrantedAuthority(permission.getPermission_uri());
+                GrantedAuthority authority = new SimpleGrantedAuthority(permission.getPermission_name());
                 grantedAuthorities.add(authority);
             }
         }

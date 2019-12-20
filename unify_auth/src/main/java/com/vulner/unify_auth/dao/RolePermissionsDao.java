@@ -11,10 +11,10 @@ public interface RolePermissionsDao {
     @Select("SELECT\n" +
             "\trp.role_uuid,\n" +
             "\trp.permission_uuid,\n" +
-            "\tp.method AS permission_method,\n" +
-            "\tp.gateway_prefix,\n" +
-            "\tp.service_prefix,\n" +
-            "\tp.uri AS permission_uri\n" +
+            "\tp.name AS permission_name,\n" +
+            "\tp.description AS permission_desc,\n" +
+            "\tp.create_time,\n" +
+            "\tp.update_time\n" +
             "FROM role_permissions rp\n" +
             "LEFT JOIN permissions p ON rp.permission_uuid=p.uuid\n" +
             "WHERE rp.role_uuid=#{roleUuid};")
