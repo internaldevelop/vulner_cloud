@@ -1,6 +1,7 @@
 package com.vulner.unify_auth.interceptor;
 
 
+import com.vulner.common.utils.ObjUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
@@ -17,27 +18,13 @@ public class ControllerInterceptConfig extends WebMvcConfigurationSupport {
         this.controllerInterceptor = controllerInterceptor;
     }
 
-//    @Override
-//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//        registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
-//        registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
-//        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
-//        super.addResourceHandlers(registry);
-//    }
-
     // 添加ResourceHandler
     // 添加Swagger资源的方法只能放在这个配置类里，放到swagger配置类里，访问 swagger-ui.html 会抛异常404
     // 放到 AuthapiApplication 中也会抛404
     // 原因未知
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
-        registry.addResourceHandler("swagger-ui.html")
-                .addResourceLocations("classpath:/META-INF/resources/");
-        registry.addResourceHandler("doc.html")
-                .addResourceLocations("classpath:/META-INF/resources/");
-        registry.addResourceHandler("/webjars/**")
-                .addResourceLocations("classpath:/META-INF/resources/webjars/");
+        ObjUtils.addSwaggerRegistry(registry);
         super.addResourceHandlers(registry);
     }
 

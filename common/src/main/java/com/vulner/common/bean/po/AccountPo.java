@@ -13,6 +13,11 @@ public class AccountPo {
     private String account;
     private String name;
     private String password;
+    private String salt;
+    private int max_attempts;
+    private int attempts;
+    private short locked;
+    private int status;
     private String email;
     private String mobile;
     private short sex;

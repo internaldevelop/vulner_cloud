@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -45,6 +46,16 @@ public class ObjUtils {
     public static <T> List<T> deepCopyList(List<T> src, Class<T> clazz) {
         String json = JSON.toJSONString(src);
         return JSON.parseArray(json, clazz);
+    }
+
+    public static void addSwaggerRegistry(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
+        registry.addResourceHandler("swagger-ui.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("doc.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 
 }

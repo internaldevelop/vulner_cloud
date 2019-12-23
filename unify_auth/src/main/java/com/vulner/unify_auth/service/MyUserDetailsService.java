@@ -1,8 +1,11 @@
 package com.vulner.unify_auth.service;
 
 import com.vulner.common.bean.po.AccountPo;
+import com.vulner.common.enumeration.PwdLockStatusEnum;
 import com.vulner.unify_auth.bean.dto.AccountRoleDto;
 import com.vulner.unify_auth.bean.dto.RolePermissionDto;
+import com.vulner.unify_auth.service.exception.MyAccountLockedException;
+import com.vulner.unify_auth.service.exception.MyAccountNotFoundException;
 import com.vulner.unify_auth.dao.AccountRolesDao;
 import com.vulner.unify_auth.dao.AccountsDao;
 import com.vulner.unify_auth.dao.RolePermissionsDao;
@@ -32,7 +35,9 @@ public class MyUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String accountName) throws UsernameNotFoundException {
         AccountPo accountPo = accountsDao.findByAccount(accountName);
         if (accountPo == null) {
-            throw new UsernameNotFoundException(accountName);
+            throw new MyAccountNotFoundException(accountName);
+        } else if (accountPo.getLocked() == PwdLockStatusEnum.LOCKED.getLocked()) {
+            throw new MyAccountLockedException(accountName);
         }
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         // 可用性 :true:可用 false:不可用

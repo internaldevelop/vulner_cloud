@@ -1,5 +1,9 @@
 package com.vulner.unify_auth.configuration.exception;
 
+import com.vulner.common.response.ResponseBean;
+import com.vulner.common.response.ResponseHelper;
+import com.vulner.unify_auth.service.exception.MyAccountNotFoundException;
+import com.vulner.unify_auth.service.exception.MyAuthException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +12,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.common.DefaultThrowableAnalyzer;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.InsufficientScopeException;
+import org.springframework.security.oauth2.common.exceptions.InvalidGrantException;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.oauth2.provider.error.WebResponseExceptionTranslator;
 import org.springframework.security.web.util.ThrowableAnalyzer;
@@ -29,31 +34,48 @@ public class MyWebResponseExceptionTranslator implements WebResponseExceptionTra
 
         // Try to extract a SpringSecurityException from the stacktrace
         Throwable[] causeChain = throwableAnalyzer.determineCauseChain(e);
-        Exception ase = (OAuth2Exception) throwableAnalyzer.getFirstThrowableOfType(OAuth2Exception.class, causeChain);
 
-        if (ase != null) {
-            return handleOAuth2Exception((OAuth2Exception) ase);
+        // Exception: self-defined exception, e.g.:
+        // UsernameNotFoundException -> MyAccountNotFoundException
+        MyAuthException myAuthEx = (MyAuthException) throwableAnalyzer.getFirstThrowableOfType(MyAuthException.class,
+                causeChain);
+        if (myAuthEx != null) {
+            return myAuthEx.handleResponse();
+        }
+
+        // Exception: InvalidGrantException
+        // 密码校验失败
+        InvalidGrantException grantEx = (InvalidGrantException) throwableAnalyzer.getFirstThrowableOfType(InvalidGrantException.class,
+                causeChain);
+        if (grantEx != null) {
+
         }
 
         // Exception: 401
-        ase = (AuthenticationException) throwableAnalyzer.getFirstThrowableOfType(AuthenticationException.class,
+        AuthenticationException authEx = (AuthenticationException) throwableAnalyzer.getFirstThrowableOfType(AuthenticationException.class,
                 causeChain);
-        if (ase != null) {
+        if (authEx != null) {
             return handleOAuth2Exception(new MyWebResponseExceptionTranslator.UnauthorizedException(e.getMessage(), e));
         }
 
         // Exception: 403
-        ase = (AccessDeniedException) throwableAnalyzer
+        AccessDeniedException accessDenyEx = (AccessDeniedException) throwableAnalyzer
                 .getFirstThrowableOfType(AccessDeniedException.class, causeChain);
-        if (ase instanceof AccessDeniedException) {
-            return handleOAuth2Exception(new MyWebResponseExceptionTranslator.ForbiddenException(ase.getMessage(), ase));
+        if (accessDenyEx instanceof AccessDeniedException) {
+            return handleOAuth2Exception(new MyWebResponseExceptionTranslator.ForbiddenException(accessDenyEx.getMessage(), accessDenyEx));
         }
 
         // Exception: 405
-        ase = (HttpRequestMethodNotSupportedException) throwableAnalyzer.getFirstThrowableOfType(
+        HttpRequestMethodNotSupportedException notSupportEx = (HttpRequestMethodNotSupportedException) throwableAnalyzer.getFirstThrowableOfType(
                 HttpRequestMethodNotSupportedException.class, causeChain);
-        if (ase instanceof HttpRequestMethodNotSupportedException) {
-            return handleOAuth2Exception(new MyWebResponseExceptionTranslator.MethodNotAllowed(ase.getMessage(), ase));
+        if (notSupportEx instanceof HttpRequestMethodNotSupportedException) {
+            return handleOAuth2Exception(new MyWebResponseExceptionTranslator.MethodNotAllowed(notSupportEx.getMessage(), notSupportEx));
+        }
+
+        // Exception: 400
+        OAuth2Exception oAuth2Ex = (OAuth2Exception) throwableAnalyzer.getFirstThrowableOfType(OAuth2Exception.class, causeChain);
+        if (oAuth2Ex != null) {
+            return handleOAuth2Exception(oAuth2Ex);
         }
 
         // Exception: 500
