@@ -21,20 +21,19 @@ public class SystemApi {
     @RequestMapping(value = "/actuator/info", method = RequestMethod.GET)
     @ResponseBody
     public Object actuatorInfo() {
-        return appName + " is running on port: " + port + ". Register server is: " + defaultZone;
+        String info = appName + " is running on port: " + port + ". Register server is: " + defaultZone;
+        return ResponseHelper.success(info);
     }
 
-    @RequestMapping(value = "/uni_auth/run_status", method = RequestMethod.GET)
+    @RequestMapping(value = "/actuator/info_test", method = RequestMethod.GET)
+    @ResponseBody
+    public Object actuatorInfoTest() {
+        return actuatorInfo();
+    }
+
+    @RequestMapping(value = "/system/run_status", method = RequestMethod.GET)
     @ResponseBody
     public Object runStatus() {
-        return ResponseHelper.success(actuatorInfo());
-    }
-
-    @Autowired
-    ErrorCodeService errorCodeService;
-    @RequestMapping(value = "/uni_auth/errcode", method = RequestMethod.GET)
-    @ResponseBody
-    public Object mqbusErrorCode() {
-        return errorCodeService.runStatus();
+        return actuatorInfo();
     }
 }

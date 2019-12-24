@@ -34,6 +34,6 @@ security:
   oauth2:
     resource:
       id: fw-bend-server
-      user-info-uri: http://localhost:10110/unified-auth/uni_auth/user
+      user-info-uri: http://localhost:10110/unified-auth/account_auth/current
 #      user-info-uri: http://localhost:1203/api/member
       prefer-token-info: false

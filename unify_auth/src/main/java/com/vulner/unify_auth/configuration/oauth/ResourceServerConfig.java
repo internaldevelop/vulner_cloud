@@ -24,11 +24,20 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .csrf().disable()
                 .exceptionHandling()
                 .authenticationEntryPoint((request, response, authException) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED))
+                // 需要权限控制的接口
                 .and()
-                .requestMatchers().antMatchers("/uni_auth/**")
+                .requestMatchers().antMatchers("/account_auth/**")
+                .requestMatchers().antMatchers("/account_manage/**")
                 .and()
                 .authorizeRequests()
-                .antMatchers("/uni_auth/**").authenticated()
+                .antMatchers("/account_auth/**").authenticated()
+                .antMatchers("/account_manage/**").authenticated()
+                // 权限放开的API接口
+                .and()
+                .authorizeRequests()
+                .antMatchers("/system/**").permitAll()
+                .antMatchers("/actuator/**").permitAll()
+                // 需要 basic 认证
                 .and()
                 .httpBasic();
     }

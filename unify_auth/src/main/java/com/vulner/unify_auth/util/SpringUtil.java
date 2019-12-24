@@ -1,4 +1,4 @@
-package com.vulner.unify_auth.service;
+package com.vulner.unify_auth.util;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

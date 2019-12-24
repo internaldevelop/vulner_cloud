@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.vulner.common.bean.po.AccountPo;
 import com.vulner.common.response.ResponseBean;
 import com.vulner.common.response.ResponseHelper;
-import com.vulner.unify_auth.service.SpringUtil;
+import com.vulner.unify_auth.util.SpringUtil;
 import com.vulner.unify_auth.dao.AccountsDao;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

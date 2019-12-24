@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public interface AccountsDao {
     @Select("SELECT\n" +
@@ -35,4 +37,20 @@ public interface AccountsDao {
             "WHERE\n" +
             "\ta.uuid=#{account_uuid};\n")
     int updatePasswdParams(PasswdParamsDto params);
+
+    @Select("SELECT\n" +
+            "\ta.uuid,\n" +
+            "\ta.account,\n" +
+            "\ta.`name`,\n" +
+            "\ta.`max_attempts`,\n" +
+            "\ta.`attempts`,\n" +
+            "\ta.`locked`,\n" +
+            "\ta.`status`,\n" +
+            "\ta.email,\n" +
+            "\ta.mobile,\n" +
+            "\ta.sex,\n" +
+            "\ta.birthday,\n" +
+            "\ta.create_time\n" +
+            "FROM accounts a\n")
+    List<AccountPo> fetchAllAccounts();
 }
