@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 
-@Component
+//@Component
 public class AuthFilter extends ZuulFilter {
 
     /**
