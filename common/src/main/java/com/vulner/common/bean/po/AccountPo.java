@@ -10,8 +10,8 @@ import java.util.Date;
 public class AccountPo {
     private int id;
     private String uuid;
-    private String account;
     private String name;
+    private String alias;
     private String password;
     private String salt;
     private int max_attempts;
@@ -20,7 +20,7 @@ public class AccountPo {
     private int status;
     private String email;
     private String mobile;
-    private short sex;
+    private String gender;
     private Date birthday;
     private Date create_time;
 }

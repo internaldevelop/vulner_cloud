@@ -437,421 +437,898 @@
 			"name": "3. 认证授权服务",
 			"item": [
 				{
-					"name": "示例授权申请",
-					"request": {
-						"auth": {
-							"type": "basic",
-							"basic": [
-								{
-									"key": "password",
-									"value": "password",
-									"type": "string"
+					"name": "示例",
+					"item": [
+						{
+							"name": "示例授权申请",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "password",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "user",
+											"type": "string"
+										}
+									]
 								},
-								{
-									"key": "username",
-									"value": "user",
-									"type": "string"
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/oauth/authorize?response_type=code&client_id=normal-app&redirect_uri=http://localhost:10901&scope=read&state=63879",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"oauth",
+										"authorize"
+									],
+									"query": [
+										{
+											"key": "response_type",
+											"value": "code"
+										},
+										{
+											"key": "client_id",
+											"value": "normal-app"
+										},
+										{
+											"key": "redirect_uri",
+											"value": "http://localhost:10901"
+										},
+										{
+											"key": "scope",
+											"value": "read"
+										},
+										{
+											"key": "state",
+											"value": "63879"
+										}
+									]
 								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/oauth/authorize?response_type=code&client_id=normal-app&redirect_uri=http://localhost:10901&scope=read&state=63879",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"oauth",
-								"authorize"
-							],
-							"query": [
-								{
-									"key": "response_type",
-									"value": "code"
-								},
-								{
-									"key": "client_id",
-									"value": "normal-app"
-								},
-								{
-									"key": "redirect_uri",
-									"value": "http://localhost:10901"
-								},
-								{
-									"key": "scope",
-									"value": "read"
-								},
-								{
-									"key": "state",
-									"value": "63879"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "示例授权模式获取令牌",
-					"request": {
-						"auth": {
-							"type": "basic",
-							"basic": [
-								{
-									"key": "password",
-									"value": "password",
-									"type": "string"
-								},
-								{
-									"key": "username",
-									"value": "user",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/x-www-form-urlencoded",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "grant_type",
-									"value": "authorization_code",
-									"type": "text"
-								},
-								{
-									"key": "code",
-									"value": "4rD0zL",
-									"type": "text"
-								},
-								{
-									"key": "client_id",
-									"value": "normal-app",
-									"type": "text"
-								},
-								{
-									"key": "redirect_url",
-									"value": "",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "http://localhost:8080/oauth/token",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"oauth",
-								"token"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "示例-密码模式授权",
-					"request": {
-						"auth": {
-							"type": "basic",
-							"basic": [
-								{
-									"key": "password",
-									"value": "android",
-									"type": "string"
-								},
-								{
-									"key": "username",
-									"value": "android",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:1202/auth/oauth/token?grant_type=password&username=哈哈&password=1",
-							"host": [
-								"localhost"
-							],
-							"port": "1202",
-							"path": [
-								"auth",
-								"oauth",
-								"token"
-							],
-							"query": [
-								{
-									"key": "grant_type",
-									"value": "password"
-								},
-								{
-									"key": "username",
-									"value": "哈哈"
-								},
-								{
-									"key": "password",
-									"value": "1"
-								}
-							]
-						},
-						"description": "参考：SpringCloud+SpringBoot+OAuth2+Spring Security+Redis实现的微服务统一认证授权\r\n    https://blog.csdn.net/WYA1993/article/details/85050120\r\n    对应源码：https://github.com/WYA1993/springcloud_oauth2.0"
-					},
-					"response": []
-				},
-				{
-					"name": "示例-成员权限信息",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:1202/auth/api/member?access_token=d401c995-8dea-4279-878b-b20f8d6cfad1",
-							"host": [
-								"localhost"
-							],
-							"port": "1202",
-							"path": [
-								"auth",
-								"api",
-								"member"
-							],
-							"query": [
-								{
-									"key": "access_token",
-									"value": "d401c995-8dea-4279-878b-b20f8d6cfad1"
-								}
-							]
-						},
-						"description": "参考：SpringCloud+SpringBoot+OAuth2+Spring Security+Redis实现的微服务统一认证授权\r\n    https://blog.csdn.net/WYA1993/article/details/85050120\r\n    对应源码：https://github.com/WYA1993/springcloud_oauth2.0"
-					},
-					"response": []
-				},
-				{
-					"name": "示例-成员登出",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "localhost:1202/auth/api/exit?access_token=d401c995-8dea-4279-878b-b20f8d6cfad1",
-							"host": [
-								"localhost"
-							],
-							"port": "1202",
-							"path": [
-								"auth",
-								"api",
-								"exit"
-							],
-							"query": [
-								{
-									"key": "access_token",
-									"value": "d401c995-8dea-4279-878b-b20f8d6cfad1"
-								}
-							]
-						},
-						"description": "参考：SpringCloud+SpringBoot+OAuth2+Spring Security+Redis实现的微服务统一认证授权\r\n    https://blog.csdn.net/WYA1993/article/details/85050120\r\n    对应源码：https://github.com/WYA1993/springcloud_oauth2.0"
-					},
-					"response": []
-				},
-				{
-					"name": "3.1 密码模式获取令牌",
-					"request": {
-						"auth": {
-							"type": "basic",
-							"basic": [
-								{
-									"key": "username",
-									"value": "android",
-									"type": "string"
-								},
-								{
-									"key": "password",
-									"value": "android",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"type": "text",
-								"value": "application/x-www-form-urlencoded",
-								"disabled": true
 							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{UNI_AUTH_URL}}/oauth/token?grant_type=password&username=user_1&password=12345678",
-							"host": [
-								"{{UNI_AUTH_URL}}"
-							],
-							"path": [
-								"oauth",
-								"token"
-							],
-							"query": [
-								{
-									"key": "grant_type",
-									"value": "password"
+							"response": []
+						},
+						{
+							"name": "示例授权模式获取令牌",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "password",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "user",
+											"type": "string"
+										}
+									]
 								},
-								{
-									"key": "username",
-									"value": "user_1"
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "grant_type",
+											"value": "authorization_code",
+											"type": "text"
+										},
+										{
+											"key": "code",
+											"value": "4rD0zL",
+											"type": "text"
+										},
+										{
+											"key": "client_id",
+											"value": "normal-app",
+											"type": "text"
+										},
+										{
+											"key": "redirect_url",
+											"value": "",
+											"type": "text"
+										}
+									]
 								},
-								{
-									"key": "password",
-									"value": "12345678"
+								"url": {
+									"raw": "http://localhost:8080/oauth/token",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"oauth",
+										"token"
+									]
 								}
-							]
+							},
+							"response": []
+						},
+						{
+							"name": "示例-密码模式授权",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "android",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "android",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:1202/auth/oauth/token?grant_type=password&username=哈哈&password=1",
+									"host": [
+										"localhost"
+									],
+									"port": "1202",
+									"path": [
+										"auth",
+										"oauth",
+										"token"
+									],
+									"query": [
+										{
+											"key": "grant_type",
+											"value": "password"
+										},
+										{
+											"key": "username",
+											"value": "哈哈"
+										},
+										{
+											"key": "password",
+											"value": "1"
+										}
+									]
+								},
+								"description": "参考：SpringCloud+SpringBoot+OAuth2+Spring Security+Redis实现的微服务统一认证授权\r\n    https://blog.csdn.net/WYA1993/article/details/85050120\r\n    对应源码：https://github.com/WYA1993/springcloud_oauth2.0"
+							},
+							"response": []
+						},
+						{
+							"name": "示例-成员权限信息",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:1202/auth/api/member?access_token=d401c995-8dea-4279-878b-b20f8d6cfad1",
+									"host": [
+										"localhost"
+									],
+									"port": "1202",
+									"path": [
+										"auth",
+										"api",
+										"member"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "d401c995-8dea-4279-878b-b20f8d6cfad1"
+										}
+									]
+								},
+								"description": "参考：SpringCloud+SpringBoot+OAuth2+Spring Security+Redis实现的微服务统一认证授权\r\n    https://blog.csdn.net/WYA1993/article/details/85050120\r\n    对应源码：https://github.com/WYA1993/springcloud_oauth2.0"
+							},
+							"response": []
+						},
+						{
+							"name": "示例-成员登出",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "localhost:1202/auth/api/exit?access_token=d401c995-8dea-4279-878b-b20f8d6cfad1",
+									"host": [
+										"localhost"
+									],
+									"port": "1202",
+									"path": [
+										"auth",
+										"api",
+										"exit"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "d401c995-8dea-4279-878b-b20f8d6cfad1"
+										}
+									]
+								},
+								"description": "参考：SpringCloud+SpringBoot+OAuth2+Spring Security+Redis实现的微服务统一认证授权\r\n    https://blog.csdn.net/WYA1993/article/details/85050120\r\n    对应源码：https://github.com/WYA1993/springcloud_oauth2.0"
+							},
+							"response": []
 						}
-					},
-					"response": []
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
 				},
 				{
-					"name": "3.2 验证令牌",
-					"request": {
-						"auth": {
-							"type": "basic",
-							"basic": [
+					"name": "3.1 密码模式认证授权",
+					"item": [
+						{
+							"name": "3.1.1 密码模式获取令牌",
+							"event": [
 								{
-									"key": "username",
-									"value": "android",
-									"type": "string"
+									"listen": "test",
+									"script": {
+										"id": "227d6160-c8b1-4fa4-9c79-e3ff0bc2e610",
+										"exec": [
+											"pm.test(\"oauth token\", function () {",
+											"    var jsonData = pm.response.json();",
+											"",
+											"    pm.environment.set(\"access_token\", jsonData.access_token);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "android",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "android",
+											"type": "string"
+										}
+									]
 								},
-								{
-									"key": "password",
-									"value": "android",
-									"type": "string"
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded",
+										"disabled": true
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/oauth/token?grant_type=password&username=user_3&password=12345678",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"oauth",
+										"token"
+									],
+									"query": [
+										{
+											"key": "grant_type",
+											"value": "password"
+										},
+										{
+											"key": "username",
+											"value": "user_3"
+										},
+										{
+											"key": "password",
+											"value": "12345678"
+										}
+									]
 								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"type": "text",
-								"value": "application/json"
 							},
-							{
-								"key": "Accept1",
-								"type": "text",
-								"value": "application/json",
-								"disabled": true
-							}
-						],
-						"url": {
-							"raw": "{{UNI_AUTH_URL}}/oauth/check_token?token=443325dd-c3ca-4db1-8bbb-db0ab34bfca2",
-							"host": [
-								"{{UNI_AUTH_URL}}"
-							],
-							"path": [
-								"oauth",
-								"check_token"
-							],
-							"query": [
-								{
-									"key": "token",
-									"value": "443325dd-c3ca-4db1-8bbb-db0ab34bfca2"
+							"response": []
+						},
+						{
+							"name": "3.1.2 验证令牌",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "username",
+											"value": "android",
+											"type": "string"
+										},
+										{
+											"key": "password",
+											"value": "android",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/oauth/check_token?token={{access_token}}",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"oauth",
+										"check_token"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": "{{access_token}}"
+										}
+									]
 								}
-							]
+							},
+							"response": []
 						}
-					},
-					"response": []
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
 				},
 				{
-					"name": "3.3 注销",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Accept",
-								"type": "text",
-								"value": "application/json"
-							},
-							{
-								"key": "Accept1",
-								"type": "text",
-								"value": "application/json",
-								"disabled": true
-							}
-						],
-						"url": {
-							"raw": "{{UNI_AUTH_URL}}/uni_auth/exit?access_token=73724078-3205-432b-8b01-bd58eb50ecc7",
-							"host": [
-								"{{UNI_AUTH_URL}}"
-							],
-							"path": [
-								"uni_auth",
-								"exit"
-							],
-							"query": [
-								{
-									"key": "access_token",
-									"value": "73724078-3205-432b-8b01-bd58eb50ecc7"
+					"name": "3.10 系统状态",
+					"item": [
+						{
+							"name": "3.10.1 运行状态",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/system/run_status",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"system",
+										"run_status"
+									]
 								}
-							]
+							},
+							"response": []
+						},
+						{
+							"name": "3.10.2 测试权限放开接口",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/actuator/info_test",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"actuator",
+										"info_test"
+									]
+								}
+							},
+							"response": []
 						}
-					},
-					"response": []
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
 				},
 				{
-					"name": "3.4 当前用户",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Accept1",
-								"value": "application/json",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"url": {
-							"raw": "{{UNI_AUTH_URL}}/uni_auth/user?access_token=d31eb17f-19e9-4a02-8efd-3efb7e692b07",
-							"host": [
-								"{{UNI_AUTH_URL}}"
-							],
-							"path": [
-								"uni_auth",
-								"user"
-							],
-							"query": [
-								{
-									"key": "access_token",
-									"value": "d31eb17f-19e9-4a02-8efd-3efb7e692b07"
+					"name": "3.11 用户登录状态",
+					"item": [
+						{
+							"name": "3.11.1 测试用户信息",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/account_auth/test_info?access_token={{access_token}}",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"account_auth",
+										"test_info"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}"
+										}
+									]
 								}
-							]
+							},
+							"response": []
+						},
+						{
+							"name": "3.11.2 当前用户",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Accept1",
+										"value": "application/json",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/account_auth/current?access_token={{access_token}}",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"account_auth",
+										"current"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.11.3 注销",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/account_auth/exit?access_token={{access_token}}",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"account_auth",
+										"exit"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}"
+										}
+									]
+								}
+							},
+							"response": []
 						}
-					},
-					"response": []
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "3.12 账号管理",
+					"item": [
+						{
+							"name": "3.12.1 所有账号",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/account_manage/all?access_token={{access_token}}",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"account_manage",
+										"all"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.12.2 新建账号",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/account_manage/add",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"account_manage",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.12.3 删除账号",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/account_manage/delete?access_token={{access_token}}&account_uuid",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"account_manage",
+										"delete"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}"
+										},
+										{
+											"key": "account_uuid",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.12.4 更新账号",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/account_manage/update?access_token={{access_token}}&uuid=df6cdd4a-1cad-11ea-b42f-0242ac110003&alias=33&mobile=999&email=111@222&birthday=2001/12/21&gender=M",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"account_manage",
+										"update"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}"
+										},
+										{
+											"key": "uuid",
+											"value": "df6cdd4a-1cad-11ea-b42f-0242ac110003"
+										},
+										{
+											"key": "alias",
+											"value": "33",
+											"description": "别名或姓名"
+										},
+										{
+											"key": "mobile",
+											"value": "999",
+											"description": "手机号码"
+										},
+										{
+											"key": "email",
+											"value": "111@222",
+											"description": "电子信箱"
+										},
+										{
+											"key": "birthday",
+											"value": "2001/12/21",
+											"description": "出生日期"
+										},
+										{
+											"key": "gender",
+											"value": "M",
+											"description": "性别：F-女；M-男"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.12.5 回收账号",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/account_manage/revoke?access_token={{access_token}}&account_uuid",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"account_manage",
+										"revoke"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}"
+										},
+										{
+											"key": "account_uuid",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.12.6 激活账号",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/account_manage/activate?access_token={{access_token}}",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"account_manage",
+										"activate"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.12.7 解锁账号",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/account_manage/unlock?access_token={{access_token}}",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"account_manage",
+										"unlock"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -881,19 +1358,19 @@
 	],
 	"variable": [
 		{
-			"id": "0ac74ea4-80f6-4ab0-a618-a050b1257cb1",
+			"id": "1723c94b-2b7c-4c4e-a8e5-0cb160c3cb8e",
 			"key": "SYS_CODE_URL",
 			"value": "http://localhost:10113/sys_code",
 			"type": "string"
 		},
 		{
-			"id": "96f8e1e2-a1c1-4736-8b49-2e1fe53a8741",
+			"id": "e07d47ba-c335-4134-af5a-1f253bab3bd8",
 			"key": "SYS_LOG_URL",
 			"value": "http://localhost:10116/sys_log",
 			"type": "string"
 		},
 		{
-			"id": "33577b8d-a620-443a-aa9a-4154d47664db",
+			"id": "95f46b9c-33fb-4582-9fe4-4c559e03bacd",
 			"key": "UNI_AUTH_URL",
 			"value": "http://localhost:10114",
 			"type": "string"

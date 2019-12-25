@@ -4,11 +4,18 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
 import java.io.*;
+import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.IntStream;
 
 public class ObjUtils {
 
@@ -58,4 +65,62 @@ public class ObjUtils {
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 
+    /**
+     * @Title: combineObjectProps
+     * @Description: 该方法是用于相同对象不同属性值的合并，如果两个相同对象中同一属性都有值，
+     *               那么 sourceObj 中的值会覆盖 targetObj 的值
+     *
+     *               Spring 中有 BeanUtils.copyProperties(Object source, Object target)
+     * @author: Jason
+     * @date: 2019/12/25
+     * @param sourceObj
+     *            被提取属性的对象
+     * @param targetObj
+     *            将要被合并或被覆盖属性的对象
+     * @return targetObj 合并后的对象
+     * @return: Object
+     */
+    public static Object combineObjectProps(Object targetObj, Object sourceObj) {
+        Class sourceClass = sourceObj.getClass();
+        Class targetClass = targetObj.getClass();
+
+        Field[] sourceFields = sourceClass.getDeclaredFields();
+        Field[] targetFields = sourceClass.getDeclaredFields();
+        for (int i = 0; i < sourceFields.length; i++) {
+            Field sourceField = sourceFields[i];
+            Field targetField = targetFields[i];
+            sourceField.setAccessible(true);
+            targetField.setAccessible(true);
+            try {
+                if (sourceField.get(sourceObj) != null) {
+                    targetField.set(targetObj, sourceField.get(sourceObj));
+                }
+            } catch (IllegalArgumentException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return targetObj;
+    }
+
+    /**
+     * @Title: getValuePropertyNames
+     * @Description: 该方法获取所有有值的方法
+     * @author: Jason
+     * @date: 2019/12/25
+     * @param source
+     *            被提取属性的对象
+     * @return 属性字符串数组
+     * @return: String[]
+     */
+    public static String[] getValuePropertyNames (Object source) {
+        final BeanWrapper src = new BeanWrapperImpl(source);
+        java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();
+        Set<String> emptyNames = new HashSet<>();
+        for(java.beans.PropertyDescriptor pd : pds) {
+            Object srcValue = src.getPropertyValue(pd.getName());
+            if (null != srcValue) emptyNames.add(pd.getName());
+        }
+        String[] result = new String[emptyNames.size()];
+        return emptyNames.toArray(result);
+    }
 }

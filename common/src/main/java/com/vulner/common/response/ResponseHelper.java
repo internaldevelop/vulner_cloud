@@ -1,9 +1,13 @@
 package com.vulner.common.response;
 
+import com.alibaba.fastjson.JSONArray;
 import com.vulner.common.bean.dto.ErrorCodeDto;
 import com.vulner.common.utils.ObjUtils;
 import com.vulner.common.utils.TimeUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ResponseHelper {
@@ -80,6 +84,15 @@ public class ResponseHelper {
         responseBean.setTimeStamp(TimeUtils.getCurrentSystemTimestamp());
         responseBean.setPayload(data);
         return responseBean;
+    }
+
+    public static ResponseBean invalidParams(BindingResult bindingResult) {
+        List<String> errMsgList = new ArrayList<>();
+        List<ObjectError> errorList = bindingResult.getAllErrors();
+        for (ObjectError error : errorList) {
+            errMsgList.add(error.getDefaultMessage());
+        }
+        return error("ERROR_INVALID_PARAMETER", errMsgList);
     }
 
     public static ResponseBean success() {

@@ -62,7 +62,7 @@ public class MyUserDetailsService implements UserDetailsService {
                 grantedAuthorities.add(authority);
             }
         }
-        User user = new User(accountPo.getAccount(), accountPo.getPassword(),
+        User user = new User(accountPo.getName(), accountPo.getPassword(),
                 enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, grantedAuthorities);
         return user;
     }
