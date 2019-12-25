@@ -1,5 +1,6 @@
 package com.vulner.common.bean.po;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +22,8 @@ public class AccountPo {
     private String email;
     private String mobile;
     private String gender;
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date birthday;
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date create_time;
 }

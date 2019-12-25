@@ -2,6 +2,7 @@ package com.vulner.unify_auth.controller;
 
 import com.vulner.common.response.ResponseHelper;
 import com.vulner.unify_auth.bean.dto.AccountPersonalInfoDto;
+import com.vulner.unify_auth.bean.dto.AccountRegisterDto;
 import com.vulner.unify_auth.service.AccountsManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -9,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @RestController
 @RequestMapping(value = "/account_manage")
@@ -23,11 +25,11 @@ public class AccountsManageApi {
         return accountsManageService.getAllAccounts();
     }
 
-    @PostMapping(value = "/add", produces = "application/json")
-    @PreAuthorize("hasAnyAuthority('statistics')")
+    @GetMapping(value = "/self", produces = "application/json")
+    @PreAuthorize("hasAnyAuthority('current-user')")
     public @ResponseBody
-    Object addAccount() {
-        return "OK";
+    Object getSelfAccountInfo(Principal user) {
+        return accountsManageService.getAccountInfo(user);
     }
 
     @DeleteMapping(value = "/delete", produces = "application/json")

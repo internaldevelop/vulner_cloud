@@ -807,7 +807,7 @@
 					"_postman_isSubFolder": true
 				},
 				{
-					"name": "3.10 系统状态",
+					"name": "3.10 系统",
 					"item": [
 						{
 							"name": "3.10.1 运行状态",
@@ -870,6 +870,93 @@
 									"path": [
 										"actuator",
 										"info_test"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.10.3 注册账号",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "user9991",
+											"description": "账号名",
+											"type": "text"
+										},
+										{
+											"key": "alias",
+											"value": "332",
+											"description": "别名或姓名",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "12345678",
+											"description": "账号密码",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "11@2",
+											"description": "电子信箱",
+											"type": "text"
+										},
+										{
+											"key": "mobile",
+											"value": "999",
+											"description": "手机号码",
+											"type": "text"
+										},
+										{
+											"key": "gender",
+											"value": "M",
+											"description": "性别：F-女；M-男",
+											"type": "text"
+										},
+										{
+											"key": "birthday",
+											"value": "2001/12/21",
+											"description": "出生日期",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/system/account/register",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"system",
+										"account",
+										"register"
 									]
 								}
 							},
@@ -1046,12 +1133,12 @@
 							"response": []
 						},
 						{
-							"name": "3.12.2 新建账号",
+							"name": "3.12.2 获取自身账号信息",
 							"request": {
 								"auth": {
 									"type": "noauth"
 								},
-								"method": "POST",
+								"method": "GET",
 								"header": [
 									{
 										"key": "Accept",
@@ -1063,32 +1150,22 @@
 										"type": "text",
 										"value": "application/json",
 										"disabled": true
-									},
-									{
-										"key": "Content-Type",
-										"name": "Content-Type",
-										"value": "application/x-www-form-urlencoded",
-										"type": "text"
 									}
 								],
-								"body": {
-									"mode": "urlencoded",
-									"urlencoded": [
-										{
-											"key": "access_token",
-											"value": "{{access_token}}",
-											"type": "text"
-										}
-									]
-								},
 								"url": {
-									"raw": "{{UNI_AUTH_URL}}/account_manage/add",
+									"raw": "{{UNI_AUTH_URL}}/account_manage/self?access_token={{access_token}}",
 									"host": [
 										"{{UNI_AUTH_URL}}"
 									],
 									"path": [
 										"account_manage",
-										"add"
+										"self"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}"
+										}
 									]
 								}
 							},
@@ -1155,51 +1232,69 @@
 										"type": "text",
 										"value": "application/json",
 										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text"
 									}
 								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}",
+											"description": "访问权限控制令牌",
+											"type": "text"
+										},
+										{
+											"key": "uuid",
+											"value": "df6cdd4a-1cad-11ea-b42f-0242ac110003",
+											"description": "账号的uuid",
+											"type": "text"
+										},
+										{
+											"key": "alias",
+											"value": "332",
+											"description": "别名或姓名",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "11@2",
+											"description": "电子信箱",
+											"type": "text"
+										},
+										{
+											"key": "mobile",
+											"value": "999",
+											"description": "手机号码",
+											"type": "text"
+										},
+										{
+											"key": "gender",
+											"value": "M",
+											"description": "性别：F-女；M-男",
+											"type": "text"
+										},
+										{
+											"key": "birthday",
+											"value": "2001/12/21",
+											"description": "出生日期",
+											"type": "text"
+										}
+									]
+								},
 								"url": {
-									"raw": "{{UNI_AUTH_URL}}/account_manage/update?access_token={{access_token}}&uuid=df6cdd4a-1cad-11ea-b42f-0242ac110003&alias=33&mobile=999&email=111@222&birthday=2001/12/21&gender=M",
+									"raw": "{{UNI_AUTH_URL}}/account_manage/update",
 									"host": [
 										"{{UNI_AUTH_URL}}"
 									],
 									"path": [
 										"account_manage",
 										"update"
-									],
-									"query": [
-										{
-											"key": "access_token",
-											"value": "{{access_token}}"
-										},
-										{
-											"key": "uuid",
-											"value": "df6cdd4a-1cad-11ea-b42f-0242ac110003"
-										},
-										{
-											"key": "alias",
-											"value": "33",
-											"description": "别名或姓名"
-										},
-										{
-											"key": "mobile",
-											"value": "999",
-											"description": "手机号码"
-										},
-										{
-											"key": "email",
-											"value": "111@222",
-											"description": "电子信箱"
-										},
-										{
-											"key": "birthday",
-											"value": "2001/12/21",
-											"description": "出生日期"
-										},
-										{
-											"key": "gender",
-											"value": "M",
-											"description": "性别：F-女；M-男"
-										}
 									]
 								}
 							},
@@ -1358,19 +1453,19 @@
 	],
 	"variable": [
 		{
-			"id": "1723c94b-2b7c-4c4e-a8e5-0cb160c3cb8e",
+			"id": "0f48fa24-74e9-4cf7-8bee-856ca54ed1da",
 			"key": "SYS_CODE_URL",
 			"value": "http://localhost:10113/sys_code",
 			"type": "string"
 		},
 		{
-			"id": "e07d47ba-c335-4134-af5a-1f253bab3bd8",
+			"id": "961e4dcd-be03-477b-8747-b1f3d6712272",
 			"key": "SYS_LOG_URL",
 			"value": "http://localhost:10116/sys_log",
 			"type": "string"
 		},
 		{
-			"id": "95f46b9c-33fb-4582-9fe4-4c559e03bacd",
+			"id": "1bf86367-4566-4e93-8e9d-258a53c45364",
 			"key": "UNI_AUTH_URL",
 			"value": "http://localhost:10114",
 			"type": "string"

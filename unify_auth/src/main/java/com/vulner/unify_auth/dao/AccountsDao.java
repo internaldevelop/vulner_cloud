@@ -1,7 +1,9 @@
 package com.vulner.unify_auth.dao;
 
 import com.vulner.common.bean.po.AccountPo;
+import com.vulner.unify_auth.bean.dto.AccountRegisterDto;
 import com.vulner.unify_auth.bean.dto.PasswdParamsDto;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Component;
@@ -70,4 +72,38 @@ public interface AccountsDao {
             "WHERE\n" +
             "\ta.uuid=#{uuid}")
     int updateAccountPersonalInfo(AccountPo accountPo);
+
+    @Insert("INSERT INTO accounts (\n" +
+            "\t`uuid`,\n" +
+            "\t`name`,\n" +
+            "\t`alias`,\n" +
+            "\t`password`,\n" +
+            "\t`salt`,\n" +
+            "\t`max_attempts`,\n" +
+            "\t`attempts`,\n" +
+            "\t`locked`,\n" +
+            "\t`status`,\n" +
+            "\t`email`,\n" +
+            "\t`mobile`,\n" +
+            "\t`gender`,\n" +
+            "\t`birthday`,\n" +
+            "\t`create_time`\n" +
+            ")\n" +
+            "VALUES(\n" +
+            "\t#{uuid},\n" +
+            "\t#{name},\n" +
+            "\t#{alias},\n" +
+            "\t#{password},\n" +
+            "\t#{salt},\n" +
+            "\t#{max_attempts},\n" +
+            "\t#{attempts},\n" +
+            "\t#{locked},\n" +
+            "\t#{status},\n" +
+            "\t#{email},\n" +
+            "\t#{mobile},\n" +
+            "\t#{gender},\n" +
+            "\t#{birthday},\n" +
+            "\t#{create_time}\n" +
+            ")")
+    int addAccount(AccountPo accountPo);
 }

@@ -1,13 +1,16 @@
 package com.vulner.unify_auth.controller;
 
+import com.vulner.unify_auth.bean.dto.AccountRegisterDto;
+import com.vulner.unify_auth.service.AccountsManageService;
 import com.vulner.unify_auth.service.ErrorCodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.vulner.common.response.ResponseHelper;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 public class SystemApi {
@@ -17,6 +20,9 @@ public class SystemApi {
     String appName;
     @Value("${myprops.defaultZone}")
     String defaultZone;
+
+    @Autowired
+    private AccountsManageService accountsManageService;
 
     @RequestMapping(value = "/actuator/info", method = RequestMethod.GET)
     @ResponseBody
@@ -35,5 +41,14 @@ public class SystemApi {
     @ResponseBody
     public Object runStatus() {
         return actuatorInfo();
+    }
+
+    @PostMapping(value = "/system/account/register", produces = "application/json")
+    public @ResponseBody
+    Object addAccount(@Valid AccountRegisterDto registerDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return ResponseHelper.invalidParams(bindingResult);
+        }
+        return accountsManageService.registerAccount(registerDto);
     }
 }
