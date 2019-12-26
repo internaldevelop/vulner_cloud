@@ -3,6 +3,7 @@ package com.vulner.common.utils;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -66,6 +67,15 @@ public class TimeUtils {
      */
     static public Date getCurrentDate() {
         return new Date();
+    }
+
+    /**
+     * 获取当前时间 java.time.LocalDateTime 类型
+     *
+     * @return java.time.LocalDateTime now
+     */
+    public static LocalDateTime getNowTime() {
+        return LocalDateTime.now();
     }
 
     /**

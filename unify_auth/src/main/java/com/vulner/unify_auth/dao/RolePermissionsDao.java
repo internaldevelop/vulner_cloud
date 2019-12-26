@@ -6,6 +6,13 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * @author Jason
+ * @create 2019/12/26
+ * @since 1.0.0
+ * @description 角色权限映射表的操作（Mybatis）
+ */
+
 @Component
 public interface RolePermissionsDao {
     @Select("SELECT\n" +

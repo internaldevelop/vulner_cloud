@@ -6,15 +6,15 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="system_code" />
-        <module name="firmware_fetch" />
-        <module name="common" />
-        <module name="bend_server" />
-        <module name="firmware_analyze" />
-        <module name="system_log" />
-        <module name="aqmp_bus" />
-        <module name="gateway_zuul" />
         <module name="unify_auth" />
+        <module name="common" />
+        <module name="system_code" />
+        <module name="firmware_analyze" />
+        <module name="aqmp_bus" />
+        <module name="firmware_fetch" />
+        <module name="gateway_zuul" />
+        <module name="bend_server" />
+        <module name="system_log" />
         <module name="register_server" />
         <module name="gateway_server" />
       </profile>

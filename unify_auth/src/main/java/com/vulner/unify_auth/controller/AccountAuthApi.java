@@ -15,6 +15,12 @@ import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author Jason
+ * @create 2019/12/26
+ * @since 1.0.0
+ * @description 账号认证授权 API 接口
+ */
 @RestController
 @RequestMapping(value = "/account_auth")
 public class AccountAuthApi {
@@ -27,6 +33,11 @@ public class AccountAuthApi {
     @Autowired
     private ConsumerTokenServices consumerTokenServices;
 
+    /**
+     * 系统测试：返回当前认证的用户信息
+     * @param user 当前认证的用户
+     * @return 自定义的用户信息
+     */
     @GetMapping(value = "/test_info", produces = "application/json")
     public @ResponseBody
     Object userInfo(OAuth2Authentication user) {
@@ -36,13 +47,23 @@ public class AccountAuthApi {
         return ResponseHelper.success(userInfo);
     }
 
-    // 不需要封装返回数据
+    /**
+     * 返回当前认证用户的信息，即 access_token 对应的用户
+     * 用户对象原封不动返回，不要做数据变换或数据封装，其它基于 SpringSecurity 的系统才能识别
+     * @param user access_token 对应的用户
+     * @return access_token 对应的用户信息
+     */
     @GetMapping(value = "/current", produces = "application/json")
     public @ResponseBody
     Principal user(Principal user) {
         return user;
     }
 
+    /**
+     * 用户注销，回收 access_token
+     * @param accessToken 已认证用户的 access_token
+     * @return ResponseBean
+     */
     @DeleteMapping(value = "/exit")
     public @ResponseBody
     ResponseBean revokeToken(@RequestParam("access_token") String accessToken) {

@@ -4,6 +4,7 @@ import com.vulner.common.bean.po.AccountPo;
 import com.vulner.common.enumeration.PwdLockStatusEnum;
 import com.vulner.unify_auth.bean.dto.PasswdParamsDto;
 import com.vulner.unify_auth.dao.AccountsDao;
+import com.vulner.unify_auth.service.helper.PasswordHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
@@ -24,6 +25,8 @@ public class AuthenticationSuccessEventListener implements ApplicationListener<A
 
     @Autowired
     private AccountsDao accountsDao;
+    @Autowired
+    private PasswordHelper passwordHelper;
 
     @Override
     public void onApplicationEvent(AuthenticationSuccessEvent authenticationSuccessEvent) {
@@ -37,22 +40,6 @@ public class AuthenticationSuccessEventListener implements ApplicationListener<A
         // 处理账号认证成功事件
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String username = userDetails.getUsername();
-        // 拿到用户的PO对象
-        AccountPo accountPo = accountsDao.findByAccount(username);
-        if (accountPo == null) {
-            return;
-        }
-
-        // 准备初始化密码参数
-        PasswdParamsDto paramsDto = new PasswdParamsDto();
-        paramsDto.setAccount_uuid(accountPo.getUuid());
-        // 最大尝试次数保持不变
-        paramsDto.setMax_attempts(accountPo.getMax_attempts());
-        // 已尝试次数清零
-        paramsDto.setAttempts(0);
-        // 消除密码锁定状态
-        paramsDto.setLocked(PwdLockStatusEnum.UNLOCKED.getLocked());
-
-        accountsDao.updatePasswdParams(paramsDto);
+        passwordHelper.clearFailedAttempt(username);
     }
 }

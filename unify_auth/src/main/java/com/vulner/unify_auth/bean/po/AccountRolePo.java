@@ -1,4 +1,4 @@
-package com.vulner.common.bean.po;
+package com.vulner.unify_auth.bean.po;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
@@ -8,13 +8,11 @@ import java.util.Date;
 
 @Component
 @Data
-public class RolePo {
+public class AccountRolePo {
     private int id;
     private String uuid;
-    private String name;
-    private short valid;
+    private String account_uuid;
+    private String role_uuid;
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date create_time;
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date update_time;
 }

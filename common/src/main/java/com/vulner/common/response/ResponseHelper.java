@@ -95,6 +95,15 @@ public class ResponseHelper {
         return error("ERROR_INVALID_PARAMETER", errMsgList);
     }
 
+    public static ResponseBean blankParams(String... paramList) {
+        List<String> errMsgList = new ArrayList<>();
+        for (String param : paramList) {
+            String message = String.format("%s不能为空", param);
+            errMsgList.add(message);
+        }
+        return error("ERROR_INVALID_PARAMETER", errMsgList);
+    }
+
     public static ResponseBean success() {
         return success(null);
     }

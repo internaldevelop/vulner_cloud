@@ -1,10 +1,12 @@
 package com.vulner.unify_auth.bean.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Component
@@ -30,5 +32,6 @@ public class AccountRegisterDto {
     private String gender;
 
     @NotNull(message = "出生日期不能为空")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date birthday;
 }

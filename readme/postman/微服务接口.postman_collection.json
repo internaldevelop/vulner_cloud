@@ -877,6 +877,23 @@
 						},
 						{
 							"name": "3.10.3 注册账号",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "85422a26-3bc8-4579-bd2c-d03b71418dd7",
+										"exec": [
+											"pm.test(\"oauth token\", function () {",
+											"    var jsonData = pm.response.json();",
+											"",
+											"    pm.environment.set(\"account_uuid\", jsonData.payload.uuid);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
 							"request": {
 								"auth": {
 									"type": "noauth"
@@ -906,7 +923,7 @@
 									"urlencoded": [
 										{
 											"key": "name",
-											"value": "user9991",
+											"value": "user91",
 											"description": "账号名",
 											"type": "text"
 										},
@@ -1192,7 +1209,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{UNI_AUTH_URL}}/account_manage/delete?access_token={{access_token}}&account_uuid",
+									"raw": "{{UNI_AUTH_URL}}/account_manage/delete?access_token={{access_token}}&account_uuid={{account_uuid}}",
 									"host": [
 										"{{UNI_AUTH_URL}}"
 									],
@@ -1207,7 +1224,7 @@
 										},
 										{
 											"key": "account_uuid",
-											"value": null
+											"value": "{{account_uuid}}"
 										}
 									]
 								}
@@ -1321,7 +1338,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{UNI_AUTH_URL}}/account_manage/revoke?access_token={{access_token}}&account_uuid",
+									"raw": "{{UNI_AUTH_URL}}/account_manage/revoke?access_token={{access_token}}&account_uuid={{account_uuid}}",
 									"host": [
 										"{{UNI_AUTH_URL}}"
 									],
@@ -1336,7 +1353,7 @@
 										},
 										{
 											"key": "account_uuid",
-											"value": null
+											"value": "{{account_uuid}}"
 										}
 									]
 								}
@@ -1364,7 +1381,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{UNI_AUTH_URL}}/account_manage/activate?access_token={{access_token}}",
+									"raw": "{{UNI_AUTH_URL}}/account_manage/activate?access_token={{access_token}}&account_uuid={{account_uuid}}",
 									"host": [
 										"{{UNI_AUTH_URL}}"
 									],
@@ -1376,6 +1393,10 @@
 										{
 											"key": "access_token",
 											"value": "{{access_token}}"
+										},
+										{
+											"key": "account_uuid",
+											"value": "{{account_uuid}}"
 										}
 									]
 								}
@@ -1403,7 +1424,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{UNI_AUTH_URL}}/account_manage/unlock?access_token={{access_token}}",
+									"raw": "{{UNI_AUTH_URL}}/account_manage/unlock?access_token={{access_token}}&account_uuid={{account_uuid}}",
 									"host": [
 										"{{UNI_AUTH_URL}}"
 									],
@@ -1415,7 +1436,74 @@
 										{
 											"key": "access_token",
 											"value": "{{access_token}}"
+										},
+										{
+											"key": "account_uuid",
+											"value": "{{account_uuid}}",
+											"description": "需要密码解锁的账号"
 										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.12.8 修改密码",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}",
+											"description": "访问权限控制令牌",
+											"type": "text"
+										},
+										{
+											"key": "old_pwd",
+											"value": "12345678",
+											"description": "旧密码",
+											"type": "text"
+										},
+										{
+											"key": "new_pwd",
+											"value": "22345678",
+											"description": "新密码",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/account_manage/change_pwd",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"account_manage",
+										"change_pwd"
 									]
 								}
 							},
@@ -1453,19 +1541,19 @@
 	],
 	"variable": [
 		{
-			"id": "0f48fa24-74e9-4cf7-8bee-856ca54ed1da",
+			"id": "24aef850-b06f-4424-8b5a-43c03c3bdf9a",
 			"key": "SYS_CODE_URL",
 			"value": "http://localhost:10113/sys_code",
 			"type": "string"
 		},
 		{
-			"id": "961e4dcd-be03-477b-8747-b1f3d6712272",
+			"id": "faf134db-a916-449d-9ab3-b032db3fb4bf",
 			"key": "SYS_LOG_URL",
 			"value": "http://localhost:10116/sys_log",
 			"type": "string"
 		},
 		{
-			"id": "1bf86367-4566-4e93-8e9d-258a53c45364",
+			"id": "61776250-7521-48f1-8ee4-2fec4ce26971",
 			"key": "UNI_AUTH_URL",
 			"value": "http://localhost:10114",
 			"type": "string"
