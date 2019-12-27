@@ -169,12 +169,49 @@ public class AccountsManageService {
         return ResponseHelper.success(passwdParams);
     }
 
-//    public ResponseBean changePassword(String accountName, String oldPwd, String newPwd) {
-//        // 判断新旧密码是否完全相同
-//
-//        // 校验旧密码
-//
-//        // 修改新密码
-//
-//    }
+    public ResponseBean changePassword(String accountName, String oldPwd, String newPwd) {
+        // 判断用户名是否有效
+        if (Strings.isNullOrEmpty(accountName)) {
+            return ResponseHelper.error("ERROR_ILLEGAL_USER_NAME");
+        }
+
+        // 读取用户的账户信息
+        AccountPo accountPo = accountsDao.findByAccount(accountName);
+        if (accountPo == null) {
+            return ResponseHelper.error("ERROR_ACCOUNT_NOT_EXIST", accountName);
+        }
+
+        // 密码锁定时，不允许修改
+        if (accountPo.getLocked() == PwdLockStatusEnum.LOCKED.getLocked()) {
+            return ResponseHelper.error("ERROR_PASSWORD_LOCKED");
+        }
+
+        // 判断新旧密码是否完全相同
+        if (Strings.isNullOrEmpty(oldPwd)) {
+            return ResponseHelper.error("ERROR_PARAMS_MISSING", "必须输入旧密码进行身份验证");
+        }
+        if (Strings.isNullOrEmpty(newPwd)) {
+            return ResponseHelper.error("ERROR_PARAMS_MISSING", "新密码不能为空");
+        }
+        if (oldPwd.equals(newPwd)) {
+            return ResponseHelper.error("ERROR_NEW_PWD_EQUALS_OLD");
+        }
+
+        // 校验旧密码
+        if (!accountPo.getPassword().equals(oldPwd)) {
+            PasswdParamsDto passwdParams = passwordHelper.increaseFailedAttempt(accountName);
+            return ResponseHelper.error("ERROR_INVALID_PASSWORD", passwdParams);
+        }
+
+        // 校验成功后，清除尝试次数
+        PasswdParamsDto passwdParamsDto = passwordHelper.clearFailedAttempt(accountName);
+
+        // 修改新密码
+        int row = accountsDao.updatePassword(accountPo.getUuid(), newPwd);
+        if (row != 1) {
+            return ResponseHelper.error("ERROR_CHANGE_PWD_FAILED");
+        }
+
+        return ResponseHelper.success(passwdParamsDto);
+    }
 }

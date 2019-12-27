@@ -6,6 +6,7 @@ import com.vulner.unify_auth.bean.dto.AccountPersonalInfoDto;
 import com.vulner.unify_auth.bean.dto.AccountRegisterDto;
 import com.vulner.unify_auth.service.AccountsManageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ import java.security.Principal;
  * @description 账号管理 API 接口
  */
 @RestController
-@RequestMapping(value = "/account_manage")
+@RequestMapping(value = "/account_manage", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AccountsManageApi {
     @Autowired
     private AccountsManageService accountsManageService;
@@ -118,7 +119,7 @@ public class AccountsManageApi {
      * @param accountUuid 账号的 UUID
      * @return ResponseBean
      */
-    @GetMapping(value = "/unlock", produces = "application/json")
+    @GetMapping(value = "/unlock_pwd", produces = "application/json")
     @PreAuthorize("hasAnyAuthority('statistics')")
     public @ResponseBody
     Object unlockAccount(@RequestParam("account_uuid") String accountUuid) {
@@ -126,5 +127,17 @@ public class AccountsManageApi {
             return ResponseHelper.blankParams("账号 UUID ");
         }
         return accountsManageService.unlockAccountPassword(accountUuid);
+    }
+
+    @PostMapping(value = "/change_pwd", produces = "application/json")
+    @PreAuthorize("hasAnyAuthority('statistics')")
+    public @ResponseBody
+    Object changePassword(Principal user,
+                          @RequestParam("old_pwd") String oldPwd,
+                          @RequestParam("new_pwd") String newPwd) {
+        if (user == null || Strings.isNullOrEmpty(user.getName())) {
+            return ResponseHelper.error("ERROR_INVALID_ACCOUNT");
+        }
+        return accountsManageService.changePassword(user.getName(), oldPwd, newPwd);
     }
 }

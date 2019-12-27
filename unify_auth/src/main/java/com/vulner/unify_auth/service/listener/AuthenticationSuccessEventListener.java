@@ -14,6 +14,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedHashMap;
+
 /**
  * @author Jason
  * @create 2019/12/23
@@ -32,14 +34,20 @@ public class AuthenticationSuccessEventListener implements ApplicationListener<A
     public void onApplicationEvent(AuthenticationSuccessEvent authenticationSuccessEvent) {
         Authentication authentication = authenticationSuccessEvent.getAuthentication();
         Object details = authentication.getDetails();
+
         if (details instanceof WebAuthenticationDetails) {
             // 客户端认证，不处理
             return;
         }
 
         // 处理账号认证成功事件
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String username = userDetails.getUsername();
-        passwordHelper.clearFailedAttempt(username);
+        if (details instanceof LinkedHashMap &&
+                ((LinkedHashMap)details).containsKey("grant_type") &&
+                ((String)(((LinkedHashMap)details).get("grant_type"))).equals("password")) {
+            // 只有密码校验时才清除尝试次数
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String username = userDetails.getUsername();
+            passwordHelper.clearFailedAttempt(username);
+        }
     }
 }
