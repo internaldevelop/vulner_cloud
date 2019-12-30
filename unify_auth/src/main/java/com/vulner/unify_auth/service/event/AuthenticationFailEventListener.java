@@ -1,6 +1,5 @@
-package com.vulner.unify_auth.service.listener;
+package com.vulner.unify_auth.service.event;
 
-import com.vulner.common.bean.po.AccountPo;
 import com.vulner.common.enumeration.PwdLockStatusEnum;
 import com.vulner.unify_auth.bean.dto.PasswdParamsDto;
 import com.vulner.unify_auth.dao.AccountsDao;
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 

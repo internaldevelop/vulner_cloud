@@ -1,4 +1,4 @@
-package com.vulner.unify_auth.interceptor;
+package com.vulner.unify_auth.configuration.interceptor;
 
 
 import com.vulner.common.utils.ObjUtils;

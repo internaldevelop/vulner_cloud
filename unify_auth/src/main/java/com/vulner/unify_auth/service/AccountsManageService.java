@@ -14,12 +14,12 @@ import com.vulner.unify_auth.bean.dto.PasswdParamsDto;
 import com.vulner.unify_auth.dao.AccountsDao;
 import com.vulner.unify_auth.service.helper.AccountHelper;
 import com.vulner.unify_auth.service.helper.PasswordHelper;
+import com.vulner.unify_auth.service.helper.RolesHelper;
 import com.vulner.unify_auth.util.PasswordUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
 import java.util.List;
 
 @Component
@@ -28,7 +28,7 @@ public class AccountsManageService {
     private AccountsDao accountsDao;
 
     @Autowired
-    private RolesManageService rolesManageService;
+    private AccountRolesMapService accountRolesMapService;
 
     @Autowired
     private PasswordHelper passwordHelper;
@@ -103,7 +103,7 @@ public class AccountsManageService {
         }
 
         // 默认设置账号为 guest 角色
-        if (!rolesManageService.addAccountRoleByName(registerDto.getName(), rolesManageService.getDefaultRole())) {
+        if (!accountRolesMapService.addAccountRoleByName(registerDto.getName(), RolesHelper.getDefaultRole())) {
             return ResponseHelper.error("ERROR_FAIL_GUEST_ROLE");
         }
 
@@ -127,7 +127,7 @@ public class AccountsManageService {
 
     public ResponseBean deleteAccountByUuid(String accountUuid) {
         // 删除所有的账号角色映射
-        boolean rv = rolesManageService.deleteAccountAllRolesByUuid(accountUuid);
+        boolean rv = accountRolesMapService.deleteAccountAllRolesByUuid(accountUuid);
 
         // 删除账号
         int row = accountsDao.deleteAccount(accountUuid);
