@@ -6,6 +6,7 @@ import com.vulner.common.enumeration.AccountStatusEnum;
 import com.vulner.common.enumeration.PwdLockStatusEnum;
 import com.vulner.common.response.ResponseBean;
 import com.vulner.common.response.ResponseHelper;
+import com.vulner.common.utils.ObjUtils;
 import com.vulner.common.utils.StringUtils;
 import com.vulner.common.utils.TimeUtils;
 import com.vulner.unify_auth.bean.dto.AccountPersonalInfoDto;
@@ -33,8 +34,18 @@ public class AccountsManageService {
     @Autowired
     private PasswordHelper passwordHelper;
 
-    public AccountPo getAccountByUuid(String uuid) {
-        String accountName = accountsDao.getAccountNameByUuid(uuid);
+    private String _uuid2Name(String accountUuid) {
+        String accountName = accountsDao.getAccountNameByUuid(accountUuid);
+        return accountName;
+    }
+
+    private String _name2Uuid(String accountName) {
+        String accountUuid = accountsDao.getAccountUuidByName(accountName);
+        return accountUuid;
+    }
+
+    private AccountPo _uuid2Account(String uuid) {
+        String accountName = _uuid2Name(uuid);
         if (Strings.isNullOrEmpty(accountName)) {
             return null;
         }
@@ -42,9 +53,35 @@ public class AccountsManageService {
         return accountsDao.findByAccount(accountName);
     }
 
+    public ResponseBean getAccountInfoByName(String accountName) {
+        // 读取账户信息
+        AccountPo accountPo = accountsDao.findByAccount(accountName);
+        if (accountPo == null) {
+            return ResponseHelper.error("ERROR_ACCOUNT_NOT_EXIST");
+        }
+
+        // 返回响应前清空账户隐私信息
+        AccountHelper.clearAccountSecretInfo(accountPo);
+
+        return ResponseHelper.success(accountPo);
+    }
+
+    public ResponseBean getAccountInfoByUuid(String accountUuid) {
+        // 读取账户信息
+        AccountPo accountPo = _uuid2Account(accountUuid);
+        if (accountPo == null) {
+            return ResponseHelper.error("ERROR_ACCOUNT_NOT_EXIST");
+        }
+
+        // 返回响应前清空账户隐私信息
+        AccountHelper.clearAccountSecretInfo(accountPo);
+
+        return ResponseHelper.success(accountPo);
+    }
+
     public ResponseBean getAllAccounts() {
         List<AccountPo> accountsList = accountsDao.fetchAllAccounts();
-        if (accountsList == null || accountsList.size() == 0) {
+        if (ObjUtils.nullOrEmptyList(accountsList)) {
             return ResponseHelper.error("ERROR_NONE_ACCOUNTS");
         } else {
             return ResponseHelper.success(accountsList);
@@ -55,7 +92,7 @@ public class AccountsManageService {
         String accountUuid = personalInfo.getUuid();
 
         // 获取 AccountPo
-        AccountPo accountPo = getAccountByUuid(accountUuid);
+        AccountPo accountPo = _uuid2Account(accountUuid);
         if (accountPo == null) {
             return ResponseHelper.error("ERROR_ACCOUNT_NOT_EXIST");
         }
@@ -112,20 +149,11 @@ public class AccountsManageService {
         return ResponseHelper.success(accountPo);
     }
 
-    public ResponseBean getAccountInfo(String accountName) {
-        // 读取账户信息
-        AccountPo accountPo = accountsDao.findByAccount(accountName);
-        if (accountPo == null) {
-            return ResponseHelper.error("ERROR_INVALID_ACCOUNT");
+    public ResponseBean deleteAccountByUuid(String accountUuid) {
+        if (Strings.isNullOrEmpty(accountUuid)) {
+            return ResponseHelper.blankParams("账号 UUID ");
         }
 
-        // 返回响应前清空账户隐私信息
-        AccountHelper.clearAccountSecretInfo(accountPo);
-
-        return ResponseHelper.success(accountPo);
-    }
-
-    public ResponseBean deleteAccountByUuid(String accountUuid) {
         // 删除所有的账号角色映射
         boolean rv = accountRolesMapService.deleteAccountAllRolesByUuid(accountUuid);
 
@@ -139,6 +167,10 @@ public class AccountsManageService {
     }
 
     public ResponseBean activateAccount(String accountUuid) {
+        if (Strings.isNullOrEmpty(accountUuid)) {
+            return ResponseHelper.blankParams("账号 UUID ");
+        }
+
         int row = accountsDao.updateStatus(accountUuid, AccountStatusEnum.ACTIVE.getStatus());
         if (row != 1) {
             return ResponseHelper.error("ERROR_ACTIVATE_ACCOUNT_FAILED");
@@ -147,6 +179,10 @@ public class AccountsManageService {
     }
 
     public ResponseBean revokeAccount(String accountUuid) {
+        if (Strings.isNullOrEmpty(accountUuid)) {
+            return ResponseHelper.blankParams("账号 UUID ");
+        }
+
         int row = accountsDao.updateStatus(accountUuid, AccountStatusEnum.DEACTIVE.getStatus());
         if (row != 1) {
             return ResponseHelper.error("ERROR_REVOKE_ACCOUNT_FAILED");
@@ -155,7 +191,11 @@ public class AccountsManageService {
     }
 
     public ResponseBean unlockAccountPassword(String accountUuid) {
-        String accountName = accountsDao.getAccountNameByUuid(accountUuid);
+        if (Strings.isNullOrEmpty(accountUuid)) {
+            return ResponseHelper.blankParams("账号 UUID ");
+        }
+
+        String accountName = _uuid2Name(accountUuid);
         if (Strings.isNullOrEmpty(accountName)) {
             return ResponseHelper.error("ERROR_ACCOUNT_NOT_EXIST");
         }
@@ -213,5 +253,18 @@ public class AccountsManageService {
         }
 
         return ResponseHelper.success(passwdParamsDto);
+    }
+
+    public ResponseBean getAccountUuid(String accountName) {
+        if (Strings.isNullOrEmpty(accountName)) {
+            return ResponseHelper.blankParams("账号名称");
+        }
+
+        String accountUuid = _name2Uuid(accountName);
+        if (Strings.isNullOrEmpty(accountUuid)) {
+            return ResponseHelper.error("ERROR_ACCOUNT_NOT_EXIST");
+        }
+
+        return ResponseHelper.success(accountUuid);
     }
 }

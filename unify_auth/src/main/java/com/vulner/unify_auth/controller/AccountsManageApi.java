@@ -3,7 +3,6 @@ package com.vulner.unify_auth.controller;
 import com.google.common.base.Strings;
 import com.vulner.common.response.ResponseHelper;
 import com.vulner.unify_auth.bean.dto.AccountPersonalInfoDto;
-import com.vulner.unify_auth.bean.dto.AccountRegisterDto;
 import com.vulner.unify_auth.service.AccountsManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -42,7 +41,7 @@ public class AccountsManageApi {
      * @param user 当前认证用户(access_token对应的用户）
      * @return ResponseBean.payload: 当前认证用户的账号信息记录
      */
-    @GetMapping(value = "/self", produces = "application/json")
+    @GetMapping(value = "/self")
     @PreAuthorize("hasAnyAuthority('current-user')")
     public @ResponseBody
     Object getSelfAccountInfo(Principal user) {
@@ -50,7 +49,7 @@ public class AccountsManageApi {
             return ResponseHelper.error("ERROR_INVALID_ACCOUNT");
         }
 
-        return accountsManageService.getAccountInfo(user.getName());
+        return accountsManageService.getAccountInfoByName(user.getName());
     }
 
     /**
@@ -58,13 +57,10 @@ public class AccountsManageApi {
      * @param accountUuid 账号 UUID
      * @return ResponseBean
      */
-    @DeleteMapping(value = "/delete", produces = "application/json")
+    @DeleteMapping(value = "/delete")
     @PreAuthorize("hasAnyAuthority('statistics')")
     public @ResponseBody
     Object deleteAccount(@RequestParam("account_uuid") String accountUuid) {
-        if (Strings.isNullOrEmpty(accountUuid)) {
-            return ResponseHelper.blankParams("账号 UUID ");
-        }
         return accountsManageService.deleteAccountByUuid(accountUuid);
     }
 
@@ -74,7 +70,7 @@ public class AccountsManageApi {
      * @param bindingResult
      * @return ResponseBean
      */
-    @PostMapping(value = "/update", produces = "application/json")
+    @PostMapping(value = "/update")
     @PreAuthorize("hasAnyAuthority('statistics')")
     public @ResponseBody
     Object updateAccount(@Valid AccountPersonalInfoDto personalInfoDto, BindingResult bindingResult) {
@@ -89,13 +85,10 @@ public class AccountsManageApi {
      * @param accountUuid 账号的 UUID
      * @return ResponseBean
      */
-    @DeleteMapping(value = "/revoke", produces = "application/json")
+    @DeleteMapping(value = "/revoke")
     @PreAuthorize("hasAnyAuthority('statistics')")
     public @ResponseBody
     Object revokeAccount(@RequestParam("account_uuid") String accountUuid) {
-        if (Strings.isNullOrEmpty(accountUuid)) {
-            return ResponseHelper.blankParams("账号 UUID ");
-        }
         return accountsManageService.revokeAccount(accountUuid);
     }
 
@@ -104,13 +97,10 @@ public class AccountsManageApi {
      * @param accountUuid  账号的 UUID
      * @return ResponseBean
      */
-    @GetMapping(value = "/activate", produces = "application/json")
+    @GetMapping(value = "/activate")
     @PreAuthorize("hasAnyAuthority('statistics')")
     public @ResponseBody
     Object activateAccount(@RequestParam("account_uuid") String accountUuid) {
-        if (Strings.isNullOrEmpty(accountUuid)) {
-            return ResponseHelper.blankParams("账号 UUID ");
-        }
         return accountsManageService.activateAccount(accountUuid);
     }
 
@@ -119,17 +109,21 @@ public class AccountsManageApi {
      * @param accountUuid 账号的 UUID
      * @return ResponseBean
      */
-    @GetMapping(value = "/unlock_pwd", produces = "application/json")
+    @GetMapping(value = "/unlock_pwd")
     @PreAuthorize("hasAnyAuthority('statistics')")
     public @ResponseBody
     Object unlockAccount(@RequestParam("account_uuid") String accountUuid) {
-        if (Strings.isNullOrEmpty(accountUuid)) {
-            return ResponseHelper.blankParams("账号 UUID ");
-        }
         return accountsManageService.unlockAccountPassword(accountUuid);
     }
 
-    @PostMapping(value = "/change_pwd", produces = "application/json")
+    /**
+     * 修改用户口令
+     * @param user 用户对象
+     * @param oldPwd 旧口令（用于保护操作的身份验证）
+     * @param newPwd 新口令
+     * @return ResponseBean
+     */
+    @PostMapping(value = "/change_pwd")
     @PreAuthorize("hasAnyAuthority('statistics')")
     public @ResponseBody
     Object changePassword(Principal user,
@@ -140,4 +134,29 @@ public class AccountsManageApi {
         }
         return accountsManageService.changePassword(user.getName(), oldPwd, newPwd);
     }
+
+    /**
+     * 获取指定 UUID 的账号信息
+     * @param accountUuid 指定账号的 UUID
+     * @return ResponseBean.payload: 指定的账号信息记录
+     */
+    @GetMapping(value = "/account_info")
+    @PreAuthorize("hasAnyAuthority('statistics')")
+    public @ResponseBody
+    Object getAccountInfo(@RequestParam("account_uuid") String accountUuid) {
+        return accountsManageService.getAccountInfoByUuid(accountUuid);
+    }
+
+    /**
+     * 账号名转 UUID
+     * @param accountName 指定的账号名
+     * @return ResponseBean.payload: 账号 UUID
+     */
+    @GetMapping(value = "/account_uuid")
+    @PreAuthorize("hasAnyAuthority('statistics')")
+    public @ResponseBody
+    Object getAccountUuid(@RequestParam("account_name") String accountName) {
+        return accountsManageService.getAccountUuid(accountName);
+    }
+
 }

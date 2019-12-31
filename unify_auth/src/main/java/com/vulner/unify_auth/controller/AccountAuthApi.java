@@ -5,6 +5,7 @@ import com.vulner.common.response.ResponseHelper;
 import com.vulner.unify_auth.service.AccountsManageService;
 import com.vulner.unify_auth.service.MyUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -22,7 +23,7 @@ import java.util.Map;
  * @description 账号认证授权 API 接口
  */
 @RestController
-@RequestMapping(value = "/account_auth")
+@RequestMapping(value = "/account_auth", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AccountAuthApi {
     @Autowired
     private MyUserDetailsService userDetailsService;
@@ -38,7 +39,7 @@ public class AccountAuthApi {
      * @param user 当前认证的用户
      * @return 自定义的用户信息
      */
-    @GetMapping(value = "/test_info", produces = "application/json")
+    @GetMapping(value = "/test_info")
     public @ResponseBody
     Object userInfo(OAuth2Authentication user) {
         Map<String, Object> userInfo = new HashMap<>();
@@ -53,7 +54,7 @@ public class AccountAuthApi {
      * @param user access_token 对应的用户
      * @return access_token 对应的用户信息
      */
-    @GetMapping(value = "/current", produces = "application/json")
+    @GetMapping(value = "/current")
     public @ResponseBody
     Principal user(Principal user) {
         return user;

@@ -883,7 +883,7 @@
 									"script": {
 										"id": "85422a26-3bc8-4579-bd2c-d03b71418dd7",
 										"exec": [
-											"pm.test(\"oauth token\", function () {",
+											"pm.test(\"register account\", function () {",
 											"    var jsonData = pm.response.json();",
 											"",
 											"    pm.environment.set(\"account_uuid\", jsonData.payload.uuid);",
@@ -959,7 +959,7 @@
 										},
 										{
 											"key": "birthday",
-											"value": "2001/12/21",
+											"value": "2018/01/12",
 											"description": "出生日期",
 											"type": "text"
 										}
@@ -1404,7 +1404,7 @@
 							"response": []
 						},
 						{
-							"name": "3.12.7 解锁账号",
+							"name": "3.12.7 解锁密码",
 							"request": {
 								"auth": {
 									"type": "noauth"
@@ -1424,13 +1424,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{UNI_AUTH_URL}}/account_manage/unlock?access_token={{access_token}}&account_uuid={{account_uuid}}",
+									"raw": "{{UNI_AUTH_URL}}/account_manage/unlock_pwd?access_token={{access_token}}&account_uuid={{account_uuid}}",
 									"host": [
 										"{{UNI_AUTH_URL}}"
 									],
 									"path": [
 										"account_manage",
-										"unlock"
+										"unlock_pwd"
 									],
 									"query": [
 										{
@@ -1484,13 +1484,13 @@
 										},
 										{
 											"key": "old_pwd",
-											"value": "12345678",
+											"value": "22345678",
 											"description": "旧密码",
 											"type": "text"
 										},
 										{
 											"key": "new_pwd",
-											"value": "22345678",
+											"value": "12345678",
 											"description": "新密码",
 											"type": "text"
 										}
@@ -1504,6 +1504,648 @@
 									"path": [
 										"account_manage",
 										"change_pwd"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.12.9 获取指定账号信息",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "ad2aa068-77e6-4e19-8304-5881a38908d6",
+										"exec": [
+											"pm.test(\"account info\", function () {",
+											"    var jsonData = pm.response.json();",
+											"",
+											"    pm.environment.set(\"account_name\", jsonData.payload.name);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/account_manage/account_info?access_token={{access_token}}&account_uuid={{account_uuid}}",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"account_manage",
+										"account_info"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}"
+										},
+										{
+											"key": "account_uuid",
+											"value": "{{account_uuid}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.12.10 账号名转UUID",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "0e929581-6a0a-4191-8ddc-d0799e6e4ee5",
+										"exec": [
+											"pm.test(\"account uuid\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.id).to.eql(0);",
+											"",
+											"    pm.environment.set(\"account_uuid\", jsonData.payload);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/account_manage/account_uuid?access_token={{access_token}}&account_name=user991",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"account_manage",
+										"account_uuid"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}"
+										},
+										{
+											"key": "account_name",
+											"value": "user991"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "3.13 角色管理",
+					"item": [
+						{
+							"name": "3.13.1 所有角色",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/role_manage/all?access_token={{access_token}}",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"role_manage",
+										"all"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.13.2 读取角色信息",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "658c1ee1-a135-4e97-a896-b0294b2f7f72",
+										"exec": [
+											"pm.test(\"role info\", function () {",
+											"    var jsonData = pm.response.json();",
+											"",
+											"    pm.environment.set(\"role_name\", jsonData.payload.name);",
+											"    pm.environment.set(\"role_alias\", jsonData.payload.alias);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/role_manage/role_info?access_token={{access_token}}&role_uuid={{role_uuid}}",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"role_manage",
+										"role_info"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}"
+										},
+										{
+											"key": "role_uuid",
+											"value": "{{role_uuid}}",
+											"description": "角色UUID"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.13.3 新增角色",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "0acedf75-88dd-4ad3-bab0-8b1d290ef504",
+										"exec": [
+											"pm.test(\"add role\", function () {",
+											"    var jsonData = pm.response.json();",
+											"",
+											"    pm.environment.set(\"role_uuid\", jsonData.payload.uuid);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}",
+											"description": "访问权限控制令牌",
+											"type": "text"
+										},
+										{
+											"key": "role_name",
+											"value": "ROLE_123",
+											"description": "角色名称，必须是“ROLE_”开头，比如：ROLE_USER",
+											"type": "text"
+										},
+										{
+											"key": "role_alias",
+											"value": "123",
+											"description": "角色别名，比如：“管理员”、“游客”、“操作员”",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/role_manage/add",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"role_manage",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.13.4 删除角色",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/role_manage/delete?access_token={{access_token}}&role_uuid={{role_uuid}}",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"role_manage",
+										"delete"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}"
+										},
+										{
+											"key": "role_uuid",
+											"value": "{{role_uuid}}",
+											"description": "角色UUID"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.13.5 更新角色",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "0acedf75-88dd-4ad3-bab0-8b1d290ef504",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}",
+											"description": "访问权限控制令牌",
+											"type": "text"
+										},
+										{
+											"key": "role_uuid",
+											"value": "{{role_uuid}}",
+											"description": "角色UUID",
+											"type": "text"
+										},
+										{
+											"key": "role_name",
+											"value": "ROLE_12",
+											"description": "角色名称，必须是“ROLE_”开头，比如：ROLE_USER",
+											"type": "text"
+										},
+										{
+											"key": "role_alias",
+											"value": "123",
+											"description": "角色别名，比如：“管理员”、“游客”、“操作员”",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/role_manage/update",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"role_manage",
+										"update"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.13.6 角色名转UUID",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "658c1ee1-a135-4e97-a896-b0294b2f7f72",
+										"exec": [
+											"pm.test(\"role uuid\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.id).to.eql(0);",
+											"",
+											"    pm.environment.set(\"role_uuid\", jsonData.payload);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/role_manage/role_uuid?access_token={{access_token}}&role_name=&role_alias=12",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"role_manage",
+										"role_uuid"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}"
+										},
+										{
+											"key": "role_name",
+											"value": "",
+											"description": "角色UUID"
+										},
+										{
+											"key": "role_alias",
+											"value": "12"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "3.14 账号角色管理",
+					"item": [
+						{
+							"name": "3.14.1 读取账号所有角色",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/account_role_map/all?access_token={{access_token}}&account_uuid={{account_uuid}}",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"account_role_map",
+										"all"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}"
+										},
+										{
+											"key": "account_uuid",
+											"value": "{{account_uuid}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.14.2 增加账号的角色",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/account_role_map/add?access_token={{access_token}}&account_uuid={{account_uuid}}&role_uuid={{role_uuid}}",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"account_role_map",
+										"add"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}"
+										},
+										{
+											"key": "account_uuid",
+											"value": "{{account_uuid}}"
+										},
+										{
+											"key": "role_uuid",
+											"value": "{{role_uuid}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.14.3 删除账号的角色",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/account_role_map/delete?access_token={{access_token}}&account_uuid={{account_uuid}}&role_uuid={{role_uuid}}",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"account_role_map",
+										"delete"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}"
+										},
+										{
+											"key": "account_uuid",
+											"value": "{{account_uuid}}"
+										},
+										{
+											"key": "role_uuid",
+											"value": "{{role_uuid}}"
+										}
 									]
 								}
 							},
@@ -1541,19 +2183,19 @@
 	],
 	"variable": [
 		{
-			"id": "24aef850-b06f-4424-8b5a-43c03c3bdf9a",
+			"id": "6fc755b2-6163-4c09-b1fe-92edc9be71b8",
 			"key": "SYS_CODE_URL",
 			"value": "http://localhost:10113/sys_code",
 			"type": "string"
 		},
 		{
-			"id": "faf134db-a916-449d-9ab3-b032db3fb4bf",
+			"id": "f3daa037-09b2-40a4-9b32-5a6c27098a32",
 			"key": "SYS_LOG_URL",
 			"value": "http://localhost:10116/sys_log",
 			"type": "string"
 		},
 		{
-			"id": "61776250-7521-48f1-8ee4-2fec4ce26971",
+			"id": "6df378ae-7085-492b-8e0c-a0e9d60b632c",
 			"key": "UNI_AUTH_URL",
 			"value": "http://localhost:10114",
 			"type": "string"

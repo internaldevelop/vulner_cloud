@@ -12,6 +12,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,6 +34,14 @@ public class ObjUtils {
             return null;
         else
             return objList.get(0);
+    }
+
+    public static <T> boolean nullOrEmptyList(List<T> objList) {
+        if (objList == null || objList.size() == 0) {
+            return true;
+        }
+
+        return false;
     }
 
     public static String getValueFromJsonString(String jsonString, String key) {
