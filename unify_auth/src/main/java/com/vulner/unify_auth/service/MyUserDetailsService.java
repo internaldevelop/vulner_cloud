@@ -2,8 +2,8 @@ package com.vulner.unify_auth.service;
 
 import com.vulner.common.bean.po.AccountPo;
 import com.vulner.common.enumeration.PwdLockStatusEnum;
-import com.vulner.unify_auth.bean.dto.AccountRoleDto;
-import com.vulner.unify_auth.bean.dto.RolePermissionDto;
+import com.vulner.unify_auth.bean.dto.PermissionDto;
+import com.vulner.unify_auth.bean.dto.RoleDto;
 import com.vulner.unify_auth.service.exception.MyAccountLockedException;
 import com.vulner.unify_auth.service.exception.MyAccountNotFoundException;
 import com.vulner.unify_auth.dao.AccountRolesDao;
@@ -50,14 +50,14 @@ public class MyUserDetailsService implements UserDetailsService {
         boolean accountNonLocked = true;
 
         // 获取该账户的所有角色
-        List<AccountRoleDto> rolesList = accountRolesDao.getAccountRoles(accountPo.getUuid());
-        for (AccountRoleDto role : rolesList) {
+        List<RoleDto> rolesList = accountRolesDao.getAccountRoles(accountPo.getUuid());
+        for (RoleDto role : rolesList) {
             // 角色必须是ROLE_开头，可以在数据库中设置
             GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(role.getRole_name());
             grantedAuthorities.add(grantedAuthority);
             // 获取当前角色的所有权限
-            List<RolePermissionDto> permissionsList = rolePermissionsDao.getPermissions(role.getRole_uuid());
-            for (RolePermissionDto permission : permissionsList) {
+            List<PermissionDto> permissionsList = rolePermissionsDao.getPermissions(role.getRole_uuid());
+            for (PermissionDto permission : permissionsList) {
                 GrantedAuthority authority = new SimpleGrantedAuthority(permission.getPermission_name());
                 grantedAuthorities.add(authority);
             }

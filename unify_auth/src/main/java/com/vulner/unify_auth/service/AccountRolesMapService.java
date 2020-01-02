@@ -1,11 +1,14 @@
 package com.vulner.unify_auth.service;
 
 import com.google.common.base.Strings;
+import com.vulner.common.bean.po.AccountPo;
 import com.vulner.common.response.ResponseBean;
 import com.vulner.common.response.ResponseHelper;
 import com.vulner.common.utils.StringUtils;
 import com.vulner.common.utils.TimeUtils;
-import com.vulner.unify_auth.bean.dto.AccountRoleDto;
+import com.vulner.unify_auth.bean.dto.AccountRoleMapDto;
+import com.vulner.unify_auth.bean.dto.AccountRolesDto;
+import com.vulner.unify_auth.bean.dto.RoleDto;
 import com.vulner.unify_auth.bean.po.AccountRolePo;
 import com.vulner.unify_auth.dao.AccountRolesDao;
 import com.vulner.unify_auth.dao.AccountsDao;
@@ -27,14 +30,17 @@ public class AccountRolesMapService {
     @Autowired
     private AccountRolesDao accountRolesDao;
 
+    @Autowired
+    private AccountsManageService accountsManageService;
+
     private boolean _addAccountRoleMap(String accountUuid, String roleUuid) {
         if (Strings.isNullOrEmpty(accountUuid) || Strings.isNullOrEmpty(roleUuid)) {
             return false;
         }
 
         // 检查是否已存在账号角色对应关系
-        AccountRoleDto accountRoleDto = accountRolesDao.getAccountRoleMap(accountUuid, roleUuid);
-        if (accountRoleDto != null) {
+        AccountRoleMapDto accountRoleMapDto = accountRolesDao.getAccountRoleMap(accountUuid, roleUuid);
+        if (accountRoleMapDto != null) {
             return false;
         }
 
@@ -56,8 +62,8 @@ public class AccountRolesMapService {
         }
 
         // 检查是否存在账号角色对应关系，如果不存在，则认定成功删除
-        AccountRoleDto accountRoleDto = accountRolesDao.getAccountRoleMap(accountUuid, roleUuid);
-        if (accountRoleDto == null) {
+        AccountRoleMapDto accountRoleMapDto = accountRolesDao.getAccountRoleMap(accountUuid, roleUuid);
+        if (accountRoleMapDto == null) {
             return true;
         }
 
@@ -94,12 +100,21 @@ public class AccountRolesMapService {
         return ResponseHelper.success();
     }
 
-    public boolean deleteAccountAllRolesByUuid(String accountUuid) {
+    public boolean deleteAllMapsByAccountUuid(String accountUuid) {
         if (Strings.isNullOrEmpty(accountUuid)) {
             return false;
         }
 
-        int rows = accountRolesDao.deleteAccountAllRoles(accountUuid);
+        int rows = accountRolesDao.deleteAllMapsByAccountUuid(accountUuid);
+        return (rows >= 1);
+    }
+
+    public boolean deleteAllMapsByRoleUuid(String roleUuid) {
+        if (Strings.isNullOrEmpty(roleUuid)) {
+            return false;
+        }
+
+        int rows = accountRolesDao.deleteAllMapsByRoleUuid(roleUuid);
         return (rows >= 1);
     }
 
@@ -108,16 +123,29 @@ public class AccountRolesMapService {
             return ResponseHelper.blankParams("账号 UUID ");
         }
 
+        // 查找账户信息
+        AccountPo accountPo = accountsManageService.searchAccountByUuid(accountUuid);
+        if (accountPo == null) {
+            return ResponseHelper.error("ERROR_ACCOUNT_NOT_EXIST", accountUuid);
+        }
+
         // 读取账户所有关联的角色
-        List<AccountRoleDto> accountRoles =  accountRolesDao.getAccountRoles(accountUuid);
+        List<RoleDto> accountRoles =  accountRolesDao.getAccountRoles(accountUuid);
 
         // 如果 list 非法，则创建一个空的list
         if (accountRoles == null) {
             accountRoles = new ArrayList<>();
         }
 
+        // 构造响应数据（账户信息 + 角色列表）
+        AccountRolesDto accountRolesDto = new AccountRolesDto();
+        accountRolesDto.setAccount_uuid(accountUuid);
+        accountRolesDto.setAccount_name(accountPo.getName());
+        accountRolesDto.setAccount_alias(accountPo.getAlias());
+        accountRolesDto.setRoles(accountRoles);
+
         // 成功返回账户关联的角色列表，或空列表
-        return ResponseHelper.success(accountRoles);
+        return ResponseHelper.success(accountRolesDto);
     }
 
 }

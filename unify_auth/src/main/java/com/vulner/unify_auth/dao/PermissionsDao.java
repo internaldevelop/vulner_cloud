@@ -64,4 +64,21 @@ public interface PermissionsDao {
     @Delete("DELETE FROM permissions p \n" +
             "WHERE p.uuid=#{permUuid}\n")
     int deletePermission(String permUuid);
+
+    @Select("SELECT\n" +
+            "\tp.`uuid`\n" +
+            "FROM permissions p\n" +
+            "WHERE p.name=#{permName};")
+    String getPermUuidByName(String permName);
+
+    @Select("SELECT * \n" +
+            "FROM permissions p \n" +
+            "WHERE p.`name`=#{permName} \n")
+    List<PermissionPo> existName(String permName);
+
+    @Select("SELECT * \n" +
+            "FROM permissions p \n" +
+            "WHERE p.`name`=#{permName} \n" +
+            "AND p.uuid<>#{permUuid}")
+    List<PermissionPo> existOtherName(String permUuid, String permName);
 }

@@ -19,6 +19,9 @@ public class PermissionsManageService {
     @Autowired
     private PermissionsDao permissionsDao;
 
+    @Autowired
+    private RolePermsMapService rolePermsMapService;
+
     public ResponseBean fetchAllPermissions() {
         List<PermissionPo> permissionPos = permissionsDao.allPermissions();
         if (ObjUtils.nullOrEmptyList(permissionPos)) {
@@ -43,6 +46,12 @@ public class PermissionsManageService {
     public ResponseBean addPerm(String permName, String permDesc) {
         if (Strings.isNullOrEmpty(permName)) {
             return ResponseHelper.blankParams("权限名称");
+        }
+
+        // 检查权限名称是否已存在（权限名称全局唯一）
+        List<PermissionPo> permList = permissionsDao.existName(permName);
+        if (!ObjUtils.nullOrEmptyList(permList)) {
+            return ResponseHelper.error("ERROR_PERM_EXIST", "请检查权限名称是否已存在或重名！");
         }
 
         if (permDesc == null) {
@@ -81,6 +90,10 @@ public class PermissionsManageService {
         if (row != 1) {
             return ResponseHelper.error("ERROR_REMOVE_FAILED");
         }
+
+        // 删除角色权限映射表中所有含该权限的项
+        rolePermsMapService.deleteAllMapsByPermUuid(permUuid);
+
         return ResponseHelper.success();
     }
 
@@ -91,6 +104,12 @@ public class PermissionsManageService {
         }
         if (Strings.isNullOrEmpty(permName)) {
             return ResponseHelper.blankParams("权限名称");
+        }
+
+        // 检查权限名称是否已存在于其他权限（该权限自身不检查，新旧名称可以相同）
+        List<PermissionPo> permList = permissionsDao.existOtherName(permUuid, permName);
+        if (!ObjUtils.nullOrEmptyList(permList)) {
+            return ResponseHelper.error("ERROR_PERM_EXIST", "请检查权限名称是否已存在或重名！");
         }
 
         // 检查是否存在要更新的权限
@@ -115,6 +134,18 @@ public class PermissionsManageService {
         return ResponseHelper.success();
     }
 
-//    public ResponseBean getPermUuid(String permName) {
-//    }
+    public ResponseBean getPermUuid(String permName) {
+        // 权限名称是必须提供的参数
+        if (Strings.isNullOrEmpty(permName)) {
+            return ResponseHelper.blankParams("权限名称");
+        }
+
+        // 获取指定权限的 UUID
+        String permUuid = permissionsDao.getPermUuidByName(permName);
+        if (Strings.isNullOrEmpty(permUuid)) {
+            return ResponseHelper.error("ERROR_PERM_NOT_EXIST", permName);
+        }
+
+        return ResponseHelper.success(permUuid);
+    }
 }

@@ -1,7 +1,7 @@
 package com.vulner.unify_auth.dao;
 
-import com.vulner.common.bean.po.AccountPo;
-import com.vulner.unify_auth.bean.dto.AccountRoleDto;
+import com.vulner.unify_auth.bean.dto.AccountRoleMapDto;
+import com.vulner.unify_auth.bean.dto.RoleDto;
 import com.vulner.unify_auth.bean.po.AccountRolePo;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
@@ -21,16 +21,16 @@ public interface AccountRolesDao {
     /**
      * 获取指定账号的所有角色
      * @param accountUuid 账号 UUID
-     * @return List<AccountRoleDto> 账号角色关联列表
+     * @return List<RoleDto> 账号关联的角色列表
      */
     @Select("SELECT\n" +
-            "\tar.account_uuid,\n" +
             "\tr.uuid AS role_uuid,\n" +
-            "\tr.name AS role_name\n" +
+            "\tr.name AS role_name,\n" +
+            "\tr.alias AS role_alias\n" +
             "FROM account_roles ar\n" +
             "LEFT JOIN roles r ON ar.role_uuid=r.uuid\n" +
             "WHERE ar.account_uuid=#{accountUuid};")
-    List<AccountRoleDto> getAccountRoles(String accountUuid);
+    List<RoleDto> getAccountRoles(String accountUuid);
 
     /**
      * 读取指定账号、指定角色的一条关联记录
@@ -40,13 +40,17 @@ public interface AccountRolesDao {
      */
     @Select("SELECT\n" +
             "\tar.account_uuid,\n" +
+            "\ta.name AS account_name,\n" +
+            "\ta.alias AS account_alias,\n" +
             "\tr.uuid AS role_uuid,\n" +
-            "\tr.name AS role_name\n" +
+            "\tr.name AS role_name,\n" +
+            "\tr.alias AS role_alias\n" +
             "FROM account_roles ar\n" +
             "LEFT JOIN roles r ON ar.role_uuid=r.uuid\n" +
+            "LEFT JOIN accounts a ON ar.account_uuid=a.uuid\n" +
             "WHERE ar.account_uuid=#{accountUuid}\n" +
             "\tAND ar.role_uuid=#{roleUuid}")
-    AccountRoleDto getAccountRoleMap(String accountUuid, String roleUuid);
+    AccountRoleMapDto getAccountRoleMap(String accountUuid, String roleUuid);
 
     /**
      * 添加一条账号角色关联记录
@@ -79,11 +83,20 @@ public interface AccountRolesDao {
     int deleteAccountRoleMap(String accountUuid, String roleUuid);
 
     /**
-     * 删除指定账号所有关联的角色记录
+     * 在账号角色映射表中，删除指定账号关联角色的所有记录
      * @param accountUuid 指定账号的 UUID
      * @return 实际删除的记录数
      */
     @Delete("DELETE FROM account_roles ar \n" +
             "WHERE ar.account_uuid=#{accountUuid}\n")
-    int deleteAccountAllRoles(String accountUuid);
+    int deleteAllMapsByAccountUuid(String accountUuid);
+
+    /**
+     * 在账号角色映射表中，删除指定角色关联账号的所有记录
+     * @param roleUuid 指定角色的 UUID
+     * @return 实际删除的记录数
+     */
+    @Delete("DELETE FROM account_roles ar \n" +
+            "WHERE ar.role_uuid=#{roleUuid}\n")
+    int deleteAllMapsByRoleUuid(String roleUuid);
 }

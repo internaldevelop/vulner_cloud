@@ -30,7 +30,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .requestMatchers().antMatchers("/account_manage/**")
                 .requestMatchers().antMatchers("/role_manage/**")
                 .requestMatchers().antMatchers("/account_role_map/**")
-                .requestMatchers().antMatchers("/permission_manage/**")
+                .requestMatchers().antMatchers("/perm_manage/**")
                 .requestMatchers().antMatchers("/role_perm_map/**")
                 .and()
                 .authorizeRequests()
@@ -38,7 +38,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers("/account_manage/**").authenticated()
                 .antMatchers("/role_manage/**").authenticated()
                 .antMatchers("/account_role_map/**").authenticated()
-                .antMatchers("/permission_manage/**").authenticated()
+                .antMatchers("/perm_manage/**").authenticated()
                 .antMatchers("/role_perm_map/**").authenticated()
                 // 权限放开的API接口
                 .and()

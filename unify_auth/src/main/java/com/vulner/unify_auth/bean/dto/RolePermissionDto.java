@@ -5,16 +5,19 @@ import lombok.Data;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.List;
 
+/**
+ * @author Jason
+ * @create 2020/1/2
+ * @since 1.0.0
+ * @description 角色权限映射的单条记录信息
+ */
 @Component
 @Data
 public class RolePermissionDto {
     private String role_uuid;
-    private String permission_uuid;
-    private String permission_name;
-    private String permission_desc;
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date create_time;
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date update_time;
+    private String role_name;
+    private String role_alias;
+    private List<PermissionDto> permissions;
 }

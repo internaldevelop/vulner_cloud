@@ -20,6 +20,12 @@ public class RolesManageService {
     @Autowired
     private RolesDao rolesDao;
 
+    @Autowired
+    private RolePermsMapService rolePermsMapService;
+
+    @Autowired
+    private AccountRolesMapService accountRolesMapService;
+
     public ResponseBean fetchAllRoles() {
         List<RolePo> rolePoList = rolesDao.fetchAllRoles();
         if (ObjUtils.nullOrEmptyList(rolePoList)) {
@@ -111,6 +117,15 @@ public class RolesManageService {
         if (row != 1) {
             return ResponseHelper.error("ERROR_REMOVE_FAILED");
         }
+
+        // 删除角色权限映射表中所有含该角色的项
+        boolean rv = rolePermsMapService.deleteAllMapsByRoleUuid(roleUuid);
+        if (!rv) {
+            return ResponseHelper.error("ERROR_REMOVE_FAILED");
+        }
+
+        // 删除账号角色映射表中所有含该角色的项
+        rv = accountRolesMapService.deleteAllMapsByRoleUuid(roleUuid);
         return ResponseHelper.success();
     }
 

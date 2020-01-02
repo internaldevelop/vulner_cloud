@@ -1748,6 +1748,7 @@
 										"exec": [
 											"pm.test(\"add role\", function () {",
 											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.id).to.eql(0);",
 											"",
 											"    pm.environment.set(\"role_uuid\", jsonData.payload.uuid);",
 											"});",
@@ -1792,13 +1793,13 @@
 										},
 										{
 											"key": "role_name",
-											"value": "ROLE_123",
+											"value": "ROLE_1",
 											"description": "角色名称，必须是“ROLE_”开头，比如：ROLE_USER",
 											"type": "text"
 										},
 										{
 											"key": "role_alias",
-											"value": "123",
+											"value": "1",
 											"description": "角色别名，比如：“管理员”、“游客”、“操作员”",
 											"type": "text"
 										}
@@ -2154,6 +2155,509 @@
 					],
 					"protocolProfileBehavior": {},
 					"_postman_isSubFolder": true
+				},
+				{
+					"name": "3.15 权限管理",
+					"item": [
+						{
+							"name": "3.15.1 所有权限",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/perm_manage/all?access_token={{access_token}}",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"perm_manage",
+										"all"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.15.2 读取指定权限",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/perm_manage/perm_info?access_token={{access_token}}&perm_uuid={{perm_uuid}}",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"perm_manage",
+										"perm_info"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}"
+										},
+										{
+											"key": "perm_uuid",
+											"value": "{{perm_uuid}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.15.3 新增权限",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "0acedf75-88dd-4ad3-bab0-8b1d290ef504",
+										"exec": [
+											"pm.test(\"add permission\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.id).to.eql(0);",
+											"",
+											"    pm.environment.set(\"perm_uuid\", jsonData.payload.uuid);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}",
+											"description": "访问权限控制令牌",
+											"type": "text"
+										},
+										{
+											"key": "name",
+											"value": "account manage",
+											"description": "权限名称",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "123",
+											"description": "权限描述",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/perm_manage/add",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"perm_manage",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.15.4 删除权限",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/perm_manage/delete?access_token={{access_token}}&perm_uuid={{perm_uuid}}",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"perm_manage",
+										"delete"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}"
+										},
+										{
+											"key": "perm_uuid",
+											"value": "{{perm_uuid}}",
+											"description": "角色UUID"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.15.5 更新权限",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "0acedf75-88dd-4ad3-bab0-8b1d290ef504",
+										"exec": [
+											"pm.test(\"add permission\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.id).to.eql(0);",
+											"",
+											"    pm.environment.set(\"perm_uuid\", jsonData.payload.uuid);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}",
+											"description": "访问权限控制令牌",
+											"type": "text"
+										},
+										{
+											"key": "perm_uuid",
+											"value": "{{perm_uuid}}",
+											"type": "text"
+										},
+										{
+											"key": "name",
+											"value": "hello",
+											"description": "权限名称",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "123",
+											"description": "权限描述",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/perm_manage/update",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"perm_manage",
+										"update"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.15.6 权限名转 UUID",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "3cf26214-42c7-4917-afac-252c9757e2b8",
+										"exec": [
+											"pm.test(\"get permission uuid\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.id).to.eql(0);",
+											"",
+											"    pm.environment.set(\"perm_uuid\", jsonData.payload);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/perm_manage/perm_uuid?access_token={{access_token}}&name=account manage",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"perm_manage",
+										"perm_uuid"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}"
+										},
+										{
+											"key": "name",
+											"value": "account manage"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "3.16 角色权限管理",
+					"item": [
+						{
+							"name": "3.16.1 读取角色所有权限",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/role_perm_map/all?access_token={{access_token}}&role_uuid={{role_uuid}}",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"role_perm_map",
+										"all"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}"
+										},
+										{
+											"key": "role_uuid",
+											"value": "{{role_uuid}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.16.2 增加角色的权限",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/role_perm_map/add?access_token={{access_token}}&role_uuid={{role_uuid}}&perm_uuid={{perm_uuid}}",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"role_perm_map",
+										"add"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}"
+										},
+										{
+											"key": "role_uuid",
+											"value": "{{role_uuid}}"
+										},
+										{
+											"key": "perm_uuid",
+											"value": "{{perm_uuid}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.16.3 删除角色的权限",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/role_perm_map/delete?access_token={{access_token}}&role_uuid={{role_uuid}}&perm_uuid={{perm_uuid}}",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"role_perm_map",
+										"delete"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}"
+										},
+										{
+											"key": "role_uuid",
+											"value": "{{role_uuid}}"
+										},
+										{
+											"key": "perm_uuid",
+											"value": "{{perm_uuid}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -2183,19 +2687,19 @@
 	],
 	"variable": [
 		{
-			"id": "6fc755b2-6163-4c09-b1fe-92edc9be71b8",
+			"id": "5973a3d6-1b90-4513-8022-8af91ea2f5d9",
 			"key": "SYS_CODE_URL",
 			"value": "http://localhost:10113/sys_code",
 			"type": "string"
 		},
 		{
-			"id": "f3daa037-09b2-40a4-9b32-5a6c27098a32",
+			"id": "e322f42d-a251-46b9-b616-69d5415b475a",
 			"key": "SYS_LOG_URL",
 			"value": "http://localhost:10116/sys_log",
 			"type": "string"
 		},
 		{
-			"id": "6df378ae-7085-492b-8e0c-a0e9d60b632c",
+			"id": "0c24c7f0-d27e-4542-8e52-437d4432bd39",
 			"key": "UNI_AUTH_URL",
 			"value": "http://localhost:10114",
 			"type": "string"

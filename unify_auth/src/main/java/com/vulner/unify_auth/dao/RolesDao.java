@@ -1,7 +1,6 @@
 package com.vulner.unify_auth.dao;
 
 import com.vulner.common.bean.po.RolePo;
-import com.vulner.unify_auth.bean.dto.AccountRoleDto;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;

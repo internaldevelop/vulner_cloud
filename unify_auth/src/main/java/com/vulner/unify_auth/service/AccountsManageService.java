@@ -44,7 +44,7 @@ public class AccountsManageService {
         return accountUuid;
     }
 
-    private AccountPo _uuid2Account(String uuid) {
+    public AccountPo searchAccountByUuid(String uuid) {
         String accountName = _uuid2Name(uuid);
         if (Strings.isNullOrEmpty(accountName)) {
             return null;
@@ -68,7 +68,7 @@ public class AccountsManageService {
 
     public ResponseBean getAccountInfoByUuid(String accountUuid) {
         // 读取账户信息
-        AccountPo accountPo = _uuid2Account(accountUuid);
+        AccountPo accountPo = searchAccountByUuid(accountUuid);
         if (accountPo == null) {
             return ResponseHelper.error("ERROR_ACCOUNT_NOT_EXIST");
         }
@@ -92,7 +92,7 @@ public class AccountsManageService {
         String accountUuid = personalInfo.getUuid();
 
         // 获取 AccountPo
-        AccountPo accountPo = _uuid2Account(accountUuid);
+        AccountPo accountPo = searchAccountByUuid(accountUuid);
         if (accountPo == null) {
             return ResponseHelper.error("ERROR_ACCOUNT_NOT_EXIST");
         }
@@ -155,7 +155,7 @@ public class AccountsManageService {
         }
 
         // 删除所有的账号角色映射
-        boolean rv = accountRolesMapService.deleteAccountAllRolesByUuid(accountUuid);
+        boolean rv = accountRolesMapService.deleteAllMapsByAccountUuid(accountUuid);
 
         // 删除账号
         int row = accountsDao.deleteAccount(accountUuid);
