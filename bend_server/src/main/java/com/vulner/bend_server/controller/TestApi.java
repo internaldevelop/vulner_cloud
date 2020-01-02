@@ -22,7 +22,7 @@ public class TestApi {
     }
 
     @GetMapping("current_user")
-    @PreAuthorize("hasAnyAuthority('current-user')")
+    @PreAuthorize("hasAnyAuthority('current user')")
     @ResponseBody
     public ResponseBean user(Principal principal) {
         return ResponseHelper.success(principal);

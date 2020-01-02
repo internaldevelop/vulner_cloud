@@ -11,7 +11,7 @@
  Target Server Version : 80016
  File Encoding         : 65001
 
- Date: 02/01/2020 17:31:24
+ Date: 02/01/2020 18:01:22
 */
 
 SET NAMES utf8mb4;
@@ -198,12 +198,23 @@ CREATE TABLE `permissions`  (
 -- ----------------------------
 -- Records of permissions
 -- ----------------------------
-INSERT INTO `permissions` VALUES (1, '44fcf8c1-1cb1-11ea-b42f-0242ac110003', 'query', '查询', '2018-12-14 09:45:35', '2018-12-14 09:45:37');
-INSERT INTO `permissions` VALUES (2, '44fd6de6-1cb1-11ea-b42f-0242ac110003', 'search', '搜索', '2018-12-17 13:23:25', '2018-12-17 13:23:27');
-INSERT INTO `permissions` VALUES (3, '44fdcfa4-1cb1-11ea-b42f-0242ac110003', 'hello', 'hello', '2018-12-17 13:23:25', '2018-12-17 13:23:25');
-INSERT INTO `permissions` VALUES (4, '44fe04bb-1cb1-11ea-b42f-0242ac110003', 'current-user', '当前用户', '2018-12-17 13:23:25', '2018-12-17 13:23:25');
+INSERT INTO `permissions` VALUES (1, '44fcf8c1-1cb1-11ea-b42f-0242ac110003', 'query', '查询-测试用', '2018-12-14 09:45:35', '2018-12-14 09:45:37');
+INSERT INTO `permissions` VALUES (2, '44fd6de6-1cb1-11ea-b42f-0242ac110003', 'search', '搜索-测试用', '2018-12-17 13:23:25', '2018-12-17 13:23:27');
+INSERT INTO `permissions` VALUES (3, '44fdcfa4-1cb1-11ea-b42f-0242ac110003', 'hello', 'hello-测试用', '2018-12-17 13:23:25', '2018-12-17 13:23:25');
+INSERT INTO `permissions` VALUES (4, '44fe04bb-1cb1-11ea-b42f-0242ac110003', 'current user', '当前用户', '2018-12-17 13:23:25', '2018-12-17 13:23:25');
 INSERT INTO `permissions` VALUES (5, '44fe402a-1cb1-11ea-b42f-0242ac110003', 'statistics', '统计', '2018-12-17 13:23:25', '2018-12-17 13:23:25');
 INSERT INTO `permissions` VALUES (8, '8b240c8e-8154-4d74-a01a-6d5e92c7fbae', 'account manage', '账号管理', '2020-01-02 16:44:21', '2020-01-02 16:44:21');
+INSERT INTO `permissions` VALUES (9, 'e482effe-1546-444b-a33e-174d63578ebe', 'role manage', '角色管理', '2020-01-02 17:39:01', '2020-01-02 17:39:01');
+INSERT INTO `permissions` VALUES (10, 'a4d71d31-fb1c-4eb8-8294-4e09e4ce0f6e', 'permission manage', '权限管理', '2020-01-02 17:39:54', '2020-01-02 17:39:54');
+INSERT INTO `permissions` VALUES (11, 'd411dd98-2879-4a64-a892-af239678e16e', 'assign account role', '账号分配角色', '2020-01-02 17:40:57', '2020-01-02 17:40:57');
+INSERT INTO `permissions` VALUES (12, '70963e33-6b06-432d-b23e-9bb994d1d940', 'assign role permission', '角色分配权限', '2020-01-02 17:41:47', '2020-01-02 17:41:47');
+INSERT INTO `permissions` VALUES (13, '3b12f7d9-0309-4f47-b7a7-911164fad048', 'report', '报告', '2020-01-02 17:48:32', '2020-01-02 17:48:32');
+INSERT INTO `permissions` VALUES (14, 'f06fadd0-7eb9-4acb-9f72-42a0729c2ee6', 'log audit', '日志审计', '2020-01-02 17:49:33', '2020-01-02 17:49:33');
+INSERT INTO `permissions` VALUES (15, '523dc965-942c-4f16-99ed-93da21606fbe', 'run task', '运行任务', '2020-01-02 17:52:11', '2020-01-02 17:52:11');
+INSERT INTO `permissions` VALUES (16, '6a40cbea-4979-4ca8-b05a-8e35d9f78ebc', 'run project', '运行项目', '2020-01-02 17:52:32', '2020-01-02 17:52:32');
+INSERT INTO `permissions` VALUES (17, '661328cd-f40e-441f-b956-0d5f7f570d7e', 'run schedule', '运行定时任务', '2020-01-02 17:53:06', '2020-01-02 17:53:06');
+INSERT INTO `permissions` VALUES (18, 'da5f8485-5648-448f-9107-b5c7bcc7ca52', 'new task', '创建新任务', '2020-01-02 17:54:52', '2020-01-02 17:54:52');
+INSERT INTO `permissions` VALUES (19, '71e1fc09-d6de-48e7-a344-134ee6584dec', 'update task', '更新任务', '2020-01-02 17:55:32', '2020-01-02 17:55:32');
 
 -- ----------------------------
 -- Table structure for role_permissions
@@ -224,6 +235,23 @@ CREATE TABLE `role_permissions`  (
 INSERT INTO `role_permissions` VALUES (10, '5f5b74ca-54e2-4760-9f41-54787407918a', 'b977008f-1caf-11ea-b42f-0242ac110003', '8b240c8e-8154-4d74-a01a-6d5e92c7fbae', '2020-01-02 17:29:19');
 INSERT INTO `role_permissions` VALUES (11, '2ff9c04d-37ea-4760-b96f-9a3a4bc17702', 'b977008f-1caf-11ea-b42f-0242ac110003', '44fe04bb-1cb1-11ea-b42f-0242ac110003', '2020-01-02 17:29:58');
 INSERT INTO `role_permissions` VALUES (12, '6dcf37f1-2327-4133-8d7b-f82a4a241cea', 'b977008f-1caf-11ea-b42f-0242ac110003', '44fe402a-1cb1-11ea-b42f-0242ac110003', '2020-01-02 17:30:23');
+INSERT INTO `role_permissions` VALUES (13, '4923363b-2e3c-44d8-a1d7-7ce6bc1f4328', 'b977008f-1caf-11ea-b42f-0242ac110003', 'e482effe-1546-444b-a33e-174d63578ebe', '2020-01-02 17:39:22');
+INSERT INTO `role_permissions` VALUES (14, '10b985aa-3009-49af-adeb-a44406f63a70', 'b977008f-1caf-11ea-b42f-0242ac110003', 'a4d71d31-fb1c-4eb8-8294-4e09e4ce0f6e', '2020-01-02 17:39:59');
+INSERT INTO `role_permissions` VALUES (15, 'f29d6041-d0f5-4318-a147-451344ca0647', 'b977008f-1caf-11ea-b42f-0242ac110003', 'd411dd98-2879-4a64-a892-af239678e16e', '2020-01-02 17:41:02');
+INSERT INTO `role_permissions` VALUES (16, 'd617f035-07f9-4d30-956b-48726b9985ed', 'b977008f-1caf-11ea-b42f-0242ac110003', '70963e33-6b06-432d-b23e-9bb994d1d940', '2020-01-02 17:41:50');
+INSERT INTO `role_permissions` VALUES (17, '7ee6ac7f-c393-45f2-a11d-6ebf485e5c6e', 'b88910ea-1caf-11ea-b42f-0242ac110003', '44fe04bb-1cb1-11ea-b42f-0242ac110003', '2020-01-02 17:43:07');
+INSERT INTO `role_permissions` VALUES (18, 'df058951-d641-4eb6-bf5c-4dd108a7236b', 'b989e0fd-1caf-11ea-b42f-0242ac110003', '44fe04bb-1cb1-11ea-b42f-0242ac110003', '2020-01-02 17:43:58');
+INSERT INTO `role_permissions` VALUES (19, 'ae7df8cc-2b49-4d07-84b8-4e28654c73d9', 'b989e0fd-1caf-11ea-b42f-0242ac110003', '44fe402a-1cb1-11ea-b42f-0242ac110003', '2020-01-02 17:44:10');
+INSERT INTO `role_permissions` VALUES (20, '46459eff-553d-4a18-b7fb-8fa7eddbc0e3', 'b989e0fd-1caf-11ea-b42f-0242ac110003', '3b12f7d9-0309-4f47-b7a7-911164fad048', '2020-01-02 17:48:36');
+INSERT INTO `role_permissions` VALUES (21, 'a93f22b6-2c18-459b-92b9-0379738288f5', 'b989e0fd-1caf-11ea-b42f-0242ac110003', 'f06fadd0-7eb9-4acb-9f72-42a0729c2ee6', '2020-01-02 17:49:36');
+INSERT INTO `role_permissions` VALUES (22, '5c6225be-90de-4ee9-ab7d-b9ae399b0a1b', '9305ff74-c24a-4e48-b14f-430ec52ca501', '44fe04bb-1cb1-11ea-b42f-0242ac110003', '2020-01-02 17:50:38');
+INSERT INTO `role_permissions` VALUES (23, 'ecfae602-5a7c-498c-824d-0780cdaed829', '9305ff74-c24a-4e48-b14f-430ec52ca501', '44fe402a-1cb1-11ea-b42f-0242ac110003', '2020-01-02 17:50:51');
+INSERT INTO `role_permissions` VALUES (24, '21d0aa7c-d338-4815-a8c1-f3410e9e747d', '9305ff74-c24a-4e48-b14f-430ec52ca501', '3b12f7d9-0309-4f47-b7a7-911164fad048', '2020-01-02 17:51:27');
+INSERT INTO `role_permissions` VALUES (25, 'a001370c-45c1-40cc-9b81-81c076bf515c', '9305ff74-c24a-4e48-b14f-430ec52ca501', '523dc965-942c-4f16-99ed-93da21606fbe', '2020-01-02 17:52:15');
+INSERT INTO `role_permissions` VALUES (26, '257c0a62-3f94-4f56-8014-59cb24ad9ab9', '9305ff74-c24a-4e48-b14f-430ec52ca501', '6a40cbea-4979-4ca8-b05a-8e35d9f78ebc', '2020-01-02 17:52:34');
+INSERT INTO `role_permissions` VALUES (27, '2d22c04d-8b93-444d-8769-3adaabe91100', '9305ff74-c24a-4e48-b14f-430ec52ca501', '661328cd-f40e-441f-b956-0d5f7f570d7e', '2020-01-02 17:53:10');
+INSERT INTO `role_permissions` VALUES (28, '1b14dee4-d676-471a-89df-63fe6acd27e3', '9305ff74-c24a-4e48-b14f-430ec52ca501', 'da5f8485-5648-448f-9107-b5c7bcc7ca52', '2020-01-02 17:54:59');
+INSERT INTO `role_permissions` VALUES (29, 'fc382ed8-6c5d-49dd-9214-29845432df36', '9305ff74-c24a-4e48-b14f-430ec52ca501', '71e1fc09-d6de-48e7-a344-134ee6584dec', '2020-01-02 17:55:34');
 
 -- ----------------------------
 -- Table structure for roles

@@ -42,7 +42,7 @@ public class AccountsManageApi {
      * @return ResponseBean.payload: 当前认证用户的账号信息记录
      */
     @GetMapping(value = "/self")
-    @PreAuthorize("hasAnyAuthority('current-user')")
+    @PreAuthorize("hasAnyAuthority('current user')")
     public @ResponseBody
     Object getSelfAccountInfo(Principal user) {
         if (user == null || Strings.isNullOrEmpty(user.getName())) {
