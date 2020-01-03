@@ -9,6 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 @Component
 public class ControllerInterceptor implements HandlerInterceptor {
@@ -24,11 +25,32 @@ public class ControllerInterceptor implements HandlerInterceptor {
             // 会话id和用户名
             String sessionId = request.getSession().getId();
 
+            // 记录调用方法名
             logger.info("---PreHandle---:" + "\tMethod: " + methodName +
                     "\tsessionId: " + sessionId);
 
-            String exceptionName = ((HandlerMethod) handler).getMethod().getExceptionTypes().getClass().getName();
-            logger.info(exceptionName);
+            // 记录调用接口参数
+            Map<String, String[]> paramsMap = request.getParameterMap();
+            String paramsInfo = "";
+            for (String key : paramsMap.keySet()) {
+                String[] values = paramsMap.get(key);
+                paramsInfo += String.format("%s: %s; ", key, values[0]);
+            }
+            logger.info(paramsInfo);
+
+            // 提取接口参数中的 access_token ，保存到 session 中
+            if (paramsMap.containsKey("access_token")) {
+                String accessToken = paramsMap.get("access_token")[0];
+                Object attrObj = request.getSession().getAttribute("access_token");
+                // 会话中没有 token ，或者会话中保存的 token 和本次校验通过的不同，则保存新的 token
+                // 进入 preHandle 前，已经校验完 token
+                if (attrObj == null || !accessToken.equals((String)attrObj)) {
+                    request.getSession().setAttribute("access_token", accessToken);
+                }
+            }
+
+//            String exceptionName = ((HandlerMethod) handler).getMethod().getExceptionTypes().getClass().getName();
+//            logger.info(exceptionName);
         } else {
 
         }
