@@ -9,6 +9,9 @@ import com.vulner.unify_auth.service.exception.MyAccountNotFoundException;
 import com.vulner.unify_auth.dao.AccountRolesDao;
 import com.vulner.unify_auth.dao.AccountsDao;
 import com.vulner.unify_auth.dao.RolePermissionsDao;
+import com.vulner.unify_auth.service.helper.SessionHelper;
+import com.vulner.unify_auth.service.logger.SysLogger;
+import com.vulner.unify_auth.util.SpringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -30,13 +33,24 @@ public class MyUserDetailsService implements UserDetailsService {
     private AccountRolesDao accountRolesDao;
     @Autowired
     private RolePermissionsDao rolePermissionsDao;
+//    @Autowired
+//    private SessionHelper sessionHelper;
+
+    private void _saveFailedAccountInfoIntoSession(String accountName) {
+        SessionHelper sessionHelper = (SessionHelper) SpringUtil.getBean("sessionHelper");
+        if (sessionHelper != null) {
+            sessionHelper.saveFailedAccountInfoIntoSession(accountName);
+        }
+    }
 
     @Override
     public UserDetails loadUserByUsername(String accountName) throws UsernameNotFoundException {
         AccountPo accountPo = accountsDao.findByAccount(accountName);
         if (accountPo == null) {
+            _saveFailedAccountInfoIntoSession(accountName);
             throw new MyAccountNotFoundException(accountName);
         } else if (accountPo.getLocked() == PwdLockStatusEnum.LOCKED.getLocked()) {
+            _saveFailedAccountInfoIntoSession(accountName);
             throw new MyAccountLockedException(accountName);
         }
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();

@@ -12,11 +12,11 @@ import java.util.List;
 @Component
 public interface SystemLogsMapper {
     @Insert("INSERT INTO sys_logs( \n" +
-            "uuid, caller, create_account_uuid, \n" +
+            "uuid, caller, account_info, \n" +
             "type, title, contents, \n" +
             "extra_info, create_time) \n" +
             "VALUES ( \n" +
-            "#{uuid}, #{caller}, #{create_account_uuid}, \n" +
+            "#{uuid}, #{caller}, #{account_info}, \n" +
             "#{type}, #{title}, #{contents}, \n" +
             "#{extra_info}, #{create_time, jdbcType=TIMESTAMP}) ")
     int addLog(SystemLogPo systemLogPo);
@@ -26,7 +26,7 @@ public interface SystemLogsMapper {
             "    s.uuid, \n" +
             "    s.type, \n" +
             "    s.caller, \n" +
-            "    s.create_account_uuid, \n" +
+            "    s.account_info, \n" +
             "    s.title, \n" +
             "    s.contents, \n" +
             "    s.extra_info, \n" +
@@ -39,7 +39,7 @@ public interface SystemLogsMapper {
             "\ts.uuid, \n" +
             "\ts.type, \n" +
             "\ts.caller, \n" +
-            "\ts.create_account_uuid, \n" +
+            "\ts.account_info, \n" +
             "\ts.title, \n" +
             "\ts.contents, \n" +
             "\ts.extra_info,\n" +
@@ -57,7 +57,7 @@ public interface SystemLogsMapper {
             "\ts.uuid, \n" +
             "\ts.type, \n" +
             "\ts.caller, \n" +
-            "\ts.create_account_uuid, \n" +
+            "\ts.account_info, \n" +
             "\ts.title, \n" +
             "\ts.contents, \n" +
             "\ts.extra_info,\n" +

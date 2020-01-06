@@ -23,13 +23,13 @@ public class SystemLogService {
     @Autowired
     SystemLogsMapper systemLogsMapper;
 
-    public ResponseBean addLog(String caller, String account_uuid, int type,
+    public ResponseBean addLog(String caller, String account_info, int type,
                                String title, String contents, String extra_info) {
         SystemLogPo systemLogPo = new SystemLogPo();
 
         systemLogPo.setUuid(StringUtils.generateUuid());
         systemLogPo.setCaller(caller);
-        systemLogPo.setCreate_account_uuid(account_uuid);
+        systemLogPo.setAccount_info(account_info);
         systemLogPo.setType(type);
         systemLogPo.setTitle(title);
         systemLogPo.setContents(contents);
@@ -44,31 +44,27 @@ public class SystemLogService {
         }
     }
 
-    public boolean writeLogFile(String caller, String account_uuid, int type,
+    public boolean writeLogFile(String caller, String account_info, int type,
                                 String title, String contents, String extra_info) {
+        String detailInfo = String.format("详细信息如下：\n用户账户uuid: [%s], 日志种类: [%d], 内容: [%s], 扩展信息: [%s]",
+                account_info, type, contents, extra_info);
         if (LogTypeEnum.SUCCESS.getType() == type) {
-            String debugStr = String.format("来自系统[%s]: [%s]调用成功。详细信息如下：\n用户账户uuid: [%s], 日志种类: [%d], 内容: [%s], 扩展信息: [%s]",
-                    caller, title, account_uuid, type, contents, extra_info);
+            String debugStr = String.format("来自系统[%s]: [%s]--调用成功。%s", caller, title, detailInfo);
             logger.info(debugStr);
         } else if (LogTypeEnum.FAIL.getType() == type) {
-            String debugStr = String.format("来自系统[%s]: [%s]调用失败。详细信息如下：\n用户账户uuid: [%s], 日志种类: [%d], 内容: [%s], 扩展信息: [%s]",
-                    caller, title, account_uuid, type, contents, extra_info);
+            String debugStr = String.format("来自系统[%s]: [%s]--调用失败。%s", caller, title, detailInfo);
             logger.info(debugStr);
         } else if (LogTypeEnum.SYS_ERROR.getType() == type) {
-            String errorStr = String.format("来自系统[%s]: [%s]系统错误。详细信息如下：\n用户账户uuid: [%s], 日志种类: [%d], 内容: [%s], 扩展信息: [%s]",
-                    caller, title, account_uuid, type, contents, extra_info);
+            String errorStr = String.format("来自系统[%s]: [%s]--系统错误。%s", caller, title, detailInfo);
             logger.error(errorStr);
         } else if (LogTypeEnum.INFO.getType() == type) {
-            String infoStr = String.format("来自系统[%s]: [%s]。详细信息如下：\n用户账户uuid: [%s], 日志种类: [%d], 内容: [%s], 扩展信息: [%s]",
-                    caller, title, account_uuid, type, contents, extra_info);
+            String infoStr = String.format("来自系统[%s]: [%s]。%s", caller, title, detailInfo);
             logger.info(infoStr);
         } else if (LogTypeEnum.EXCEPT.getType() == type) {
-            String errorStr = String.format("来自系统[%s]: [%s]系统异常。详细信息如下：\n用户账户uuid: [%s], 日志种类: [%d], 内容: [%s], 扩展信息: [%s]",
-                    caller, title, account_uuid, type, contents, extra_info);
+            String errorStr = String.format("来自系统[%s]: [%s]--系统异常。%s", caller, title, detailInfo);
             logger.error(errorStr);
         } else if (LogTypeEnum.WARNING.getType() == type) {
-            String warnStr = String.format("来自系统[%s]: [%s]告警。详细信息如下：\n用户账户uuid: [%s], 日志种类: [%d], 内容: [%s], 扩展信息: [%s]",
-                    caller, title, account_uuid, type, contents, extra_info);
+            String warnStr = String.format("来自系统[%s]: [%s]--告警。%s", caller, title, detailInfo);
             logger.warn(warnStr);
         }
 

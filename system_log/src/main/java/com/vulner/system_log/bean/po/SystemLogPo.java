@@ -10,7 +10,7 @@ public class SystemLogPo {
     // 调用者（其他模块或系统名称）
     private String caller;
     // 系统或模块的使用者账户 UUID
-    private String create_account_uuid;
+    private String account_info;
     //    日志记录的类型：
     //            1：成功操作；
     //            2：失败操作；

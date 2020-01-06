@@ -1,6 +1,7 @@
 package com.vulner.unify_auth.configuration.interceptor;
 
 
+import com.vulner.common.global.MyConst;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -39,13 +40,13 @@ public class ControllerInterceptor implements HandlerInterceptor {
             logger.info(paramsInfo);
 
             // 提取接口参数中的 access_token ，保存到 session 中
-            if (paramsMap.containsKey("access_token")) {
-                String accessToken = paramsMap.get("access_token")[0];
-                Object attrObj = request.getSession().getAttribute("access_token");
+            if (paramsMap.containsKey(MyConst.ACCESS_TOKEN)) {
+                String accessToken = paramsMap.get(MyConst.ACCESS_TOKEN)[0];
+                Object attrObj = request.getSession().getAttribute(MyConst.ACCESS_TOKEN);
                 // 会话中没有 token ，或者会话中保存的 token 和本次校验通过的不同，则保存新的 token
                 // 进入 preHandle 前，已经校验完 token
                 if (attrObj == null || !accessToken.equals((String)attrObj)) {
-                    request.getSession().setAttribute("access_token", accessToken);
+                    request.getSession().setAttribute(MyConst.ACCESS_TOKEN, accessToken);
                 }
             }
 

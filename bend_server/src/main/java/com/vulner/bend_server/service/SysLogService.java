@@ -14,7 +14,7 @@ public interface SysLogService {
 
     @PostMapping(value = "/sys_log/add")
     String addLog(@RequestParam("caller")String caller,
-                  @RequestParam("account_uuid")String account_uuid,
+                  @RequestParam("account_info")String account_info,
                   @RequestParam("type")int type,
                   @RequestParam("title")String title,
                   @RequestParam("contents")String contents,

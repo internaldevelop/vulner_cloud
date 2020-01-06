@@ -17,15 +17,15 @@ public class LogApi {
     @PostMapping(value = "/add")
     @ResponseBody
     public Object recordLog(@RequestParam("caller")String caller,
-                            @RequestParam("account_uuid")String account_uuid,
+                            @RequestParam("account_info")String account_info,
                             @RequestParam("type")int type,
                             @RequestParam("title")String title,
                             @RequestParam("contents")String contents,
                             @RequestParam("extra_info")String extra_info) {
 
-        systemLogService.writeLogFile(caller, account_uuid, type, title, contents, extra_info);
+        systemLogService.writeLogFile(caller, account_info, type, title, contents, extra_info);
 
-        return systemLogService.addLog(caller, account_uuid, type, title, contents, extra_info);
+        return systemLogService.addLog(caller, account_info, type, title, contents, extra_info);
     }
 
     @GetMapping(value = "/get")

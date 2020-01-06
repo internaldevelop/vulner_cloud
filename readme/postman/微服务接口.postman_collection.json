@@ -1793,13 +1793,13 @@
 										},
 										{
 											"key": "role_name",
-											"value": "ROLE_1",
+											"value": "ROLE_OPERATOR",
 											"description": "角色名称，必须是“ROLE_”开头，比如：ROLE_USER",
 											"type": "text"
 										},
 										{
 											"key": "role_alias",
-											"value": "1",
+											"value": "操作员",
 											"description": "角色别名，比如：“管理员”、“游客”、“操作员”",
 											"type": "text"
 										}
@@ -2687,19 +2687,19 @@
 	],
 	"variable": [
 		{
-			"id": "5973a3d6-1b90-4513-8022-8af91ea2f5d9",
+			"id": "3bc1d628-457c-46e7-b930-241b4ad4db1d",
 			"key": "SYS_CODE_URL",
 			"value": "http://localhost:10113/sys_code",
 			"type": "string"
 		},
 		{
-			"id": "e322f42d-a251-46b9-b616-69d5415b475a",
+			"id": "5a4ccd4d-c393-49b3-bc76-73601acf3077",
 			"key": "SYS_LOG_URL",
 			"value": "http://localhost:10116/sys_log",
 			"type": "string"
 		},
 		{
-			"id": "0c24c7f0-d27e-4542-8e52-437d4432bd39",
+			"id": "3c6916ec-c20c-4e9e-bbd9-17d99ebc7f39",
 			"key": "UNI_AUTH_URL",
 			"value": "http://localhost:10114",
 			"type": "string"

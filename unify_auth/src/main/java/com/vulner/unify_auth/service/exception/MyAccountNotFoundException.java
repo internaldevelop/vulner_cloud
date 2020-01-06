@@ -1,5 +1,12 @@
 package com.vulner.unify_auth.service.exception;
 
+import com.vulner.common.response.ResponseBean;
+import com.vulner.common.response.ResponseHelper;
+import com.vulner.unify_auth.service.logger.SysLogger;
+import com.vulner.unify_auth.util.SpringUtil;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 
 /**
@@ -28,6 +35,9 @@ public class MyAccountNotFoundException extends MyAuthException {
     }
 
     public String getSummary() {
-        return "用户不存在";
+        String msg = String.format("账户（%s）不存在！", this.getMessage());
+
+        return msg;
     }
+
 }
