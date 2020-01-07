@@ -55,4 +55,19 @@ public class LogApi {
 
         return systemLogService.getLogs(caller, title, beginTime, endTime, offset, count);
     }
+
+    @GetMapping(value = "/search_by_filter")
+    @ResponseBody
+    public Object searchByFilter(@RequestParam(value = "type", required = false, defaultValue = "0") int type,
+                                 @RequestParam(value = "caller", required = false) String caller,
+                                 @RequestParam(value = "account_name", required = false) String accountName,
+                                 @RequestParam(value = "account_alias", required = false) String accountAlias,
+                                 @RequestParam(value = "title", required = false) String title,
+                                 @RequestParam(value = "begin_time", required = false) String beginTime,
+                                 @RequestParam(value = "end_time", required = false) String endTime,
+                                 @RequestParam(value = "offset", required = false) int offset,
+                                 @RequestParam(value = "count", required = false) int count) {
+        return systemLogService.searchLogsByFilters(type, caller, accountName, accountAlias,
+                title, beginTime, endTime, offset, count);
+    }
 }

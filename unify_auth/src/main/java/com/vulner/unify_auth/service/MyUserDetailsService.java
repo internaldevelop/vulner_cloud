@@ -39,7 +39,8 @@ public class MyUserDetailsService implements UserDetailsService {
     private void _saveFailedAccountInfoIntoSession(String accountName) {
         SessionHelper sessionHelper = (SessionHelper) SpringUtil.getBean("sessionHelper");
         if (sessionHelper != null) {
-            sessionHelper.saveFailedAccountInfoIntoSession(accountName);
+            // access_token 设置为空，表示没有验证通过的 token
+            sessionHelper.saveTokenAndAccountIntoSession("", accountName);
         }
     }
 

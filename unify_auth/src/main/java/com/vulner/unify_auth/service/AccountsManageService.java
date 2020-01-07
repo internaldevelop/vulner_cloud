@@ -16,11 +16,15 @@ import com.vulner.unify_auth.dao.AccountsDao;
 import com.vulner.unify_auth.service.helper.AccountHelper;
 import com.vulner.unify_auth.service.helper.PasswordHelper;
 import com.vulner.unify_auth.service.helper.RolesHelper;
+import com.vulner.unify_auth.service.helper.SessionHelper;
+import com.vulner.unify_auth.service.logger.SysLogger;
 import com.vulner.unify_auth.util.PasswordUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
 import org.springframework.stereotype.Component;
 
+import java.security.Principal;
 import java.util.List;
 
 @Component
@@ -33,6 +37,15 @@ public class AccountsManageService {
 
     @Autowired
     private PasswordHelper passwordHelper;
+
+    @Autowired
+    private ConsumerTokenServices consumerTokenServices;
+
+    @Autowired
+    private SysLogger sysLogger;
+
+    @Autowired
+    private SessionHelper sessionHelper;
 
     private String _uuid2Name(String accountUuid) {
         String accountName = accountsDao.getAccountNameByUuid(accountUuid);
@@ -266,5 +279,26 @@ public class AccountsManageService {
         }
 
         return ResponseHelper.success(accountUuid);
+    }
+
+    public ResponseBean accountLogout(String accessToken, Principal user) {
+        String accountName = user.getName();
+        String msg = String.format("账号（%s）登出", accountName);
+        String title = "登出";
+
+        // 会话中保存 token 和账号信息
+        sessionHelper.saveTokenAndAccountIntoSession(accessToken, accountName);
+
+        // 回收身份令牌
+        boolean rv = consumerTokenServices.revokeToken(accessToken);
+        if (rv) {
+            msg += "成功";
+            sysLogger.success(title, msg);
+            return ResponseHelper.success(msg);
+        } else {
+            msg += "失败";
+            sysLogger.fail(title, msg);
+            return ResponseHelper.error("ERROR_LOGOUT_FAILED", msg);
+        }
     }
 }

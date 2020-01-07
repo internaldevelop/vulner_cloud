@@ -1,6 +1,9 @@
 package com.vulner.system_log.service;
 
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Strings;
 import com.vulner.common.enumeration.LogTypeEnum;
+import com.vulner.common.global.MyConst;
 import com.vulner.common.response.ResponseBean;
 import com.vulner.common.response.ResponseHelper;
 import com.vulner.common.utils.StringUtils;
@@ -89,5 +92,73 @@ public class SystemLogService {
         } else {
             return ResponseHelper.error("ERROR_LOGS_NOT_FOUND");
         }
+    }
+
+    public ResponseBean searchLogsByFilters(int type,
+                                            String caller,
+                                            String accountName,
+                                            String accountAlias,
+                                            String title,
+                                            String beginTime,
+                                            String endTime,
+                                            int offset,
+                                            int count) {
+        String timeFormat = "yyyy-MM-dd HH:mm:ss";
+        // 起始时间未指定，则使用1900年1月1日作为过滤器的起始时间
+        if (Strings.isNullOrEmpty(beginTime)) {
+            beginTime = "1900-01-01";
+        }
+        Timestamp timeFrom = TimeUtils.parseTimeFromString(beginTime, timeFormat);
+
+        // 结束时间未指定，则使用当前时间作为过滤器的结束时间
+        Timestamp timeTo;
+        if (Strings.isNullOrEmpty(endTime)) {
+            timeTo = TimeUtils.getCurrentSystemTimestamp();
+        } else {
+            timeTo = TimeUtils.parseTimeFromString(endTime, timeFormat);
+        }
+
+        // 组装账号名为待查询格式
+        if (Strings.isNullOrEmpty(accountName)) {
+            accountName = "";
+        } else {
+            accountName = String.format("\"account_name\":\"%s\"", accountName);
+        }
+
+        // 组装账号名为待查询格式
+        if (Strings.isNullOrEmpty(accountAlias)) {
+            accountAlias = "";
+        } else {
+            accountAlias = String.format("\"account_alias\":\"%s\"", accountAlias);
+        }
+
+        // caller 和 title 如为null，则设置为空字符串
+        if (caller == null) {
+            caller = "";
+        }
+        if (title == null) {
+            title = "";
+        }
+
+        // 如果 count 为0，则默认为 MAX_RECORD_COUNT 条数据
+        if (count == 0) {
+            count = MyConst.MAX_RECORD_COUNT;
+        }
+
+        // 计算满足过滤器条件的记录总数
+        int total = systemLogsMapper.countByFilters(type, caller, accountName, accountAlias,
+                title, timeFrom, timeTo);
+
+        // 读取满足条件的记录
+        List<SystemLogPo> logsList = systemLogsMapper.searchByFilters(type, caller, accountName, accountAlias,
+                title, timeFrom, timeTo, offset, count);
+
+        // 响应数据包含记录总数，当前记录数，和查询出来的日志记录集合
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("total", total);
+        jsonObject.put("count", logsList.size());
+        jsonObject.put("logs", logsList);
+
+        return ResponseHelper.success(jsonObject);
     }
 }

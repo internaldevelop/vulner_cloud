@@ -73,4 +73,40 @@ public interface SystemLogsMapper {
                               @Param("begin_time")Timestamp beginTime,
                               @Param("end_time")Timestamp endTime,
                               int offset, int count);
+
+    @Select("SELECT\n" +
+            "\ts.id, \n" +
+            "\ts.uuid, \n" +
+            "\ts.type, \n" +
+            "\ts.caller, \n" +
+            "\ts.account_info, \n" +
+            "\ts.title, \n" +
+            "\ts.contents, \n" +
+            "\ts.extra_info,\n" +
+            "\ts.create_time \n" +
+            "FROM sys_logs s \n" +
+            "WHERE \n" +
+            "\t(#{type}=0 OR s.type=#{type}) AND \n" +
+            "\ts.caller LIKE '%${caller}%' AND \n" +
+            "\ts.account_info LIKE '%${accountName}%' AND \n" +
+            "\ts.account_info LIKE '%${accountAlias}%' AND \n" +
+            "\ts.title LIKE '%${title}%' AND \n" +
+            "\ts.create_time BETWEEN #{timeFrom} AND #{timeTo} \n" +
+            "ORDER BY s.create_time DESC \n" +
+            "LIMIT #{offset}, #{count}")
+    List<SystemLogPo> searchByFilters(int type, String caller, String accountName, String accountAlias,
+                                      String title, Timestamp timeFrom, Timestamp timeTo,
+                                      int offset, int count);
+
+    @Select("SELECT count(1)\n" +
+            "FROM sys_logs s \n" +
+            "WHERE \n" +
+            "\t(#{type}=0 OR s.type=#{type}) AND \n" +
+            "\ts.caller LIKE '%${caller}%' AND \n" +
+            "\ts.account_info LIKE '%${accountName}%' AND \n" +
+            "\ts.account_info LIKE '%${accountAlias}%' AND \n" +
+            "\ts.title LIKE '%${title}%' AND \n" +
+            "\ts.create_time BETWEEN #{timeFrom} AND #{timeTo} \n")
+    int countByFilters(int type, String caller, String accountName, String accountAlias,
+                       String title, Timestamp timeFrom, Timestamp timeTo);
 }

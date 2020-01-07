@@ -89,16 +89,17 @@ public class SessionHelper {
         session.setAttribute(MyConst.ACCOUNT_ALIAS, "");
     }
 
-    public void saveFailedAccountInfoIntoSession(String accountName) {
+    public void saveTokenAndAccountIntoSession(String accessToken, String accountName) {
         HttpSession session = httpServletRequest.getSession();
         if (session == null) {
             return;
         }
 
         // 失败的处理中，保存空的 token 信息
-        session.setAttribute(MyConst.ACCESS_TOKEN, "");
+        session.setAttribute(MyConst.ACCESS_TOKEN, accessToken);
 
         // 在会话中保存账户信息
         _updateAccountInfo(session, accountName);
     }
+
 }

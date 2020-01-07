@@ -57,7 +57,7 @@ public class MyAccountPwdVerifyException extends MyAuthException  {
         int remains = maxAttempts - attempts;
 
         // 提示信息
-        String msg = String.format("账户（%s）密码校验失败，剩余%d次尝试次数（最大尝试次数为%d）。", accountName, remains, maxAttempts);
+        String msg = String.format("账号（%s）密码校验失败，剩余%d次尝试次数（最大尝试次数为%d）。", accountName, remains, maxAttempts);
 
         // 返回数据体
         JSONObject jsonObject = new JSONObject();

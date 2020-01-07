@@ -393,7 +393,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{SYS_LOG_URL}}/get_in_period?caller=fw analyze back-end server&title=echoErrorCode&begin_time=2019-12-01 17:53:50&end_time=2019-12-07 09:41:40&offset=1&count=3",
+							"raw": "{{SYS_LOG_URL}}/get_in_period?caller=uni-auth service&title=登录&begin_time=2019-12-01 17:53:50&end_time=2020-12-07 09:41:40&offset=0&count=300",
 							"host": [
 								"{{SYS_LOG_URL}}"
 							],
@@ -403,11 +403,11 @@
 							"query": [
 								{
 									"key": "caller",
-									"value": "fw analyze back-end server"
+									"value": "uni-auth service"
 								},
 								{
 									"key": "title",
-									"value": "echoErrorCode"
+									"value": "登录"
 								},
 								{
 									"key": "begin_time",
@@ -415,15 +415,79 @@
 								},
 								{
 									"key": "end_time",
-									"value": "2019-12-07 09:41:40"
+									"value": "2020-12-07 09:41:40"
 								},
 								{
 									"key": "offset",
-									"value": "1"
+									"value": "0"
 								},
 								{
 									"key": "count",
-									"value": "3"
+									"value": "300"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.5 过滤器查询日志",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SYS_LOG_URL}}/search_by_filter?type&caller=uni-auth service&account_name=user_1&account_alias&title=&begin_time=2019-12-01 17:53:50&end_time=2020-12-07 09:41:40&offset=0&count=10",
+							"host": [
+								"{{SYS_LOG_URL}}"
+							],
+							"path": [
+								"search_by_filter"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": null,
+									"description": "可选参数，日志类型，不含此参数或空，表示所有日志类型"
+								},
+								{
+									"key": "caller",
+									"value": "uni-auth service",
+									"description": "可选参数，日志记录来源，不含此参数或为空，表示所有日志来源"
+								},
+								{
+									"key": "account_name",
+									"value": "user_1",
+									"description": "可选参数，用户账号名，不含此参数或为空，表示包含所有用户名"
+								},
+								{
+									"key": "account_alias",
+									"value": null,
+									"description": "可选参数，用户别名，不含此参数或为空，表示包含所有用户别名"
+								},
+								{
+									"key": "title",
+									"value": "",
+									"description": "可选参数，日志标题，不含此参数或为空，表示包含所有标题"
+								},
+								{
+									"key": "begin_time",
+									"value": "2019-12-01 17:53:50",
+									"description": "可选参数，查询的起始时间，不含此参数或为空，表示起始时间为1900年1月1日"
+								},
+								{
+									"key": "end_time",
+									"value": "2020-12-07 09:41:40",
+									"description": "可选参数，查询的结束时间，不含此参数或为空，表示结束时间为当前时间"
+								},
+								{
+									"key": "offset",
+									"value": "0",
+									"description": "可选参数，满足过滤器条件的首条记录的偏移量，不含此参数或为空，表示偏移量为0"
+								},
+								{
+									"key": "count",
+									"value": "10",
+									"description": "可选参数，满足过滤器条件的记录的当前查询数量，不含此参数或为空，表示最大为200"
 								}
 							]
 						}
@@ -2687,19 +2751,19 @@
 	],
 	"variable": [
 		{
-			"id": "3bc1d628-457c-46e7-b930-241b4ad4db1d",
+			"id": "6dd18136-37bf-4924-8f99-c23f1ccc7561",
 			"key": "SYS_CODE_URL",
 			"value": "http://localhost:10113/sys_code",
 			"type": "string"
 		},
 		{
-			"id": "5a4ccd4d-c393-49b3-bc76-73601acf3077",
+			"id": "c503b391-c1d5-4182-9f5a-099fb945450f",
 			"key": "SYS_LOG_URL",
 			"value": "http://localhost:10116/sys_log",
 			"type": "string"
 		},
 		{
-			"id": "3c6916ec-c20c-4e9e-bbd9-17d99ebc7f39",
+			"id": "0a9202b0-b4af-4a89-a86f-597d76924a83",
 			"key": "UNI_AUTH_URL",
 			"value": "http://localhost:10114",
 			"type": "string"

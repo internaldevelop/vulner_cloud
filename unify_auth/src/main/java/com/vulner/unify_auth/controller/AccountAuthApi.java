@@ -12,6 +12,7 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
@@ -67,11 +68,9 @@ public class AccountAuthApi {
      */
     @DeleteMapping(value = "/exit")
     public @ResponseBody
-    ResponseBean revokeToken(@RequestParam("access_token") String accessToken) {
-        if (consumerTokenServices.revokeToken(accessToken)) {
-            return ResponseHelper.success("注销成功");
-        } else {
-            return ResponseHelper.error("ERROR_LOGOUT_FAILED");
-        }
+    ResponseBean revokeToken(@RequestParam("access_token") String accessToken,
+                             Principal user) {
+
+        return accountsManageService.accountLogout(accessToken, user);
     }
 }

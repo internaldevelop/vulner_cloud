@@ -11,7 +11,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Jason
@@ -52,7 +54,7 @@ public class AuthenticationSuccessEventListener implements ApplicationListener<A
             sessionHelper.saveAccountInfoIntoSession(authentication);
 
             // 日志记录：登录成功
-            String msg = String.format("账户（%s）登录成功", username);
+            String msg = String.format("账号（%s）登录成功", username);
             sysLogger.success("登录", msg);
         }
     }

@@ -38,7 +38,7 @@ public class MyAccountLockedException extends MyAuthException {
     }
 
     public String getSummary() {
-        String msg = String.format("账户（%s）密码已锁定，请联系系统管理员解锁！", this.getMessage());
+        String msg = String.format("账号（%s）密码已锁定，请联系系统管理员解锁！", this.getMessage());
 
         return msg;
     }
