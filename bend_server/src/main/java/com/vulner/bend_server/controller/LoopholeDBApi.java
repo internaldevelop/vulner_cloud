@@ -10,6 +10,7 @@ import com.vulner.bend_server.service.SysLogService;
 import com.vulner.common.response.ResponseHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -38,6 +39,7 @@ public class LoopholeDBApi {
      * @return
      */
     @GetMapping(value = "/search")
+    @PreAuthorize("hasAnyAuthority('query')")
     @ResponseBody
     public Object search(@RequestParam(required = false)Integer page_num, @RequestParam(required = false)Integer page_size, @RequestParam(required = false) String name) {
         Page<ExploitInfoTinyPo> exploitInfoTinyList = loopholeDBService.search(page_num, page_size, name);
@@ -49,6 +51,7 @@ public class LoopholeDBApi {
      * @return
      */
     @GetMapping(value = "/add_vul")
+    @PreAuthorize("hasAnyAuthority('query')")
     @ResponseBody
     public Object addVul(@RequestBody ExploitInfoTinyPo exploit_info) {
         Boolean addFlag = loopholeDBService.addVul(exploit_info);
@@ -60,6 +63,7 @@ public class LoopholeDBApi {
      * @return
      */
     @GetMapping(value = "/modify_vul")
+    @PreAuthorize("hasAnyAuthority('query')")
     @ResponseBody
     public Object modifyVul(@RequestParam String params) throws Exception {
         Map<String, String> map = objectMapper.readValue(params, Map.class);
@@ -73,6 +77,7 @@ public class LoopholeDBApi {
      * @return
      */
     @GetMapping(value = "/del_vul")
+    @PreAuthorize("hasAnyAuthority('query')")
     @ResponseBody
     public Object delVul(@RequestParam("vul_id") String vulId) {
         Boolean addFlag = loopholeDBService.delVul(vulId);

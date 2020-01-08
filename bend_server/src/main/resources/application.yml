@@ -9,15 +9,18 @@ spring:
   application:
     name: fw-bend-server
   rabbitmq:
-    host: 192.168.182.88
+    host: 192.168.1.41
     port: 5672
-    username: admin
-    password: admin
+    username: guest
+    password: 123456
   cloud:
     bus:
       enabled: true
     trace:
       enabled: true
+  data:
+    mongodb:
+      uri: mongodb://admin:123456@192.168.1.41:27017/exploit_db_tiny?authSource=admin&authMechanism=SCRAM-SHA-1
 
 server:
   port: ${myprops.port}
@@ -37,3 +40,11 @@ security:
       user-info-uri: http://localhost:10110/unified-auth/account_auth/current
 #      user-info-uri: http://localhost:1203/api/member
       prefer-token-info: false
+
+
+logging:
+  level:
+    org:
+      springframework:
+        boot:
+          autoconfigure: ERROR

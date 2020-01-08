@@ -1,7 +1,7 @@
 package com.vulner.bend_server.configuration.interceptor;
 
 
-import com.vulner.bend_server.global.Const;
+import com.vulner.common.global.MyConst;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -10,6 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 @Component
 public class ControllerInterceptor implements HandlerInterceptor {
@@ -24,15 +25,31 @@ public class ControllerInterceptor implements HandlerInterceptor {
             String methodName = ((HandlerMethod) handler).getMethod().getName();
             // 会话id和用户名
             String sessionId = request.getSession().getId();
-            String userAccount = (String)request.getSession().getAttribute(Const.ACCOUNT);
-            //
-//            logger.info("---PreHandle---:" + "\tClass: " + className + "\tMethod: " + methodName +
-//                    "\tsessionId: " + sessionId + "\tuserName: " + userName);
-            logger.info("---PreHandle---:" + "\tMethod: " + methodName +
-                    "\tsessionId: " + sessionId + "\tuserAccount: " + userAccount);
 
-            String exceptionName = ((HandlerMethod) handler).getMethod().getExceptionTypes().getClass().getName();
-            logger.info(exceptionName);
+            // 记录调用方法名
+            logger.info("---PreHandle---:" + "\tMethod: " + methodName +
+                    "\tsessionId: " + sessionId);
+
+            // 记录调用接口参数
+            Map<String, String[]> paramsMap = request.getParameterMap();
+            String paramsInfo = "";
+            for (String key : paramsMap.keySet()) {
+                String[] values = paramsMap.get(key);
+                paramsInfo += String.format("%s: %s; ", key, values[0]);
+            }
+            logger.info(paramsInfo);
+
+            // 提取接口参数中的 access_token ，保存到 session 中
+            if (paramsMap.containsKey(MyConst.ACCESS_TOKEN)) {
+                String accessToken = paramsMap.get(MyConst.ACCESS_TOKEN)[0];
+                Object attrObj = request.getSession().getAttribute(MyConst.ACCESS_TOKEN);
+                // 会话中没有 token ，或者会话中保存的 token 和本次校验通过的不同，则保存新的 token
+                // 进入 preHandle 前，已经校验完 token
+                if (attrObj == null || !accessToken.equals((String)attrObj)) {
+                    request.getSession().setAttribute(MyConst.ACCESS_TOKEN, accessToken);
+                }
+            }
+
         } else {
 
         }
