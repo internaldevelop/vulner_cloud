@@ -1,8 +1,11 @@
 package com.vulner.bend_server.configuration.interceptor;
 
 
+import com.vulner.bend_server.service.UniAuthService;
 import com.vulner.common.global.MyConst;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -47,6 +50,8 @@ public class ControllerInterceptor implements HandlerInterceptor {
                 // 进入 preHandle 前，已经校验完 token
                 if (attrObj == null || !accessToken.equals((String)attrObj)) {
                     request.getSession().setAttribute(MyConst.ACCESS_TOKEN, accessToken);
+//                    Object selfAccountInfo = uniAuthService.getSelfAccountInfo();
+//                    System.out.println(selfAccountInfo);
                 }
             }
 

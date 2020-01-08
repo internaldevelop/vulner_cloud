@@ -3,16 +3,17 @@ package com.vulner.bend_server.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vulner.bend_server.bean.po.ExploitInfoTinyPo;
 import com.vulner.bend_server.global.Page;
-import com.vulner.bend_server.global.SysLogger;
 import com.vulner.bend_server.service.ErrorCodeService;
 import com.vulner.bend_server.service.LoopholeDBService;
-import com.vulner.bend_server.service.SysLogService;
+import com.vulner.bend_server.service.logger.SysLogService;
+import com.vulner.bend_server.service.logger.SysLogger;
 import com.vulner.common.response.ResponseHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.Map;
 
 /**
@@ -22,8 +23,6 @@ import java.util.Map;
 @RequestMapping(value = "/vuldb", produces = MediaType.APPLICATION_JSON_VALUE)
 public class LoopholeDBApi {
 
-    @Autowired
-    ErrorCodeService errorCodeService;
     @Autowired
     SysLogService sysLogService;
     @Autowired
@@ -39,10 +38,13 @@ public class LoopholeDBApi {
      * @return
      */
     @GetMapping(value = "/search")
-    @PreAuthorize("hasAnyAuthority('query')")
+    @PreAuthorize("hasAnyAuthority('statistics')")
     @ResponseBody
-    public Object search(@RequestParam(required = false)Integer page_num, @RequestParam(required = false)Integer page_size, @RequestParam(required = false) String name) {
+    public Object search(Principal user, @RequestParam(required = false)Integer page_num, @RequestParam(required = false)Integer page_size, @RequestParam(required = false) String name) {
+        String accountName = user.getName();
+        String msg = String.format("账号（%s）查询", accountName);
         Page<ExploitInfoTinyPo> exploitInfoTinyList = loopholeDBService.search(page_num, page_size, name);
+        sysLogger.success("漏洞库查询", msg);
         return ResponseHelper.success(exploitInfoTinyList);
     }
 

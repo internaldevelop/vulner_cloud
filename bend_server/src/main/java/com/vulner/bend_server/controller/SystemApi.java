@@ -1,17 +1,16 @@
 package com.vulner.bend_server.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.vulner.bend_server.global.SysLogger;
 import com.vulner.bend_server.service.*;
+import com.vulner.bend_server.service.logger.SysLogService;
+import com.vulner.bend_server.service.logger.SysLogger;
 import com.vulner.common.response.ResponseBean;
 import com.vulner.common.response.ResponseHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.LinkedHashMap;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class SystemApi {

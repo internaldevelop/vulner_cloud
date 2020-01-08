@@ -1,24 +1,33 @@
-package com.vulner.bend_server.global;
+package com.vulner.bend_server.service.logger;
 
-import com.vulner.bend_server.service.SysLogService;
+import com.alibaba.fastjson.JSONObject;
+import com.vulner.bend_server.service.helper.SessionHelper;
 import com.vulner.common.enumeration.LogTypeEnum;
+import com.vulner.common.global.MyConst;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class SysLogger {
-    public final String caller = "fw analyze back-end server";
+    public final String caller = "uni-auth service";
 
     @Autowired
-    SysLogService sysLogService;
+    private SysLogService sysLogService;
+
+    @Autowired
+    private SessionHelper sessionHelper;
 
     private void _log(int type,
                     String title,
                     String contents,
                     String extra_info) {
-        // Todo: set the account uuid
-        String account_uuid = "b3fa2914-a4c4-4dc3-978f-fe7ca3125abb";
-        sysLogService.addLog(caller, account_uuid, type, title, contents, extra_info);
+        // 组装账户信息 （JSON）
+        JSONObject jsonObject = new JSONObject();
+        String accessToken = sessionHelper.getSessionAttribute(jsonObject, MyConst.ACCESS_TOKEN);
+        sessionHelper.getSessionAttribute(jsonObject, MyConst.ACCOUNT_UUID);
+        sessionHelper.getSessionAttribute(jsonObject, MyConst.ACCOUNT_NAME);
+        sessionHelper.getSessionAttribute(jsonObject, MyConst.ACCOUNT_ALIAS);
+        sysLogService.addLog(accessToken, caller, jsonObject.toJSONString(), type, title, contents, extra_info);
     }
 
     // -----------------------------------------------------------------------
