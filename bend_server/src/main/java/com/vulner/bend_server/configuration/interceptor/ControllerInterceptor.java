@@ -1,11 +1,9 @@
 package com.vulner.bend_server.configuration.interceptor;
 
-
+import com.vulner.bend_server.global.ContextUtil;
 import com.vulner.bend_server.service.UniAuthService;
 import com.vulner.common.global.MyConst;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -21,6 +19,8 @@ public class ControllerInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        UniAuthService uniAuthService =  ContextUtil.getBean(UniAuthService.class);  // 统一权限
+
         if (handler instanceof HandlerMethod) {
             // 获取类名
             String className = ((HandlerMethod) handler).getBean().getClass().getName();
@@ -50,8 +50,18 @@ public class ControllerInterceptor implements HandlerInterceptor {
                 // 进入 preHandle 前，已经校验完 token
                 if (attrObj == null || !accessToken.equals((String)attrObj)) {
                     request.getSession().setAttribute(MyConst.ACCESS_TOKEN, accessToken);
-//                    Object selfAccountInfo = uniAuthService.getSelfAccountInfo();
-//                    System.out.println(selfAccountInfo);
+
+                    Map mp = (Map)uniAuthService.getSelfAccountInfo(accessToken);
+
+                    if (mp != null && mp.containsKey("payload")){
+                        Object payload = mp.get("payload");
+                        Map mpPayload = (Map)mp.get("payload");
+
+                        request.getSession().setAttribute(MyConst.ACCOUNT_UUID, mpPayload.get("uuid"));
+                        request.getSession().setAttribute(MyConst.ACCOUNT_NAME, mpPayload.get("name"));
+                        request.getSession().setAttribute(MyConst.ACCOUNT_ALIAS, mpPayload.get("alias"));
+                    }
+
                 }
             }
 
