@@ -50,7 +50,10 @@ public interface SystemLogsMapper {
             "\ts.title=#{title} \n" +
             "ORDER BY s.create_time DESC \n" +
             "LIMIT #{offset}, #{count}")
-    List<SystemLogPo> getLogs(String caller, String title, int offset, int count);
+    List<SystemLogPo> getLogs(@Param("caller") String caller,
+                              @Param("title") String title,
+                              @Param("offset") int offset,
+                              @Param("count") int count);
 
     @Select("SELECT\n" +
             "\ts.id, \n" +
@@ -69,10 +72,12 @@ public interface SystemLogsMapper {
             "\ts.create_time BETWEEN #{begin_time} AND #{end_time} \n" +
             "ORDER BY s.create_time DESC \n" +
             "LIMIT #{offset}, #{count}")
-    List<SystemLogPo> getPeriodLogs(String caller, String title,
-                              @Param("begin_time")Timestamp beginTime,
-                              @Param("end_time")Timestamp endTime,
-                              int offset, int count);
+    List<SystemLogPo> getPeriodLogs(@Param("caller") String caller,
+                                    @Param("title") String title,
+                                    @Param("begin_time")Timestamp beginTime,
+                                    @Param("end_time")Timestamp endTime,
+                                    @Param("offset") int offset,
+                                    @Param("count") int count);
 
     @Select("SELECT\n" +
             "\ts.id, \n" +
@@ -94,9 +99,15 @@ public interface SystemLogsMapper {
             "\ts.create_time BETWEEN #{timeFrom} AND #{timeTo} \n" +
             "ORDER BY s.create_time DESC \n" +
             "LIMIT #{offset}, #{count}")
-    List<SystemLogPo> searchByFilters(int type, String caller, String accountName, String accountAlias,
-                                      String title, Timestamp timeFrom, Timestamp timeTo,
-                                      int offset, int count);
+    List<SystemLogPo> searchByFilters(@Param("type") int type,
+                                      @Param("caller") String caller,
+                                      @Param("accountName") String accountName,
+                                      @Param("accountAlias") String accountAlias,
+                                      @Param("title") String title,
+                                      @Param("timeFrom") Timestamp timeFrom,
+                                      @Param("timeTo") Timestamp timeTo,
+                                      @Param("offset") int offset,
+                                      @Param("count") int count);
 
     @Select("SELECT count(1)\n" +
             "FROM sys_logs s \n" +
@@ -107,6 +118,11 @@ public interface SystemLogsMapper {
             "\ts.account_info LIKE '%${accountAlias}%' AND \n" +
             "\ts.title LIKE '%${title}%' AND \n" +
             "\ts.create_time BETWEEN #{timeFrom} AND #{timeTo} \n")
-    int countByFilters(int type, String caller, String accountName, String accountAlias,
-                       String title, Timestamp timeFrom, Timestamp timeTo);
+    int countByFilters(@Param("type") int type,
+                       @Param("caller") String caller,
+                       @Param("accountName") String accountName,
+                       @Param("accountAlias") String accountAlias,
+                       @Param("title") String title,
+                       @Param("timeFrom") Timestamp timeFrom,
+                       @Param("timeTo") Timestamp timeTo);
 }
