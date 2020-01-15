@@ -1,10 +1,7 @@
 package com.vulner.unify_auth.dao;
 
 import com.vulner.common.bean.po.PermissionPo;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -34,7 +31,7 @@ public interface PermissionsDao {
             "\tp.update_time\n" +
             "FROM permissions p\n" +
             "WHERE p.uuid=#{permUuid}")
-    PermissionPo serachByUuid(String permUuid);
+    PermissionPo serachByUuid(@Param("permUuid") String permUuid);
 
     @Insert("INSERT INTO permissions (\n" +
             "\t`uuid`,\n" +
@@ -63,22 +60,22 @@ public interface PermissionsDao {
 
     @Delete("DELETE FROM permissions p \n" +
             "WHERE p.uuid=#{permUuid}\n")
-    int deletePermission(String permUuid);
+    int deletePermission(@Param("permUuid") String permUuid);
 
     @Select("SELECT\n" +
             "\tp.`uuid`\n" +
             "FROM permissions p\n" +
             "WHERE p.name=#{permName};")
-    String getPermUuidByName(String permName);
+    String getPermUuidByName(@Param("permName") String permName);
 
     @Select("SELECT * \n" +
             "FROM permissions p \n" +
             "WHERE p.`name`=#{permName} \n")
-    List<PermissionPo> existName(String permName);
+    List<PermissionPo> existName(@Param("permName") String permName);
 
     @Select("SELECT * \n" +
             "FROM permissions p \n" +
             "WHERE p.`name`=#{permName} \n" +
             "AND p.uuid<>#{permUuid}")
-    List<PermissionPo> existOtherName(String permUuid, String permName);
+    List<PermissionPo> existOtherName(@Param("permUuid") String permUuid, @Param("permName") String permName);
 }

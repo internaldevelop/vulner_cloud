@@ -3,10 +3,7 @@ package com.vulner.unify_auth.dao;
 import com.vulner.common.bean.po.AccountPo;
 import com.vulner.unify_auth.bean.dto.AccountRegisterDto;
 import com.vulner.unify_auth.bean.dto.PasswdParamsDto;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -41,7 +38,7 @@ public interface AccountsDao {
             "\ta.create_time\n" +
             "FROM accounts a\n" +
             "WHERE a.`name`=#{accountName};")
-    AccountPo findByAccount(String accountName);
+    AccountPo findByAccount(@Param("accountName") String accountName);
 
     /**
      * 通过账号 UUID 获取账号名
@@ -52,7 +49,7 @@ public interface AccountsDao {
             "\ta.`name`\n" +
             "FROM accounts a\n" +
             "WHERE a.uuid=#{uuid};")
-    String getAccountNameByUuid(String uuid);
+    String getAccountNameByUuid(@Param("uuid") String uuid);
 
     /**
      * 通过账号名获取账号 UUID
@@ -63,7 +60,7 @@ public interface AccountsDao {
             "\ta.`uuid`\n" +
             "FROM accounts a\n" +
             "WHERE a.name=#{name};")
-    String getAccountUuidByName(String name);
+    String getAccountUuidByName(@Param("name") String name);
 
     /**
      * 更新密码参数
@@ -161,7 +158,7 @@ public interface AccountsDao {
      */
     @Delete("DELETE FROM accounts a \n" +
             "WHERE a.uuid=#{accountUuid}\n")
-    int deleteAccount(String accountUuid);
+    int deleteAccount(@Param("accountUuid") String accountUuid);
 
     /**
      * 更新账号的状态值
@@ -174,7 +171,7 @@ public interface AccountsDao {
             "\ta.`status`=#{status}\n" +
             "WHERE\n" +
             "\ta.uuid=#{accountUuid}")
-    int updateStatus(String accountUuid, int status);
+    int updateStatus(@Param("accountUuid") String accountUuid, @Param("status") int status);
 
     /**
      * 更新账号的密码
@@ -187,5 +184,5 @@ public interface AccountsDao {
             "\ta.`password`=#{password}\n" +
             "WHERE\n" +
             "\ta.uuid=#{accountUuid}")
-    int updatePassword(String accountUuid, String password);
+    int updatePassword(@Param("accountUuid") String accountUuid, @Param("password") String password);
 }

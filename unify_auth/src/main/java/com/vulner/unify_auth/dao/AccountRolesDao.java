@@ -5,6 +5,7 @@ import com.vulner.unify_auth.bean.dto.RoleDto;
 import com.vulner.unify_auth.bean.po.AccountRolePo;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +31,7 @@ public interface AccountRolesDao {
             "FROM account_roles ar\n" +
             "LEFT JOIN roles r ON ar.role_uuid=r.uuid\n" +
             "WHERE ar.account_uuid=#{accountUuid};")
-    List<RoleDto> getAccountRoles(String accountUuid);
+    List<RoleDto> getAccountRoles(@Param("accountUuid") String accountUuid);
 
     /**
      * 读取指定账号、指定角色的一条关联记录
@@ -50,7 +51,7 @@ public interface AccountRolesDao {
             "LEFT JOIN accounts a ON ar.account_uuid=a.uuid\n" +
             "WHERE ar.account_uuid=#{accountUuid}\n" +
             "\tAND ar.role_uuid=#{roleUuid}")
-    AccountRoleMapDto getAccountRoleMap(String accountUuid, String roleUuid);
+    AccountRoleMapDto getAccountRoleMap(@Param("accountUuid") String accountUuid, @Param("roleUuid") String roleUuid);
 
     /**
      * 添加一条账号角色关联记录
@@ -80,7 +81,7 @@ public interface AccountRolesDao {
     @Delete("DELETE FROM account_roles ar \n" +
             "WHERE ar.account_uuid=#{accountUuid}\n" +
             "\tAND ar.role_uuid=#{roleUuid}")
-    int deleteAccountRoleMap(String accountUuid, String roleUuid);
+    int deleteAccountRoleMap(@Param("accountUuid") String accountUuid, @Param("roleUuid") String roleUuid);
 
     /**
      * 在账号角色映射表中，删除指定账号关联角色的所有记录
@@ -89,7 +90,7 @@ public interface AccountRolesDao {
      */
     @Delete("DELETE FROM account_roles ar \n" +
             "WHERE ar.account_uuid=#{accountUuid}\n")
-    int deleteAllMapsByAccountUuid(String accountUuid);
+    int deleteAllMapsByAccountUuid(@Param("accountUuid") String accountUuid);
 
     /**
      * 在账号角色映射表中，删除指定角色关联账号的所有记录
@@ -98,5 +99,5 @@ public interface AccountRolesDao {
      */
     @Delete("DELETE FROM account_roles ar \n" +
             "WHERE ar.role_uuid=#{roleUuid}\n")
-    int deleteAllMapsByRoleUuid(String roleUuid);
+    int deleteAllMapsByRoleUuid(@Param("roleUuid") String roleUuid);
 }

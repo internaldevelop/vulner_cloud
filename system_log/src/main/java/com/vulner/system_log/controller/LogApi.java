@@ -65,8 +65,8 @@ public class LogApi {
                                  @RequestParam(value = "title", required = false) String title,
                                  @RequestParam(value = "begin_time", required = false) String beginTime,
                                  @RequestParam(value = "end_time", required = false) String endTime,
-                                 @RequestParam(value = "offset", required = false) int offset,
-                                 @RequestParam(value = "count", required = false) int count) {
+                                 @RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
+                                 @RequestParam(value = "count", required = false, defaultValue = "0") int count) {
         return systemLogService.searchLogsByFilters(type, caller, accountName, accountAlias,
                 title, beginTime, endTime, offset, count);
     }

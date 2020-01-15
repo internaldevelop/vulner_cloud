@@ -1,10 +1,7 @@
 package com.vulner.unify_auth.dao;
 
 import com.vulner.common.bean.po.RolePo;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -26,7 +23,7 @@ public interface RolesDao {
             "\tr.`uuid`\n" +
             "FROM roles r\n" +
             "WHERE r.name=#{name};")
-    String getRoleUuidByName(String name);
+    String getRoleUuidByName(@Param("name") String name);
 
     /**
      * 根据角色化名获取角色的 UUID
@@ -37,7 +34,7 @@ public interface RolesDao {
             "\tr.`uuid`\n" +
             "FROM roles r\n" +
             "WHERE r.alias=#{alias};")
-    String getRoleUuidByAlias(String alias);
+    String getRoleUuidByAlias(@Param("alias") String alias);
 
     /**
      * 读取所有角色
@@ -69,7 +66,7 @@ public interface RolesDao {
             "\tr.`update_time`\n" +
             "FROM roles r\n" +
             "WHERE r.`uuid`=#{roleUuid};")
-    RolePo searchByUuid(String roleUuid);
+    RolePo searchByUuid(@Param("roleUuid") String roleUuid);
 
     /**
      * 增加角色记录
@@ -101,7 +98,7 @@ public interface RolesDao {
      */
     @Delete("DELETE FROM roles r \n" +
             "WHERE r.uuid=#{roleUuid}\n")
-    int deleteRole(String roleUuid);
+    int deleteRole(@Param("roleUuid") String roleUuid);
 
     /**
      * 更新角色记录
@@ -127,7 +124,7 @@ public interface RolesDao {
             "FROM roles r \n" +
             "WHERE r.`name`=#{roleName} \n" +
             "OR r.`alias`=#{roleAlias}")
-    List<RolePo> existNameOrAlias(String roleName, String roleAlias);
+    List<RolePo> existNameOrAlias(@Param("roleName") String roleName, @Param("roleAlias") String roleAlias);
 
     /**
      * 除指定 UUID 的角色外，检查给定的角色名称或化名是否已存在
@@ -141,5 +138,5 @@ public interface RolesDao {
             "WHERE (r.`name`=#{roleName} \n" +
             "\tOR r.`alias`=#{roleAlias}) \n" +
             "AND r.uuid<>#{roleUuid}")
-    List<RolePo> existOtherNameOrAlias(String roleUuid, String roleName, String roleAlias);
+    List<RolePo> existOtherNameOrAlias(@Param("roleUuid") String roleUuid, @Param("roleName") String roleName, @Param("roleAlias") String roleAlias);
 }

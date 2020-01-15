@@ -5,6 +5,7 @@ import com.vulner.unify_auth.bean.dto.RolePermMapDto;
 import com.vulner.unify_auth.bean.po.RolePermissionPo;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +27,7 @@ public interface RolePermissionsDao {
             "FROM role_permissions rp\n" +
             "LEFT JOIN permissions p ON rp.permission_uuid=p.uuid\n" +
             "WHERE rp.role_uuid=#{roleUuid};")
-    List<PermissionDto> getPermissions(String roleUuid);
+    List<PermissionDto> getPermissions(@Param("roleUuid") String roleUuid);
 
     @Select("SELECT\n" +
             "\trp.role_uuid,\n" +
@@ -40,7 +41,7 @@ public interface RolePermissionsDao {
             "LEFT JOIN permissions p ON rp.permission_uuid=p.uuid\n" +
             "WHERE rp.role_uuid=#{roleUuid}\n" +
             "\tAND rp.permission_uuid=#{permUuid}")
-    RolePermMapDto getRolePermMap(String roleUuid, String permUuid);
+    RolePermMapDto getRolePermMap(@Param("roleUuid") String roleUuid, @Param("permUuid") String permUuid);
 
     @Insert("INSERT INTO role_permissions (\n" +
             "\t`uuid`,\n" +
@@ -59,13 +60,13 @@ public interface RolePermissionsDao {
     @Delete("DELETE FROM role_permissions rp \n" +
             "WHERE rp.role_uuid=#{roleUuid}\n" +
             "\tAND rp.permission_uuid=#{permUuid}")
-    int deleteRolePermMap(String roleUuid, String permUuid);
+    int deleteRolePermMap(@Param("roleUuid") String roleUuid, @Param("permUuid") String permUuid);
 
     @Delete("DELETE FROM role_permissions rp \n" +
             "WHERE rp.role_uuid=#{roleUuid}\n")
-    int deleteAllMapsByRoleUuid(String roleUuid);
+    int deleteAllMapsByRoleUuid(@Param("roleUuid") String roleUuid);
 
     @Delete("DELETE FROM role_permissions rp \n" +
             "WHERE rp.permission_uuid=#{permUuid}\n")
-    int deleteAllMapsByPermUuid(String permUuid);
+    int deleteAllMapsByPermUuid(@Param("permUuid") String permUuid);
 }
