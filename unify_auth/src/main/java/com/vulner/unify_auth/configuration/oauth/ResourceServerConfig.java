@@ -32,6 +32,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .requestMatchers().antMatchers("/account_role_map/**")
                 .requestMatchers().antMatchers("/perm_manage/**")
                 .requestMatchers().antMatchers("/role_perm_map/**")
+                .requestMatchers().antMatchers("/license/**")
                 .and()
                 .authorizeRequests()
                 .antMatchers("/account_auth/**").authenticated()
@@ -40,6 +41,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers("/account_role_map/**").authenticated()
                 .antMatchers("/perm_manage/**").authenticated()
                 .antMatchers("/role_perm_map/**").authenticated()
+                .antMatchers("/license/**").authenticated()
                 // 权限放开的API接口
                 .and()
                 .authorizeRequests()

@@ -95,5 +95,10 @@ public class SystemApi {
         return systemService.echoAcquire(types);
     }
 
+    @GetMapping(value = "/echo/version")
+    public @ResponseBody Object getVersion() {
+        return systemService.getHostSystemInfo();
+    }
+
 
 }

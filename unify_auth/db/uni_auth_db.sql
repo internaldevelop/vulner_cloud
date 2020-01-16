@@ -277,4 +277,30 @@ INSERT INTO `roles` VALUES (3, 'b989e0fd-1caf-11ea-b42f-0242ac110003', 'ROLE_AUD
 INSERT INTO `roles` VALUES (4, 'b88910ea-1caf-11ea-b42f-0242ac110003', 'ROLE_GUEST', '游客', 1, '2018-12-14 09:46:16', '2020-01-02 17:20:26');
 INSERT INTO `roles` VALUES (11, '9305ff74-c24a-4e48-b14f-430ec52ca501', 'ROLE_OPERATOR', '操作员', 1, '2020-01-02 17:18:07', '2020-01-02 17:18:07');
 
+DROP TABLE IF EXISTS `license_data`;
+CREATE TABLE `license_data` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `uuid` varchar(40) DEFAULT NULL COMMENT 'uuid',
+  `issuer_uuid` varchar(40) DEFAULT NULL COMMENT '发行用户uuid',
+  `issuer_name` varchar(40) DEFAULT NULL COMMENT '发行用户名',
+  `license_data` varchar(1000) DEFAULT NULL COMMENT '授权码数据',
+  `use_flag` tinyint(4) DEFAULT '1' COMMENT '使用标识(1:未使用;0:已使用)',
+  `use_time` datetime DEFAULT NULL COMMENT '使用时间',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='License授权表';
+
+DROP TABLE IF EXISTS `license_expire`;
+CREATE TABLE `license_expire` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `uuid` varchar(40) DEFAULT NULL COMMENT 'uuid',
+  `issuer_uuid` varchar(40) DEFAULT NULL COMMENT '发行用户uuid',
+  `issuer_name` varchar(40) DEFAULT NULL COMMENT '发行用户名',
+  `user_uuid` varchar(40) DEFAULT NULL COMMENT '被授权用户uuid',
+  `user_name` varchar(40) DEFAULT NULL COMMENT '被授权用户名',
+  `expire_time` datetime DEFAULT NULL COMMENT '到期时间',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='License授权到期时间表';
+
 SET FOREIGN_KEY_CHECKS = 1;

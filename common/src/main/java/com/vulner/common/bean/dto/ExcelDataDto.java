@@ -22,4 +22,9 @@ public class ExcelDataDto implements Serializable {
      * 页签名称
      */
     private String name;
+
+    /**
+     * 文本数据
+     */
+    private String content;
 }

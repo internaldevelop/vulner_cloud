@@ -14,6 +14,20 @@ import java.util.List;
 @Component
 public class SystemService {
 
+    public Object getHostSystemInfo() {
+        JSONObject sysInfo = new JSONObject();
+        sysInfo.put("sysName", "电力工控固件漏洞挖掘工具");
+        sysInfo.put("desc", "对电力工控固件深层次漏洞挖掘。");
+        sysInfo.put("sysVer", "1.0.0.1001");
+        sysInfo.put("copyright", "Copyright ©2019-2022 中国电科院");
+        sysInfo.put("status", "运行中");
+        sysInfo.put("overview", "建设对电力智能电网系统软硬件和通讯协议进行漏洞挖掘的技术手段，" +
+                "根据攻击层次的不同，这些针对智能电网系统的恶意攻击可以划分为利用应用软件（包括智能电网软件）漏洞、" +
+                "利用通信协议漏洞以及基于硬件漏洞三种类型。");
+
+        return ResponseHelper.success(sysInfo);
+    }
+
     public Object echoAcquire(String types) {
 
         boolean bAll = false;
