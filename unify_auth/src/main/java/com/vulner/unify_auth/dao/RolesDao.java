@@ -37,6 +37,16 @@ public interface RolesDao {
     String getRoleUuidByAlias(@Param("alias") String alias);
 
     /**
+     * 获取指定角色 UUID 的记录数量
+     * @param roleUuid  角色 UUID
+     * @return 1(存在该角色) or 0 (该角色不存在)
+     */
+    @Select("SELECT COUNT(1)\n" +
+            "FROM roles r\n" +
+            "WHERE r.`uuid`=#{roleUuid};")
+    int getCountByUuid(@Param("roleUuid") String roleUuid);
+
+    /**
      * 读取所有角色
      * @return 角色记录 LIST
      */

@@ -10,6 +10,7 @@ import com.vulner.unify_auth.bean.dto.PermissionDto;
 import com.vulner.unify_auth.bean.dto.RolePermMapDto;
 import com.vulner.unify_auth.bean.dto.RolePermissionDto;
 import com.vulner.unify_auth.bean.po.RolePermissionPo;
+import com.vulner.unify_auth.dao.PermissionsDao;
 import com.vulner.unify_auth.dao.RolePermissionsDao;
 import com.vulner.unify_auth.dao.RolesDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,9 @@ public class RolePermsMapService {
 
     @Autowired
     private RolesDao rolesDao;
+
+    @Autowired
+    private PermissionsDao permsDao;
 
     private ResponseBean _preCheck(String roleUuid, String permUuid) {
         if (Strings.isNullOrEmpty(roleUuid)) {
@@ -138,5 +142,48 @@ public class RolePermsMapService {
 
         int rows = rolePermsDao.deleteAllMapsByPermUuid(permUuid);
         return (rows > 0);
+    }
+
+    public ResponseBean setRolePerms(String roleUuid, String roleName, String permUuids, String permNames) {
+        if (Strings.isNullOrEmpty(roleUuid) && Strings.isNullOrEmpty(roleName)) {
+            return ResponseHelper.blankParams("角色 UUID 或角色名称");
+        }
+        if (Strings.isNullOrEmpty(permUuids) && Strings.isNullOrEmpty(permNames)) {
+            return ResponseHelper.blankParams("权限 UUID 列表或权限名称列表");
+        }
+
+        // 解析权限列表
+        List<String> permUuidList = new ArrayList<>();
+        if (Strings.isNullOrEmpty(permUuids)) {
+            String[] permNameList = permNames.split(",");
+            for (String permName : permNameList) {
+                String permUuid = permsDao.getPermUuidByName(permName);
+                if (!Strings.isNullOrEmpty(permUuid)) {
+                    permUuidList.add(permUuid);
+                }
+            }
+        } else {
+            String[] uuidList = permUuids.split(",");
+            for (String uuid : uuidList) {
+                int count = permsDao.getCountByUuid(uuid);
+                if (count > 0) {
+                    permUuidList.add(uuid);
+                }
+            }
+        }
+
+        // 删除指定角色的所有权限关联记录
+        if (Strings.isNullOrEmpty(roleUuid)) {
+            roleUuid = rolesDao.getRoleUuidByName(roleName);
+        }
+        rolePermsDao.deleteAllMapsByRoleUuid(roleUuid);
+
+        // 增加指定账户的角色关联记录
+        for (String permUuid : permUuidList) {
+            addRolePermMapByUuid(roleUuid, permUuid);
+        }
+
+        // 成功返回
+        return ResponseHelper.success();
     }
 }

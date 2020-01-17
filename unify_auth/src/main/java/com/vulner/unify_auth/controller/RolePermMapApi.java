@@ -35,4 +35,13 @@ public class RolePermMapApi {
         return rolePermsMapService.deleteRolePermMapByUuid(roleUuid, permUuid);
     }
 
+    @PostMapping(value = "set")
+    @PreAuthorize("hasAnyAuthority('statistics')")
+    public @ResponseBody
+    Object setRolePerms(@RequestParam(value = "role_uuid", required = false) String roleUuid,
+                        @RequestParam(value = "role_name", required = false) String roleName,
+                        @RequestParam(value = "perm_uuid_list", required = false) String permUuidList,
+                        @RequestParam(value = "perm_name_list", required = false) String permNameList) {
+        return rolePermsMapService.setRolePerms(roleUuid, roleName, permUuidList, permNameList);
+    }
 }

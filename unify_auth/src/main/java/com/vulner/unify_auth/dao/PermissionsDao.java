@@ -14,6 +14,10 @@ import java.util.List;
  */
 @Component
 public interface PermissionsDao {
+    /**
+     * 读取所有权限的记录
+     * @return PermissionPo 列表
+     */
     @Select("SELECT\n" +
             "\tp.uuid,\n" +
             "\tp.name,\n" +
@@ -23,6 +27,11 @@ public interface PermissionsDao {
             "FROM permissions p\n")
     List<PermissionPo> allPermissions();
 
+    /**
+     * 读取指定权限的记录
+     * @param permUuid 指定权限的 UUID
+     * @return PermissionPo
+     */
     @Select("SELECT\n" +
             "\tp.uuid,\n" +
             "\tp.name,\n" +
@@ -33,6 +42,21 @@ public interface PermissionsDao {
             "WHERE p.uuid=#{permUuid}")
     PermissionPo serachByUuid(@Param("permUuid") String permUuid);
 
+    /**
+     * 获取指定权限 UUID 的记录数量
+     * @param permUuid  指定权限 UUID
+     * @return 1(存在该权限) or 0 (该权限不存在)
+     */
+    @Select("SELECT COUNT(1)\n" +
+            "FROM permissions p\n" +
+            "WHERE p.uuid=#{permUuid}")
+    int getCountByUuid(@Param("permUuid") String permUuid);
+
+    /**
+     * 添加一条权限
+     * @param permissionPo 权限对象 PermissionPo
+     * @return 实际插入记录数
+     */
     @Insert("INSERT INTO permissions (\n" +
             "\t`uuid`,\n" +
             "\t`name`,\n" +
@@ -49,6 +73,11 @@ public interface PermissionsDao {
             ")")
     int addPermission(PermissionPo permissionPo);
 
+    /**
+     * 更新一条权限
+     * @param permissionPo 权限对象 PermissionPo
+     * @return 实际更新记录数
+     */
     @Update("UPDATE permissions p \n" +
             "SET\n" +
             "\tp.`name`=#{name},\n" +
@@ -58,21 +87,42 @@ public interface PermissionsDao {
             "\tp.uuid=#{uuid}")
     int updatePermission(PermissionPo permissionPo);
 
+    /**
+     * 删除一条权限
+     * @param permUuid 指定权限 UUID
+     * @return 实际删除记录数
+     */
     @Delete("DELETE FROM permissions p \n" +
             "WHERE p.uuid=#{permUuid}\n")
     int deletePermission(@Param("permUuid") String permUuid);
 
+    /**
+     * 从权限名称获取该权限的 UUID
+     * @param permName 权限名称
+     * @return 权限的 UUID
+     */
     @Select("SELECT\n" +
             "\tp.`uuid`\n" +
             "FROM permissions p\n" +
             "WHERE p.name=#{permName};")
     String getPermUuidByName(@Param("permName") String permName);
 
+    /**
+     * 获取指定权限名称的的权限记录列表
+     * @param permName 待查询的权限名称
+     * @return 权限记录列表
+     */
     @Select("SELECT * \n" +
             "FROM permissions p \n" +
             "WHERE p.`name`=#{permName} \n")
     List<PermissionPo> existName(@Param("permName") String permName);
 
+    /**
+     * 除指定 UUID 的权限外，获取指定权限名称的其他权限记录列表
+     * @param permUuid 指定权限的 UUID
+     * @param permName 待查询的权限名称
+     * @return
+     */
     @Select("SELECT * \n" +
             "FROM permissions p \n" +
             "WHERE p.`name`=#{permName} \n" +

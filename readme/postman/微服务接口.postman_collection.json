@@ -2140,30 +2140,42 @@
 										"type": "text",
 										"value": "application/json",
 										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text"
 									}
 								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}",
+											"type": "text"
+										},
+										{
+											"key": "account_uuid",
+											"value": "{{account_uuid}}",
+											"type": "text"
+										},
+										{
+											"key": "role_uuid",
+											"value": "{{role_uuid}}",
+											"type": "text"
+										}
+									]
+								},
 								"url": {
-									"raw": "{{UNI_AUTH_URL}}/account_role_map/add?access_token={{access_token}}&account_uuid={{account_uuid}}&role_uuid={{role_uuid}}",
+									"raw": "{{UNI_AUTH_URL}}/account_role_map/add",
 									"host": [
 										"{{UNI_AUTH_URL}}"
 									],
 									"path": [
 										"account_role_map",
 										"add"
-									],
-									"query": [
-										{
-											"key": "access_token",
-											"value": "{{access_token}}"
-										},
-										{
-											"key": "account_uuid",
-											"value": "{{account_uuid}}"
-										},
-										{
-											"key": "role_uuid",
-											"value": "{{role_uuid}}"
-										}
 									]
 								}
 							},
@@ -2211,6 +2223,79 @@
 											"key": "role_uuid",
 											"value": "{{role_uuid}}"
 										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3.14.4 设置账号的角色",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}",
+											"type": "text"
+										},
+										{
+											"key": "account_uuid",
+											"value": "",
+											"description": "account_uuid/account_name 二选一，指定账号的 UUID",
+											"type": "text"
+										},
+										{
+											"key": "account_name",
+											"value": "user_3",
+											"description": "account_uuid/account_name 二选一，指定账号名",
+											"type": "text"
+										},
+										{
+											"key": "role_uuid_list",
+											"value": "",
+											"description": "英文逗号分隔，role_uuid_list/role_name_list 二选一，指定要设置的角色，不在列表范围内的角色将被删除与账号的关联",
+											"type": "text"
+										},
+										{
+											"key": "role_name_list",
+											"value": "ROLE_ADMIN,ROLE_AUDITOR,ROLE_OPERATOR",
+											"description": "英文逗号分隔，role_uuid_list/role_name_list 二选一",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/account_role_map/set",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"account_role_map",
+										"set"
 									]
 								}
 							},
@@ -2643,30 +2728,42 @@
 										"type": "text",
 										"value": "application/json",
 										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text"
 									}
 								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}",
+											"type": "text"
+										},
+										{
+											"key": "role_uuid",
+											"value": "{{role_uuid}}",
+											"type": "text"
+										},
+										{
+											"key": "perm_uuid",
+											"value": "{{perm_uuid}}",
+											"type": "text"
+										}
+									]
+								},
 								"url": {
-									"raw": "{{UNI_AUTH_URL}}/role_perm_map/add?access_token={{access_token}}&role_uuid={{role_uuid}}&perm_uuid={{perm_uuid}}",
+									"raw": "{{UNI_AUTH_URL}}/role_perm_map/add",
 									"host": [
 										"{{UNI_AUTH_URL}}"
 									],
 									"path": [
 										"role_perm_map",
 										"add"
-									],
-									"query": [
-										{
-											"key": "access_token",
-											"value": "{{access_token}}"
-										},
-										{
-											"key": "role_uuid",
-											"value": "{{role_uuid}}"
-										},
-										{
-											"key": "perm_uuid",
-											"value": "{{perm_uuid}}"
-										}
 									]
 								}
 							},
@@ -2718,6 +2815,79 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "3.16.4 设置角色的权限",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept1",
+										"type": "text",
+										"value": "application/json",
+										"disabled": true
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}",
+											"type": "text"
+										},
+										{
+											"key": "role_uuid",
+											"value": "",
+											"description": " role_uuid/role_name 二选一，指定要设置权限的角色",
+											"type": "text"
+										},
+										{
+											"key": "role_name",
+											"value": "ROLE_OPERATOR",
+											"description": " role_uuid/role_name 二选一，指定要设置权限的角色",
+											"type": "text"
+										},
+										{
+											"key": "perm_uuid_list",
+											"value": "",
+											"description": "英文逗号分隔， perm_uuid_list/perm_name_list 二选一，指定要设置的权限，不在列表范围内的权限将被删除与角色的关联",
+											"type": "text"
+										},
+										{
+											"key": "perm_name_list",
+											"value": "statistics,run project,query,search,hello,current user,run schedule,report,run task,new task",
+											"description": "英文逗号分隔， perm_uuid_list/perm_name_list 二选一",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{UNI_AUTH_URL}}/role_perm_map/set",
+									"host": [
+										"{{UNI_AUTH_URL}}"
+									],
+									"path": [
+										"role_perm_map",
+										"set"
+									]
+								}
+							},
+							"response": []
 						}
 					],
 					"protocolProfileBehavior": {},
@@ -2751,19 +2921,19 @@
 	],
 	"variable": [
 		{
-			"id": "6dd18136-37bf-4924-8f99-c23f1ccc7561",
+			"id": "237d6aba-dd6d-4823-9ceb-c4714f6b8919",
 			"key": "SYS_CODE_URL",
 			"value": "http://localhost:10113/sys_code",
 			"type": "string"
 		},
 		{
-			"id": "c503b391-c1d5-4182-9f5a-099fb945450f",
+			"id": "1f14b4f2-3497-4ee2-b10d-3cc17a2db3b9",
 			"key": "SYS_LOG_URL",
 			"value": "http://localhost:10116/sys_log",
 			"type": "string"
 		},
 		{
-			"id": "0a9202b0-b4af-4a89-a86f-597d76924a83",
+			"id": "aeea3694-d581-4542-a111-abc23720c3f8",
 			"key": "UNI_AUTH_URL",
 			"value": "http://localhost:10114",
 			"type": "string"

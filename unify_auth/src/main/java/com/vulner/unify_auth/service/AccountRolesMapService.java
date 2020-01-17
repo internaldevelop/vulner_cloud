@@ -148,4 +148,47 @@ public class AccountRolesMapService {
         return ResponseHelper.success(accountRolesDto);
     }
 
+    public ResponseBean setAccountRoles(String accountUuid, String accountName, String roleUuids, String roleNames) {
+        if (Strings.isNullOrEmpty(accountUuid) && Strings.isNullOrEmpty(accountName)) {
+            return ResponseHelper.blankParams("账号 UUID 或账号名");
+        }
+        if (Strings.isNullOrEmpty(roleUuids) && Strings.isNullOrEmpty(roleNames)) {
+            return ResponseHelper.blankParams("角色 UUID 列表或角色名列表");
+        }
+
+        // 解析角色列表
+        List<String> roleUuidList = new ArrayList<>();
+        if (Strings.isNullOrEmpty(roleUuids)) {
+            String[] roleNameList = roleNames.split(",");
+            for (String roleName : roleNameList) {
+                String roleUuid = rolesDao.getRoleUuidByName(roleName);
+                if (!Strings.isNullOrEmpty(roleUuid)) {
+                    roleUuidList.add(roleUuid);
+                }
+            }
+        } else {
+            String[] uuidList = roleUuids.split(",");
+            for (String uuid : uuidList) {
+                int count = rolesDao.getCountByUuid(uuid);
+                if (count > 0) {
+                    roleUuidList.add(uuid);
+                }
+            }
+        }
+
+        // 删除指定账户的所有角色关联记录
+        if (Strings.isNullOrEmpty(accountUuid)) {
+            accountUuid = accountsDao.getAccountUuidByName(accountName);
+        }
+        accountRolesDao.deleteAllMapsByAccountUuid(accountUuid);
+
+        // 增加指定账户的角色关联记录
+        for (String roleUuid : roleUuidList) {
+            _addAccountRoleMap(accountUuid, roleUuid);
+        }
+
+        // 成功返回
+        return ResponseHelper.success();
+    }
+
 }
