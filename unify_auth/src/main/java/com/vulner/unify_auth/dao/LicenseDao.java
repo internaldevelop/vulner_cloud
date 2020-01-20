@@ -49,7 +49,7 @@ public interface LicenseDao {
                 "	license_data \n" +
                 "WHERE\n" +
                 "	uuid = #{uuid}\n" +
-                "<when test = \"use_flag != null\">\n" +
+                "<when test = 'use_flag != null'>\n" +
                 "   AND use_flag = #{use_flag}\n" +
                 "</when>\n" +
             "</script>")
@@ -59,8 +59,8 @@ public interface LicenseDao {
                 "uuid, " +
                 "issuer_uuid, " +
                 "issuer_name, " +
-                "user_uuid, " +
-                "user_name, " +
+                "account_uuid, " +
+                "account_name, " +
                 "expire_time, " +
                 "create_time" +
             ")\n" +
@@ -68,12 +68,30 @@ public interface LicenseDao {
                 "#{uuid}, " +
                 "#{issuer_uuid}, " +
                 "#{issuer_name}, " +
-                "#{user_uuid}, " +
-                "#{user_name}, " +
+                "#{account_uuid}, " +
+                "#{account_name}, " +
                 "#{expire_time}, " +
                 "#{create_time}" +
             ")")
     int addLicenseExpire(LicenseExpirePo licenseExpirePo);
+
+    @Select("SELECT\n" +
+            "	id,\n" +
+            "	uuid,\n" +
+            "	issuer_uuid,\n" +
+            "	issuer_name,\n" +
+            "	account_uuid,\n" +
+            "	account_name,\n" +
+            "	expire_time,\n" +
+            "	create_time \n" +
+            "FROM\n" +
+            "	license_expire \n" +
+            "WHERE\n" +
+            "	account_uuid = #{account_uuid} \n" +
+            "ORDER BY\n" +
+            "	id DESC \n" +
+            "	LIMIT 1")
+    LicenseExpirePo getExpireInfoByUuid(@Param("account_uuid") String accountUuid);
 
 
 }

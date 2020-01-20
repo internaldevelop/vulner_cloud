@@ -88,8 +88,8 @@ public interface AccountRolesDao {
      * @param accountUuid 指定账号的 UUID
      * @return 实际删除的记录数
      */
-    @Delete("DELETE FROM account_roles ar \n" +
-            "WHERE ar.account_uuid=#{accountUuid}\n")
+    @Delete("DELETE FROM account_roles \n" +
+            "WHERE account_uuid=#{accountUuid}\n")
     int deleteAllMapsByAccountUuid(@Param("accountUuid") String accountUuid);
 
     /**
@@ -97,7 +97,7 @@ public interface AccountRolesDao {
      * @param roleUuid 指定角色的 UUID
      * @return 实际删除的记录数
      */
-    @Delete("DELETE FROM account_roles ar \n" +
-            "WHERE ar.role_uuid=#{roleUuid}\n")
+    @Delete("DELETE FROM account_roles \n" +
+            "WHERE role_uuid=#{roleUuid}\n")
     int deleteAllMapsByRoleUuid(@Param("roleUuid") String roleUuid);
 }

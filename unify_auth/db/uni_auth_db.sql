@@ -296,8 +296,8 @@ CREATE TABLE `license_expire` (
   `uuid` varchar(40) DEFAULT NULL COMMENT 'uuid',
   `issuer_uuid` varchar(40) DEFAULT NULL COMMENT '发行用户uuid',
   `issuer_name` varchar(40) DEFAULT NULL COMMENT '发行用户名',
-  `user_uuid` varchar(40) DEFAULT NULL COMMENT '被授权用户uuid',
-  `user_name` varchar(40) DEFAULT NULL COMMENT '被授权用户名',
+  `account_uuid` varchar(40) DEFAULT NULL COMMENT '被授权用户uuid',
+  `account_name` varchar(40) DEFAULT NULL COMMENT '被授权用户名',
   `expire_time` datetime DEFAULT NULL COMMENT '到期时间',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE

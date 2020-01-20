@@ -19,12 +19,17 @@ public class LicenseApi {
 
     /**
      * 生成License
-     * @return
+     * @param response
+     * @param user
+     * @param accountUuid
+     * @param expireTime 到期时间
+     * @param sign 标识 0:续期; 1:角色授权
+     * @param roleUuids 角色
      */
     @GetMapping(value = "/create")
     @PreAuthorize("hasAnyAuthority('statistics')")
-    public void createLicense(HttpServletResponse response, Principal user, @RequestParam("user_uuid") String userUuid, @RequestParam("expire_time") String expireTime) {
-        licenseService.createLicense(response, user, userUuid, expireTime);
+    public void createLicense(HttpServletResponse response, Principal user, @RequestParam(required = false, value = "account_uuid") String accountUuid, @RequestParam("expire_time") String expireTime, @RequestParam("sign") String sign, @RequestParam(required = false, value = "role_uuids") String roleUuids) {
+        licenseService.createLicense(response, user, accountUuid, expireTime, sign, roleUuids);
     }
 
     /**
@@ -35,8 +40,7 @@ public class LicenseApi {
     @PreAuthorize("hasAnyAuthority('statistics')")
     @ResponseBody
     public Object importLicense(Principal user, @RequestParam("file") MultipartFile file){
-        licenseService.importLicense(user, file);
-        return null;
+        return licenseService.importLicense(user, file);
     }
 
 }

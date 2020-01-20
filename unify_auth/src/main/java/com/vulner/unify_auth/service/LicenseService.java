@@ -3,11 +3,15 @@ package com.vulner.unify_auth.service;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.vulner.common.bean.dto.ExcelDataDto;
+import com.vulner.common.response.ResponseHelper;
 import com.vulner.common.utils.*;
+import com.vulner.unify_auth.bean.po.AccountRolePo;
 import com.vulner.unify_auth.bean.po.LicenseDataPo;
 import com.vulner.unify_auth.bean.po.LicenseExpirePo;
+import com.vulner.unify_auth.dao.AccountRolesDao;
 import com.vulner.unify_auth.dao.AccountsDao;
 import com.vulner.unify_auth.dao.LicenseDao;
+import com.vulner.unify_auth.dao.RolesDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,21 +30,27 @@ public class LicenseService {
     private LicenseDao licenseDao;
     @Autowired
     private AccountsDao accountsDao;
+    @Autowired
+    private AccountRolesDao accountRolesDao;
 
     /**
      * 生成License
      * @param response
      * @param user
-     * @param userUuid
+     * @param accountUuid
      * @param expireTime
      */
-    public void createLicense(HttpServletResponse response, Principal user, String userUuid, String expireTime) {
+    public void createLicense(HttpServletResponse response, Principal user, String accountUuid, String expireTime, String sign, String roleUuids) {
 
         String issuerName = user.getName(); // 发行用户名
         String licenseUuid = StringUtils.generateUuid(); // 授权码uuid
 
         String issuerUuid = accountsDao.getAccountUuidByName(issuerName);
-        String userName = accountsDao.getAccountNameByUuid(userUuid);
+
+        String accountName = "";
+        if(StringUtils.isValid(accountUuid)){
+            accountName = accountsDao.getAccountNameByUuid(accountUuid);
+        }
 
         if (StringUtils.isValid(issuerUuid)) {
 
@@ -49,8 +59,17 @@ public class LicenseService {
             mp.put("issuer_uuid", issuerUuid);  // 发行用户uuid
             mp.put("issuer_name", issuerName);  // 发行用户名
             mp.put("expire_time",expireTime);  // 到期时间
-            mp.put("user_uuid",userUuid);  // 被授权用户uuid
-            mp.put("user_name",userName);  // 被授权用户名
+            if(StringUtils.isValid(accountUuid)){
+                mp.put("account_uuid",accountUuid);  // 被授权用户uuid
+                mp.put("account_name",accountName);  // 被授权用户名
+            }
+
+            if (StringUtils.isValid(roleUuids) && "1".equals(sign)){  // 标识 0:续期; 1:角色授权
+                mp.put("sign", "1");
+                mp.put("role_uuids", roleUuids);
+            } else {
+                mp.put("sign", "0");
+            }
 
             LicenseDataPo po = new LicenseDataPo();
             po.setUuid(licenseUuid);
@@ -61,10 +80,8 @@ public class LicenseService {
             String strMap = JSONObject.toJSONString(mp);
             
             try {
+                System.out.println(strMap);
                 String strEncrypt = AesUtils.encryptAES(strMap);  // 加密串
-                System.out.println("===================================");
-                System.out.println(strEncrypt);
-                System.out.println("===================================");
 
                 po.setLicense_data(strEncrypt);
                 licenseDao.createLicense(po);  // 存库
@@ -85,7 +102,7 @@ public class LicenseService {
      * @param user
      * @param file
      */
-    public void importLicense(Principal user, MultipartFile file) {
+    public Object importLicense(Principal user, MultipartFile file) {
         Date now = new Date();
         Reader reader = null;
         try {
@@ -114,21 +131,46 @@ public class LicenseService {
                         liExpPo.setUuid(StringUtils.generateUuid());
                         liExpPo.setIssuer_uuid(mp.get("issuer_uuid"));  // 发行用户uuid
                         liExpPo.setIssuer_name(mp.get("issuer_name"));  // 发行用户名
-                        liExpPo.setUser_uuid(mp.get("user_uuid"));  // 被授权用户uuid
-                        liExpPo.setUser_name(mp.get("user_name"));  // 被授权用户名
+                        String accountUuid = mp.get("account_uuid");
+
+                        String accountName = user.getName();
+                        if (StringUtils.isValid(accountUuid)){
+                            liExpPo.setAccount_uuid(accountUuid);  // 被授权用户uuid
+                        } else {
+                            accountUuid = accountsDao.getAccountUuidByName(accountName);
+                            liExpPo.setAccount_uuid(accountUuid);
+                        }
+                        liExpPo.setAccount_name(accountName);  // 被授权用户名
                         liExpPo.setExpire_time(DateFormat.stringToDate(mp.get("expire_time"), DateFormat.SQL_FORMAT));
                         liExpPo.setCreate_time(now);
                         licenseDao.addLicenseExpire(liExpPo);
+
+                        String sign = mp.get("sign");
+                        if (StringUtils.isValid(sign) && "1".equals(sign) && StringUtils.isValid(accountUuid)){  // 标识 0:续期; 1:角色授权
+                            String roleUuids = mp.get("role_uuids");
+                            if (StringUtils.isValid(roleUuids)){
+                                String[] rUuids = roleUuids.split(",");
+                                accountRolesDao.deleteAllMapsByAccountUuid(accountUuid);  // 删除原有角色
+                                for(String rUuid : rUuids){
+                                    AccountRolePo aRolePo = new AccountRolePo();
+                                    aRolePo.setUuid(StringUtils.generateUuid());
+                                    aRolePo.setAccount_uuid(accountUuid);
+                                    aRolePo.setRole_uuid(rUuid);
+                                    aRolePo.setCreate_time(now);
+                                    accountRolesDao.addAccountRoleMap(aRolePo);
+                                }
+                            }
+                        }
 
                         liPo.setUse_flag(0);
                         liPo.setUse_time(now);
                         licenseDao.updLicense(liPo);  // 更新License使用状态
                     }
                 } else {
-                    System.out.println("无效的License......");
+                    return ResponseHelper.error("ERROR_PARAMS_MISSING", "无效的License");
                 }
             } else {
-                System.out.println("无效的License......");
+                return ResponseHelper.error("ERROR_PARAMS_MISSING", "无效的License");
             }
 
         } catch (Exception e) {
@@ -143,6 +185,7 @@ public class LicenseService {
             }
         }
 
+        return ResponseHelper.success();
     }
 
 }

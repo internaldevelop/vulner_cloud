@@ -124,7 +124,7 @@ public class AccountRolesMapService {
         }
 
         // 查找账户信息
-        AccountPo accountPo = accountsManageService.searchAccountByUuid(accountUuid);
+        AccountPo accountPo = accountsManageService.searchAccountByUuid(accountUuid, null);
         if (accountPo == null) {
             return ResponseHelper.error("ERROR_ACCOUNT_NOT_EXIST", accountUuid);
         }

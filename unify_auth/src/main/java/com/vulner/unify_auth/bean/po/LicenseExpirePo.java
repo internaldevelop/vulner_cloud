@@ -16,8 +16,8 @@ public class LicenseExpirePo {
     private String uuid;
     private String issuer_uuid;
     private String issuer_name;
-    private String user_uuid;
-    private String user_name;
+    private String account_uuid;
+    private String account_name;
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date expire_time;
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")

@@ -1,5 +1,6 @@
 package com.vulner.unify_auth.dao;
 
+import com.vulner.common.bean.dto.AccountDto;
 import com.vulner.common.bean.po.AccountPo;
 import com.vulner.unify_auth.bean.dto.AccountRegisterDto;
 import com.vulner.unify_auth.bean.dto.PasswdParamsDto;
@@ -38,7 +39,7 @@ public interface AccountsDao {
             "\ta.create_time\n" +
             "FROM accounts a\n" +
             "WHERE a.`name`=#{accountName};")
-    AccountPo findByAccount(@Param("accountName") String accountName);
+    AccountDto findByAccount(@Param("accountName") String accountName);
 
     /**
      * 通过账号 UUID 获取账号名

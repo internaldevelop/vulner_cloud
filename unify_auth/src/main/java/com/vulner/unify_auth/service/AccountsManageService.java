@@ -1,18 +1,22 @@
 package com.vulner.unify_auth.service;
 
 import com.google.common.base.Strings;
+import com.vulner.common.bean.dto.AccountDto;
 import com.vulner.common.bean.po.AccountPo;
 import com.vulner.common.enumeration.AccountStatusEnum;
 import com.vulner.common.enumeration.PwdLockStatusEnum;
 import com.vulner.common.response.ResponseBean;
 import com.vulner.common.response.ResponseHelper;
+import com.vulner.common.utils.DateFormat;
 import com.vulner.common.utils.ObjUtils;
 import com.vulner.common.utils.StringUtils;
 import com.vulner.common.utils.TimeUtils;
 import com.vulner.unify_auth.bean.dto.AccountPersonalInfoDto;
 import com.vulner.unify_auth.bean.dto.AccountRegisterDto;
 import com.vulner.unify_auth.bean.dto.PasswdParamsDto;
+import com.vulner.unify_auth.bean.po.LicenseExpirePo;
 import com.vulner.unify_auth.dao.AccountsDao;
+import com.vulner.unify_auth.dao.LicenseDao;
 import com.vulner.unify_auth.service.helper.AccountHelper;
 import com.vulner.unify_auth.service.helper.PasswordHelper;
 import com.vulner.unify_auth.service.helper.RolesHelper;
@@ -25,6 +29,7 @@ import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
 import org.springframework.stereotype.Component;
 
 import java.security.Principal;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -47,6 +52,9 @@ public class AccountsManageService {
     @Autowired
     private SessionHelper sessionHelper;
 
+    @Autowired
+    private LicenseDao licenseDao;
+
     private String _uuid2Name(String accountUuid) {
         String accountName = accountsDao.getAccountNameByUuid(accountUuid);
         return accountName;
@@ -57,39 +65,53 @@ public class AccountsManageService {
         return accountUuid;
     }
 
-    public AccountPo searchAccountByUuid(String uuid) {
-        String accountName = _uuid2Name(uuid);
-        if (Strings.isNullOrEmpty(accountName)) {
+    public AccountDto searchAccountByUuid(String uuid, String accountName) {
+        Date now = new Date();
+
+        if (!StringUtils.isValid(accountName)) {
+            accountName = _uuid2Name(uuid);
+
+        }
+        if (!StringUtils.isValid(accountName)) {
             return null;
         }
 
-        return accountsDao.findByAccount(accountName);
+        AccountDto accountDto = accountsDao.findByAccount(accountName);
+        LicenseExpirePo liExpirePo = licenseDao.getExpireInfoByUuid(uuid);
+        String expireFlag = "1";  // 过期标识 0:过期; 1:未过期
+        if (liExpirePo != null && liExpirePo.getExpire_time() != null && now.compareTo(liExpirePo.getExpire_time()) > 0) {
+            expireFlag = "0";
+        }
+        accountDto.setExpire_flag(expireFlag);
+
+        return accountDto;
     }
 
     public ResponseBean getAccountInfoByName(String accountName) {
         // 读取账户信息
-        AccountPo accountPo = accountsDao.findByAccount(accountName);
-        if (accountPo == null) {
+//        AccountPo accountPo = accountsDao.findByAccount(accountName);
+        AccountDto accountDto = searchAccountByUuid(null, accountName);
+        if (accountDto == null) {
             return ResponseHelper.error("ERROR_ACCOUNT_NOT_EXIST");
         }
 
         // 返回响应前清空账户隐私信息
-        AccountHelper.clearAccountSecretInfo(accountPo);
+        AccountHelper.clearAccountSecretInfo(accountDto);
 
-        return ResponseHelper.success(accountPo);
+        return ResponseHelper.success(accountDto);
     }
 
     public ResponseBean getAccountInfoByUuid(String accountUuid) {
         // 读取账户信息
-        AccountPo accountPo = searchAccountByUuid(accountUuid);
-        if (accountPo == null) {
+        AccountDto accountDto = searchAccountByUuid(accountUuid, null);
+        if (accountDto == null) {
             return ResponseHelper.error("ERROR_ACCOUNT_NOT_EXIST");
         }
 
         // 返回响应前清空账户隐私信息
-        AccountHelper.clearAccountSecretInfo(accountPo);
+        AccountHelper.clearAccountSecretInfo(accountDto);
 
-        return ResponseHelper.success(accountPo);
+        return ResponseHelper.success(accountDto);
     }
 
     public ResponseBean getAllAccounts() {
@@ -105,7 +127,7 @@ public class AccountsManageService {
         String accountUuid = personalInfo.getUuid();
 
         // 获取 AccountPo
-        AccountPo accountPo = searchAccountByUuid(accountUuid);
+        AccountPo accountPo = searchAccountByUuid(accountUuid, null);
         if (accountPo == null) {
             return ResponseHelper.error("ERROR_ACCOUNT_NOT_EXIST");
         }
