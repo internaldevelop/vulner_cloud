@@ -78,9 +78,9 @@ public class AccountsManageService {
 
         AccountDto accountDto = accountsDao.findByAccount(accountName);
         LicenseExpirePo liExpirePo = licenseDao.getExpireInfoByUuid(uuid);
-        String expireFlag = "1";  // 过期标识 0:过期; 1:未过期
-        if (liExpirePo != null && liExpirePo.getExpire_time() != null && now.compareTo(liExpirePo.getExpire_time()) > 0) {
-            expireFlag = "0";
+        String expireFlag = "0";  // 过期标识 0:过期; 1:未过期
+        if (liExpirePo != null && liExpirePo.getExpire_time() != null && now.compareTo(liExpirePo.getExpire_time()) < 1) {
+            expireFlag = "1";
         }
         accountDto.setExpire_flag(expireFlag);
 

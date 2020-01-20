@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "0dbe0ab0-4338-4a0e-8d4f-708475713360",
+		"_postman_id": "70915b4d-d12b-4172-8e08-53335394fdd2",
 		"name": "固件漏洞挖掘测试集",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -139,8 +139,51 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "1.8 服务器信息",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/echo/acquire?types=CPU,Mem,FS,FST",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"echo",
+								"acquire"
+							],
+							"query": [
+								{
+									"key": "types",
+									"value": "CPU,Mem,FS,FST"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.9 系统关于",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/echo/version",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"echo",
+								"version"
+							]
+						}
+					},
+					"response": []
 				}
-			]
+			],
+			"protocolProfileBehavior": {}
 		},
 		{
 			"name": "2. 测试",
@@ -386,6 +429,148 @@
 				}
 			],
 			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "3. 漏洞库",
+			"item": [
+				{
+					"name": "3.1 漏洞库查询",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/vuldb/search?name=&page_num=1&page_size=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"vuldb",
+								"search"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": ""
+								},
+								{
+									"key": "page_num",
+									"value": "1"
+								},
+								{
+									"key": "page_size",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3.2 漏洞库数据添加",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\": [\r\n        \"5\",\r\n        \"Microsoft Windows 2000/NT 4 - RPC Locator Service Remote Overflow\"\r\n    ],\r\n    \"date_published\": \"2003-04-03\",\r\n    \"verified\": 1,\r\n    \"application_path\": \"\",\r\n    \"application_md5\": \"\",\r\n    \"port\": \"139\",\r\n    \"tags\": [ ],\r\n    \"code\": [\r\n        {\r\n            \"id\": \"151793\",\r\n            \"exploit_id\": \"5\",\r\n            \"code_type\": \"osvdb\",\r\n            \"code\": \"7117\"\r\n        },\r\n        {\r\n            \"id\": \"151792\",\r\n            \"exploit_id\": \"5\",\r\n            \"code_type\": \"cve\",\r\n            \"code\": \"2003-0003\"\r\n        }\r\n    ],\r\n    \"author\": {\r\n        \"name\": \"Marcin Wolak\",\r\n        \"author_id\": \"5\"\r\n    },\r\n    \"type\": {\r\n        \"name\": \"remote\",\r\n        \"display\": \"Remote\",\r\n        \"type_id\": \"3\"\r\n    },\r\n    \"platform\": {\r\n        \"platform\": \"Windows\",\r\n        \"platform_id\": \"45\"\r\n    },\r\n    \"edb_id\": \"5\",\r\n    \"exploit_method_url\": \"<a href=\\\"/download/5\\\"><i class=\\\"mdi mdi-download mdi-18px\\\" style=\\\"color: #132f50\\\"></i></a>\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/vuldb/add_vul",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"vuldb",
+								"add_vul"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3.3 漏洞库数据删除",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/vuldb/del_vul?vul_id=5e05aa1d93ff493cf0a666c2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"vuldb",
+								"del_vul"
+							],
+							"query": [
+								{
+									"key": "vul_id",
+									"value": "5e05aa1d93ff493cf0a666c2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3.4 漏洞库数据修改",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"id\": \"5e09608c22d5e90a04003568\",\r\n    \"date_published\": \"2003-04-03\",\r\n    \"verified\": \"1\",\r\n    \"port\": \"139\",\r\n    \"edb_id\": \"5\",\r\n    \"author\": {\r\n        \"author_id\": \"3\",\r\n        \"name\": \"Marcin Wolak\"\r\n    },\r\n    \"type\": {\r\n        \"type_id\": \"3\",\r\n        \"name\": \"remote\"\r\n    },\r\n    \"platform\": {\r\n        \"platform_id\": \"3\",\r\n        \"platform\": \"Windows\"\r\n    },\r\n    \"description\": [\r\n        \"5\",\r\n        \"Microsoft Windows 2000/NT 4 - RPC Locator Service Remote Overflow\"\r\n    ],\r\n    \"code\": [\r\n        {\r\n            \"code_id\": \"151793\",\r\n            \"exploit_id\": \"5\",\r\n            \"code_type\": \"osvdb\"\r\n        },\r\n        {\r\n            \"code_id\": \"151792\",\r\n            \"exploit_id\": \"5\",\r\n            \"code_type\": \"cve\",\r\n            \"code\": \"2003-0003\"\r\n        }\r\n    ],\r\n    \"_class\": \"com.vulner.bend_server.bean.po.ExploitInfoTinyPo\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/vuldb/modify_vul?params={\"id\": \"5e09ac295e09bbdc1cda376f937afb11\",\"date_published\": \"2003-04-03\", \"verified\": \"1\", \"port\": \"1490\", \"edb_id\": \"5\", \"author.author_id\": \"3\",\"author.name\": \"Marcin Wolak1121\",\"author.test\": \"测试\" }",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"vuldb",
+								"modify_vul"
+							],
+							"query": [
+								{
+									"key": "params",
+									"value": "{\"id\": \"5e09ac295e09bbdc1cda376f937afb11\",\"date_published\": \"2003-04-03\", \"verified\": \"1\", \"port\": \"1490\", \"edb_id\": \"5\", \"author.author_id\": \"3\",\"author.name\": \"Marcin Wolak1121\",\"author.test\": \"测试\" }"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
 		}
 	],
 	"variable": [
@@ -395,5 +580,6 @@
 			"value": "http://localhost:10901",
 			"type": "string"
 		}
-	]
+	],
+	"protocolProfileBehavior": {}
 }
