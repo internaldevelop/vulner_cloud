@@ -36,7 +36,7 @@ public class LicenseApi {
      * 导入License
      * @return
      */
-    @GetMapping(value = "/import")
+    @PostMapping(value = "/import")
     @PreAuthorize("hasAnyAuthority('statistics')")
     @ResponseBody
     public Object importLicense(Principal user, @RequestParam("file") MultipartFile file){
