@@ -6,7 +6,7 @@
         <groupId>vulner_cloud</groupId>
         <artifactId>vulner_cloud</artifactId>
         <version>1.0</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath/>
     </parent>
     <groupId>com.vulner.eureka</groupId>
     <artifactId>register_server</artifactId>

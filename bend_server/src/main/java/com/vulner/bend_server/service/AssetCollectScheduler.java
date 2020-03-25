@@ -6,7 +6,6 @@ import com.vulner.bend_server.global.websocket.SockMsgTypeEnum;
 import com.vulner.bend_server.global.websocket.WebSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -16,13 +15,11 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-//@Component
 @Component
 @Order(2)
 public class AssetCollectScheduler implements CommandLineRunner {
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
-//    @Autowired
     public SystemService systemService = new SystemService();
 
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -37,7 +34,7 @@ public class AssetCollectScheduler implements CommandLineRunner {
         runnable.setInfoTypes(infoTypes);
 
         //0延时，每3秒执行下beeper的任务
-        final ScheduledFuture<?> beeperHandler = scheduler.scheduleAtFixedRate(runnable, 0, 3, TimeUnit.SECONDS);
+        final ScheduledFuture<?> beeperHandler = scheduler.scheduleAtFixedRate(runnable, 0, 30, TimeUnit.SECONDS);
 //        //执行6秒后，取消beeperHandler任务的执行并退出程序
 //        scheduler.schedule(new Runnable() {
 //            public void run() {
@@ -75,9 +72,5 @@ public class AssetCollectScheduler implements CommandLineRunner {
     public void run(String... args) throws Exception {
         new AssetCollectScheduler().beepForAnHour(null);
     }
-    public static void main(String[] args) {
-        new AssetCollectScheduler().beepForAnHour(null);
-    }
-
 
 }
