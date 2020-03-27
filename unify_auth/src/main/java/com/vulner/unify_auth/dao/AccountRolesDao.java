@@ -100,4 +100,13 @@ public interface AccountRolesDao {
     @Delete("DELETE FROM account_roles \n" +
             "WHERE role_uuid=#{roleUuid}\n")
     int deleteAllMapsByRoleUuid(@Param("roleUuid") String roleUuid);
+
+    @Select("SELECT\n" +
+            "	GROUP_CONCAT(r.alias) role_names\n" +
+            "FROM\n" +
+            "	roles r\n" +
+            "	INNER JOIN account_roles ar ON r.uuid = ar.role_uuid \n" +
+            "WHERE\n" +
+            "	ar.account_uuid = #{accountUuid}")
+    String getAccountRoleName(@Param("accountUuid") String accountUuid);
 }

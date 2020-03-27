@@ -53,6 +53,19 @@ zuul:
     eager-load:
       enabled: true
   host:
-    connect-timeout-millis: 30000
-    socket-timeout-millis: 30000
+    connect-timeout-millis: 15000
+    socket-timeout-millis: 60000
   add-proxy-headers: true
+ribbon:
+  ReadTimeout: 10000
+  ConnectTimeout: 10000
+
+#设置hystrix的熔断时间
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            #设置API网关中路由转发请求的HystrixCommand执行超时时间
+            timeoutInMilliseconds: 30000

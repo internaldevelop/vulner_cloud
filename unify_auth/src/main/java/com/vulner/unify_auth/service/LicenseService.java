@@ -105,6 +105,7 @@ public class LicenseService {
     public Object importLicense(Principal user, MultipartFile file) {
         Date now = new Date();
         Reader reader = null;
+        Map<String, String> data = new HashMap<>();
         try {
             reader = new InputStreamReader(file.getInputStream(), "utf-8");
             BufferedReader br = new BufferedReader(reader);
@@ -134,6 +135,7 @@ public class LicenseService {
                         String accountUuid = mp.get("account_uuid");
 
                         String accountName = user.getName();
+                        data.put("account_uuid", accountName);
                         if (StringUtils.isValid(accountUuid)){
                             liExpPo.setAccount_uuid(accountUuid);  // 被授权用户uuid
                         } else {
@@ -141,7 +143,10 @@ public class LicenseService {
                             liExpPo.setAccount_uuid(accountUuid);
                         }
                         liExpPo.setAccount_name(accountName);  // 被授权用户名
-                        liExpPo.setExpire_time(DateFormat.stringToDate(mp.get("expire_time"), DateFormat.SQL_FORMAT));
+                        String expireTime = mp.get("expire_time");
+                        data.put("expire_time", expireTime);
+
+                        liExpPo.setExpire_time(DateFormat.stringToDate(expireTime, DateFormat.SQL_FORMAT));
                         liExpPo.setCreate_time(now);
                         licenseDao.addLicenseExpire(liExpPo);
 
@@ -165,12 +170,13 @@ public class LicenseService {
                         liPo.setUse_flag(0);
                         liPo.setUse_time(now);
                         licenseDao.updLicense(liPo);  // 更新License使用状态
+                        data.put("role_names", accountRolesDao.getAccountRoleName(accountUuid));
                     }
                 } else {
-                    return ResponseHelper.error("ERROR_PARAMS_MISSING", "无效的License");
+                    return ResponseHelper.error("ERROR_LICENSE_INVALID");
                 }
             } else {
-                return ResponseHelper.error("ERROR_PARAMS_MISSING", "无效的License");
+                return ResponseHelper.error("ERROR_LICENSE_INVALID");
             }
 
         } catch (Exception e) {
@@ -185,7 +191,7 @@ public class LicenseService {
             }
         }
 
-        return ResponseHelper.success();
+        return ResponseHelper.success(data);
     }
 
 }
