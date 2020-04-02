@@ -89,16 +89,21 @@ public class SystemApi {
     @Autowired
     SystemService systemService;
 
-    @GetMapping(value = "/echo/acquire")
-    @ResponseBody
-    public Object echoAcquire(@RequestParam("types") String types) {
-        return systemService.echoAcquire(types);
-    }
-
     @GetMapping(value = "/echo/version")
     public @ResponseBody Object getVersion() {
         return systemService.getHostSystemInfo();
     }
 
+    @GetMapping(value = "/starttask/resources")
+    @ResponseBody
+    public Object startTaskResources(@RequestParam("asset_uuid") String assetUuid, @RequestParam("types") String types, @RequestParam("second_time") String secondTime) {
+        return systemService.startTaskResources(assetUuid, types, secondTime);
+    }
+
+    @GetMapping(value = "/resources/setdata")
+    @ResponseBody
+    public Object setResourcesData(@RequestParam("asset_uuid") String assetUuid, @RequestParam("datas") String datas) {
+        return systemService.setResourcesData(assetUuid, datas);
+    }
 
 }
