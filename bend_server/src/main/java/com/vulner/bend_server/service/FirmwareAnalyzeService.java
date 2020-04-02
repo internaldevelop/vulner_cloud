@@ -1,17 +1,12 @@
 package com.vulner.bend_server.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @FeignClient(value = "firmware-analyze")
 public interface FirmwareAnalyzeService {
-    @GetMapping(value = "/fw_analyze/run_status")
-    String runStatus();
+
+    @RequestMapping(value = "/{req_url}")
+    Object forwardRequest(@PathVariable String req_url, @RequestParam("access_token") String access_token, @RequestParam("params") String params);
 }

@@ -57,14 +57,6 @@ public class SystemApi {
     }
 
     @Autowired
-    FirmwareAnalyzeService fwAnalyzeService;
-    @GetMapping(value = "/echo/fwanalyze")
-    @ResponseBody
-    public Object echoFwAnalyze() {
-        return fwAnalyzeService.runStatus();
-    }
-
-    @Autowired
     MqBusService mqBusService;
     @GetMapping(value = "/echo/mqbus")
     @ResponseBody
