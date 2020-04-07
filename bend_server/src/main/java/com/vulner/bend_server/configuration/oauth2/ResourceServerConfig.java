@@ -26,12 +26,12 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .and()
                 .requestMatchers().antMatchers("/test/**", "/uni_auth/**", "/api/**")
                 .requestMatchers().antMatchers("/vuldb/**")
-                .requestMatchers().antMatchers("/firmware/**")
+//                .requestMatchers().antMatchers("/firmware/**")
                 .and()
                 .authorizeRequests()
                 .antMatchers("/test/**", "/uni_auth/**", "/api/**").authenticated()
                 .antMatchers("/vuldb/**").authenticated()
-                .antMatchers("/firmware/**").authenticated()
+//                .antMatchers("/firmware/**").authenticated()
                 .and()
                 .httpBasic();
     }
