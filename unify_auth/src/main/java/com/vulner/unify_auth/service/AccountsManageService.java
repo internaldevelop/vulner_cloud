@@ -68,11 +68,11 @@ public class AccountsManageService {
     public AccountDto searchAccountByUuid(String uuid, String accountName) {
         Date now = new Date();
 
-        if (!StringUtils.isValid(accountName)) {
+        if (StringUtils.isValid(uuid)) {
             accountName = _uuid2Name(uuid);
-
-        }
-        if (!StringUtils.isValid(accountName)) {
+        } else if (StringUtils.isValid(accountName)) {
+            uuid = _name2Uuid(accountName);
+        } else {
             return null;
         }
 
