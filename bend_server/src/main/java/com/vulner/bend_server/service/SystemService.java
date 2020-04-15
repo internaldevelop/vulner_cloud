@@ -49,7 +49,7 @@ public class SystemService {
 
         String assetIp = "localhost";
         // 构造URL
-        String url = "http://" + assetIp + ":8191/asset-info/acquire?types={types}&second_time={second_time}";
+        String url = "http://" + assetIp + ":8191/asset-info/start-task-acquire?types={types}&second_time={second_time}";
 
         // 构造参数map
         HashMap<String, String> map = new HashMap<>();

@@ -1,5 +1,6 @@
 package com.vulner.bend_server;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -14,8 +15,10 @@ import org.springframework.web.client.RestTemplate;
 
 //@SpringBootApplication(scanBasePackages = {"com.vulner.bend_server.controller", "com.vulner.bend_server.service", },
 //        exclude = DataSourceAutoConfiguration.class)
-@SpringBootApplication(scanBasePackages = {"com.vulner.bend_server.controller", "com.vulner.bend_server.service",
-    "com.vulner.bend_server.global", "com.vulner.bend_server.configuration"})
+//@SpringBootApplication(scanBasePackages = {"com.vulner.bend_server.controller", "com.vulner.bend_server.service",
+//    "com.vulner.bend_server.global", "com.vulner.bend_server.configuration"})
+@SpringBootApplication
+@MapperScan(basePackages = {"com.vulner.bend_server.dao"})
 //@EnableEurekaClient
 @EnableDiscoveryClient
 @EnableFeignClients
