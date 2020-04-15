@@ -7,7 +7,6 @@ public class SHAEncrypt {
 
     /**
      * 传入文本内容，返回 SHA-256 串
-     *
      * @param strText
      * @return
      */
@@ -17,7 +16,6 @@ public class SHAEncrypt {
 
     /**
      * 传入文本内容，返回 SHA-512 串
-     *
      * @param strText
      * @return
      */
@@ -60,8 +58,6 @@ public class SHAEncrypt {
                 e.printStackTrace();
             }
         }
-
         return strResult;
     }
-
 }

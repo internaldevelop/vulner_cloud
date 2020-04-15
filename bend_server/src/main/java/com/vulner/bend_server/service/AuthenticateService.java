@@ -34,15 +34,34 @@ public class AuthenticateService {
 
         String assetIp = "localhost";
         // 构造URL
-        String url = "http://" + assetIp + ":8191/asset-info/get-fingerprint";
+        String url = "http://" + assetIp + ":8191/authenticate/get-fingerprint";
 
         // 构造参数mp
         HashMap<String, String> mp = new HashMap<>();
 
-        if (!this.uptData(assetUuid, url, mp))
-            return ResponseHelper.error("ERROR_GENERAL_ERROR");
+        if (this.uptData(assetUuid, url, mp)){
+            this.sendOutSymKey(assetIp, assetUuid);
+            return ResponseHelper.success();
+        }
+        return ResponseHelper.error("ERROR_GENERAL_ERROR");
+    }
 
-        return ResponseHelper.success();
+    /**
+     * 回调agent返回sym_key
+     * @param assetIp
+     * @param assetUuid
+     */
+    public void sendOutSymKey(String assetIp, String assetUuid) {
+        String url = "http://" + assetIp + ":8191/authenticate/save-sym-key?sym_key={sym_key}";
+        AssetAuthenticatePo aaPo = authenticateMapper.getAuthenticate(assetUuid);
+        if (aaPo != null) {
+            // 构造参数mp
+            HashMap<String, String> mp = new HashMap<>();
+            mp.put("sym_key", aaPo.getSym_key());
+            RestTemplateUtil.reqData(url, mp);
+        }
+
+
     }
 
     /**
@@ -53,7 +72,7 @@ public class AuthenticateService {
     public Object getPublicKey(String assetUuid) {
         String assetIp = "localhost";
         // 构造URL
-        String url = "http://" + assetIp + ":8191/asset-info/get-public-key";
+        String url = "http://" + assetIp + ":8191/authenticate/get-public-key";
         // 构造参数mp
         HashMap<String, String> mp = new HashMap<>();
 
@@ -103,6 +122,7 @@ public class AuthenticateService {
             }
             aaPo.setUpdate_time(now);
             aaPo.setAsset_uuid(assetUuid);
+            aaPo.setAuthenticate_flag(0);  //   // 0未认证; -1:失败；1:成功
             if(StringUtils.isValid(fingerprintStr))
                 aaPo.setDev_fingerprint(fingerprintStr);  // 设备指纹
             if (StringUtils.isValid(symKey))
@@ -132,7 +152,7 @@ public class AuthenticateService {
 
         String assetIp = "localhost";
         // 构造URL
-        String url = "http://" + assetIp + ":8191/asset-info/authenticate";
+        String url = "http://" + assetIp + ":8191/authenticate/authenticate";
         // 构造参数mp
         HashMap<String, String> mp = new HashMap<>();
 

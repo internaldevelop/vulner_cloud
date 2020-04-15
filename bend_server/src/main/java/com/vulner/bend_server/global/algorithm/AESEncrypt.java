@@ -19,8 +19,6 @@ public class AESEncrypt {
     private static final String CHARSET_TING = "UTF-8";  // 编码格式
     private static final String DEFAULT_CIPHER_ALGORITHM = "AES/ECB/PKCS5Padding";  // 默认的加密算法
 
-    public static final String SYM_KEY = "f52da1cfdf5c8b0c1376c7aaf1ebf4a94a9a0b94092c7d5fc844d0f7db879ef3";  // 秘钥
-
     /**
      * AES 加密操作
      * @param content 待加密内容
@@ -82,17 +80,5 @@ public class AESEncrypt {
             logger.log(Level.SEVERE, null, e);
         }
         return null;
-    }
-
-
-    public static void main(String[] args) {
-
-        String s = "美女，你好";
-
-        System.out.println("s:" + s);
-        String s1 = AESEncrypt.encrypt(s, SYM_KEY);   // 加密
-        System.out.println("s1:" + s1);
-        System.out.println("s2:"+AESEncrypt.decrypt(s1, SYM_KEY));  // 解密
-
     }
 }
