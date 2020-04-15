@@ -135,13 +135,14 @@ public class LicenseService {
                         String accountUuid = mp.get("account_uuid");
 
                         String accountName = user.getName();
-                        data.put("account_uuid", accountName);
+
                         if (StringUtils.isValid(accountUuid)){
                             liExpPo.setAccount_uuid(accountUuid);  // 被授权用户uuid
                         } else {
                             accountUuid = accountsDao.getAccountUuidByName(accountName);
                             liExpPo.setAccount_uuid(accountUuid);
                         }
+                        data.put("account_uuid", accountUuid);
                         liExpPo.setAccount_name(accountName);  // 被授权用户名
                         String expireTime = mp.get("expire_time");
                         data.put("expire_time", expireTime);
@@ -154,6 +155,7 @@ public class LicenseService {
                         if (StringUtils.isValid(sign) && "1".equals(sign) && StringUtils.isValid(accountUuid)){  // 标识 0:续期; 1:角色授权
                             String roleUuids = mp.get("role_uuids");
                             if (StringUtils.isValid(roleUuids)){
+                                data.put("role_uuids", roleUuids);
                                 String[] rUuids = roleUuids.split(",");
                                 accountRolesDao.deleteAllMapsByAccountUuid(accountUuid);  // 删除原有角色
                                 for(String rUuid : rUuids){
@@ -170,7 +172,7 @@ public class LicenseService {
                         liPo.setUse_flag(0);
                         liPo.setUse_time(now);
                         licenseDao.updLicense(liPo);  // 更新License使用状态
-                        data.put("role_names", accountRolesDao.getAccountRoleName(accountUuid));
+
                     }
                 } else {
                     return ResponseHelper.error("ERROR_LICENSE_INVALID");
