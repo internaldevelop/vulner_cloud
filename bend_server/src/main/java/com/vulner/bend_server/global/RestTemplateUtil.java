@@ -25,4 +25,16 @@ public class RestTemplateUtil {
         }
         return retObj;
     }
+
+    public static ResponseBean reqData(String url) {
+        ResponseBean retObj = null;
+        try {
+            // 向节点发送请求，并返回节点的响应结果
+            ResponseEntity<ResponseBean> responseEntity = restTemplate.getForEntity(url, ResponseBean.class);
+            retObj = responseEntity.getBody();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return retObj;
+    }
 }

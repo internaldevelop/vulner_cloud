@@ -13,6 +13,10 @@
 					"request": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "{{base_url}}/actuator/info",
 							"host": [
@@ -37,6 +41,10 @@
 								"type": "text"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "{{base_url}}/echo/errcode",
 							"host": [
@@ -55,6 +63,10 @@
 					"request": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "{{base_url}}/echo/fwfetch",
 							"host": [
@@ -73,6 +85,10 @@
 					"request": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "{{base_url}}/echo/fwanalyze",
 							"host": [
@@ -91,6 +107,10 @@
 					"request": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "{{base_url}}/echo/mqbus",
 							"host": [
@@ -109,6 +129,10 @@
 					"request": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "{{base_url}}/echo/syslog",
 							"host": [
@@ -127,6 +151,10 @@
 					"request": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "{{base_url}}/echo/uniauth",
 							"host": [
@@ -145,6 +173,10 @@
 					"request": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "{{base_url}}/echo/acquire?types=CPU,Mem,FS,FST",
 							"host": [
@@ -169,6 +201,10 @@
 					"request": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "{{base_url}}/echo/version",
 							"host": [
@@ -182,8 +218,7 @@
 					},
 					"response": []
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		},
 		{
 			"name": "2. 测试",
@@ -202,6 +237,10 @@
 								"type": "text"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "localhost:10901/api/current?",
 							"host": [
@@ -244,6 +283,10 @@
 								"disabled": true
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "localhost:10901/test/oath?access_token=d31eb17f-19e9-4a02-8efd-3efb7e692b07",
 							"host": [
@@ -278,6 +321,10 @@
 								"type": "text"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "localhost:10110/fw-bend-server/test/current_user?access_token=d31eb17f-19e9-4a02-8efd-3efb7e692b07",
 							"host": [
@@ -320,6 +367,10 @@
 								"disabled": true
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "{{base_url}}/test/hello?access_token=3833d8a9-39ec-425a-bf3c-713207afa041",
 							"host": [
@@ -353,6 +404,10 @@
 								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "{{base_url}}/test/current_user?access_token=3833d8a9-39ec-425a-bf3c-713207afa041",
 							"host": [
@@ -386,6 +441,10 @@
 								"value": "application/json"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "{{base_url}}/test/query?access_token=3833d8a9-39ec-425a-bf3c-713207afa041",
 							"host": [
@@ -427,8 +486,7 @@
 						]
 					}
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		},
 		{
 			"name": "3. 漏洞库",
@@ -438,8 +496,12 @@
 					"request": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
-							"raw": "{{base_url}}/vuldb/search?name=&page_num=1&page_size=1",
+							"raw": "{{base_url}}/vuldb/search?name=&page_num=1&page_size=1&access_token={{access_token}}",
 							"host": [
 								"{{base_url}}"
 							],
@@ -459,6 +521,10 @@
 								{
 									"key": "page_size",
 									"value": "1"
+								},
+								{
+									"key": "access_token",
+									"value": "{{access_token}}"
 								}
 							]
 						}
@@ -482,12 +548,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"description\": [\r\n        \"5\",\r\n        \"Microsoft Windows 2000/NT 4 - RPC Locator Service Remote Overflow\"\r\n    ],\r\n    \"date_published\": \"2003-04-03\",\r\n    \"verified\": 1,\r\n    \"application_path\": \"\",\r\n    \"application_md5\": \"\",\r\n    \"port\": \"139\",\r\n    \"tags\": [ ],\r\n    \"code\": [\r\n        {\r\n            \"id\": \"151793\",\r\n            \"exploit_id\": \"5\",\r\n            \"code_type\": \"osvdb\",\r\n            \"code\": \"7117\"\r\n        },\r\n        {\r\n            \"id\": \"151792\",\r\n            \"exploit_id\": \"5\",\r\n            \"code_type\": \"cve\",\r\n            \"code\": \"2003-0003\"\r\n        }\r\n    ],\r\n    \"author\": {\r\n        \"name\": \"Marcin Wolak\",\r\n        \"author_id\": \"5\"\r\n    },\r\n    \"type\": {\r\n        \"name\": \"remote\",\r\n        \"display\": \"Remote\",\r\n        \"type_id\": \"3\"\r\n    },\r\n    \"platform\": {\r\n        \"platform\": \"Windows\",\r\n        \"platform_id\": \"45\"\r\n    },\r\n    \"edb_id\": \"5\",\r\n    \"exploit_method_url\": \"<a href=\\\"/download/5\\\"><i class=\\\"mdi mdi-download mdi-18px\\\" style=\\\"color: #132f50\\\"></i></a>\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
+							"raw": "{\r\n    \"description\": [\r\n        \"5\",\r\n        \"Microsoft Windows 2000/NT 4 - RPC Locator Service Remote Overflow\"\r\n    ],\r\n    \"date_published\": \"2003-04-03\",\r\n    \"verified\": 1,\r\n    \"application_path\": \"\",\r\n    \"application_md5\": \"\",\r\n    \"port\": \"139\",\r\n    \"tags\": [ ],\r\n    \"code\": [\r\n        {\r\n            \"id\": \"151793\",\r\n            \"exploit_id\": \"5\",\r\n            \"code_type\": \"osvdb\",\r\n            \"code\": \"7117\"\r\n        },\r\n        {\r\n            \"id\": \"151792\",\r\n            \"exploit_id\": \"5\",\r\n            \"code_type\": \"cve\",\r\n            \"code\": \"2003-0003\"\r\n        }\r\n    ],\r\n    \"author\": {\r\n        \"name\": \"Marcin Wolak\",\r\n        \"author_id\": \"5\"\r\n    },\r\n    \"type\": {\r\n        \"name\": \"remote\",\r\n        \"display\": \"Remote\",\r\n        \"type_id\": \"3\"\r\n    },\r\n    \"platform\": {\r\n        \"platform\": \"Windows\",\r\n        \"platform_id\": \"45\"\r\n    },\r\n    \"edb_id\": \"5\",\r\n    \"exploit_method_url\": \"<a href=\\\"/download/5\\\"><i class=\\\"mdi mdi-download mdi-18px\\\" style=\\\"color: #132f50\\\"></i></a>\"\r\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/vuldb/add_vul",
@@ -507,6 +568,10 @@
 					"request": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "{{base_url}}/vuldb/del_vul?vul_id=5e05aa1d93ff493cf0a666c2",
 							"host": [
@@ -543,12 +608,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n\t\"id\": \"5e09608c22d5e90a04003568\",\r\n    \"date_published\": \"2003-04-03\",\r\n    \"verified\": \"1\",\r\n    \"port\": \"139\",\r\n    \"edb_id\": \"5\",\r\n    \"author\": {\r\n        \"author_id\": \"3\",\r\n        \"name\": \"Marcin Wolak\"\r\n    },\r\n    \"type\": {\r\n        \"type_id\": \"3\",\r\n        \"name\": \"remote\"\r\n    },\r\n    \"platform\": {\r\n        \"platform_id\": \"3\",\r\n        \"platform\": \"Windows\"\r\n    },\r\n    \"description\": [\r\n        \"5\",\r\n        \"Microsoft Windows 2000/NT 4 - RPC Locator Service Remote Overflow\"\r\n    ],\r\n    \"code\": [\r\n        {\r\n            \"code_id\": \"151793\",\r\n            \"exploit_id\": \"5\",\r\n            \"code_type\": \"osvdb\"\r\n        },\r\n        {\r\n            \"code_id\": \"151792\",\r\n            \"exploit_id\": \"5\",\r\n            \"code_type\": \"cve\",\r\n            \"code\": \"2003-0003\"\r\n        }\r\n    ],\r\n    \"_class\": \"com.vulner.bend_server.bean.po.ExploitInfoTinyPo\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
+							"raw": "{\r\n\t\"id\": \"5e09608c22d5e90a04003568\",\r\n    \"date_published\": \"2003-04-03\",\r\n    \"verified\": \"1\",\r\n    \"port\": \"139\",\r\n    \"edb_id\": \"5\",\r\n    \"author\": {\r\n        \"author_id\": \"3\",\r\n        \"name\": \"Marcin Wolak\"\r\n    },\r\n    \"type\": {\r\n        \"type_id\": \"3\",\r\n        \"name\": \"remote\"\r\n    },\r\n    \"platform\": {\r\n        \"platform_id\": \"3\",\r\n        \"platform\": \"Windows\"\r\n    },\r\n    \"description\": [\r\n        \"5\",\r\n        \"Microsoft Windows 2000/NT 4 - RPC Locator Service Remote Overflow\"\r\n    ],\r\n    \"code\": [\r\n        {\r\n            \"code_id\": \"151793\",\r\n            \"exploit_id\": \"5\",\r\n            \"code_type\": \"osvdb\"\r\n        },\r\n        {\r\n            \"code_id\": \"151792\",\r\n            \"exploit_id\": \"5\",\r\n            \"code_type\": \"cve\",\r\n            \"code\": \"2003-0003\"\r\n        }\r\n    ],\r\n    \"_class\": \"com.vulner.bend_server.bean.po.ExploitInfoTinyPo\"\r\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/vuldb/modify_vul?params={\"id\": \"5e09ac295e09bbdc1cda376f937afb11\",\"date_published\": \"2003-04-03\", \"verified\": \"1\", \"port\": \"1490\", \"edb_id\": \"5\", \"author.author_id\": \"3\",\"author.name\": \"Marcin Wolak1121\",\"author.test\": \"测试\" }",
@@ -569,8 +629,250 @@
 					},
 					"response": []
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
+		},
+		{
+			"name": "4.授权认证",
+			"item": [
+				{
+					"name": "bendserver获取设备列表",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{gateway_url}}fw-bend-server/assets/get-assets",
+							"host": [
+								"{{gateway_url}}fw-bend-server"
+							],
+							"path": [
+								"assets",
+								"get-assets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "bendserver授权",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{gateway_url}}fw-bend-server/authenticate/to-authorizate?asset_uuid=f0edb0b7-0186-485d-825c-7336a01719ef&empower_flag=-1",
+							"host": [
+								"{{gateway_url}}fw-bend-server"
+							],
+							"path": [
+								"authenticate",
+								"to-authorizate"
+							],
+							"query": [
+								{
+									"key": "asset_uuid",
+									"value": "f0edb0b7-0186-485d-825c-7336a01719ef"
+								},
+								{
+									"key": "empower_flag",
+									"value": "-1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "bendserver认证",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{gateway_url}}fw-bend-server/authenticate/authenticate?asset_uuid=22222222222222222222",
+							"host": [
+								"{{gateway_url}}fw-bend-server"
+							],
+							"path": [
+								"authenticate",
+								"authenticate"
+							],
+							"query": [
+								{
+									"key": "asset_uuid",
+									"value": "22222222222222222222"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "bendserver扫描设备",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{gateway_url}}fw-bend-server/authenticate/scan-get-equipment?start_ip=192.168.1.40&end_ip=192.168.1.40",
+							"host": [
+								"{{gateway_url}}fw-bend-server"
+							],
+							"path": [
+								"authenticate",
+								"scan-get-equipment"
+							],
+							"query": [
+								{
+									"key": "start_ip",
+									"value": "192.168.1.40"
+								},
+								{
+									"key": "end_ip",
+									"value": "192.168.1.40"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "bendserver保存公钥",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{gateway_url}}fw-bend-server/authenticate/get-public-key?asset_uuid=22222222222222222222",
+							"host": [
+								"{{gateway_url}}fw-bend-server"
+							],
+							"path": [
+								"authenticate",
+								"get-public-key"
+							],
+							"query": [
+								{
+									"key": "asset_uuid",
+									"value": "22222222222222222222"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "bendserver获取指纹产生对称秘钥",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{gateway_url}}fw-bend-server/authenticate/get-fingerprint?asset_uuid=22222222222222222222",
+							"host": [
+								"{{gateway_url}}fw-bend-server"
+							],
+							"path": [
+								"authenticate",
+								"get-fingerprint"
+							],
+							"query": [
+								{
+									"key": "asset_uuid",
+									"value": "22222222222222222222"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "bendserver定时获取系统资源信息",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{gateway_url}}fw-bend-server/starttask/resources?types&asset_uuid&second_time=",
+							"host": [
+								"{{gateway_url}}fw-bend-server"
+							],
+							"path": [
+								"starttask",
+								"resources"
+							],
+							"query": [
+								{
+									"key": "types",
+									"value": null
+								},
+								{
+									"key": "asset_uuid",
+									"value": null
+								},
+								{
+									"key": "second_time",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "bendserver转发请求",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{gateway_url}}fw-bend-server/firmware/test_req?params=22222222222222222222&access_token={{access_token}}",
+							"host": [
+								"{{gateway_url}}fw-bend-server"
+							],
+							"path": [
+								"firmware",
+								"test_req"
+							],
+							"query": [
+								{
+									"key": "params",
+									"value": "22222222222222222222"
+								},
+								{
+									"key": "access_token",
+									"value": "{{access_token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"variable": [
@@ -580,6 +882,5 @@
 			"value": "http://localhost:10901",
 			"type": "string"
 		}
-	],
-	"protocolProfileBehavior": {}
+	]
 }

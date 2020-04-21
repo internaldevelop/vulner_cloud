@@ -13,6 +13,41 @@ public class AuthenticateApi {
     AuthenticateService authenticateService;
 
     /**
+     * 根据ip段扫描设备
+     * @param startIp
+     * @param endIp
+     * @return
+     */
+    @GetMapping(value = "/scan-get-equipment")
+    @ResponseBody
+    public Object scanGetEquipment(@RequestParam("start_ip") String startIp, @RequestParam("end_ip") String endIp) {
+        return authenticateService.scanGetEquipment(startIp, endIp);
+    }
+
+    /**
+     * 授权
+     * @param assetUuid
+     * @param empowerFlag
+     * @return
+     */
+    @GetMapping(value = "/to-authorizate")
+    @ResponseBody
+    public Object toAuthorizate(@RequestParam("asset_uuid") String assetUuid, @RequestParam("empower_flag") int empowerFlag) {
+        return authenticateService.toAuthorizate(assetUuid, empowerFlag);
+    }
+
+    /**
+     * 认证
+     * @param assetUuid
+     * @return
+     */
+    @GetMapping(value = "/authenticate")
+    @ResponseBody
+    public Object authenticate(@RequestParam("asset_uuid") String assetUuid) {
+        return authenticateService.authenticate(assetUuid);
+    }
+
+    /**
      * 获取设备指纹生成对称秘钥 sym_key
      * @param assetUuid
      * @return
@@ -32,17 +67,6 @@ public class AuthenticateApi {
     @ResponseBody
     public Object getPublicKey(@RequestParam("asset_uuid") String assetUuid) {
         return authenticateService.getPublicKey(assetUuid);
-    }
-
-    /**
-     * 认证
-     * @param assetUuid
-     * @return
-     */
-    @GetMapping(value = "/authenticate")
-    @ResponseBody
-    public Object authenticate(@RequestParam("asset_uuid") String assetUuid) {
-        return authenticateService.authenticate(assetUuid);
     }
 
 }
