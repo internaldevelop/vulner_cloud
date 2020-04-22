@@ -126,8 +126,8 @@ public class WebSocketServer {
      */
     public static void broadcastAssetInfo(SockMsgTypeEnum msgType, Object object) {
         for (WebSocketServer item : webSocketSet) {
-//            if (item.sid.startsWith("asset_info") || item.sid.startsWith("accept_all"))
-            item.sendMessage(msgType, object);
+            if (item.sid.startsWith("asset_info") || item.sid.startsWith("user"))
+                item.sendMessage(msgType, object);
         }
     }
 

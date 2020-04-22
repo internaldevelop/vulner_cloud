@@ -9,6 +9,8 @@ import com.vulner.bend_server.global.RestTemplateUtil;
 import com.vulner.bend_server.global.algorithm.AESEncrypt;
 import com.vulner.bend_server.global.algorithm.RSAEncrypt;
 import com.vulner.bend_server.global.algorithm.SHAEncrypt;
+import com.vulner.bend_server.global.websocket.SockMsgTypeEnum;
+import com.vulner.bend_server.global.websocket.WebSocketServer;
 import com.vulner.common.response.ResponseBean;
 import com.vulner.common.response.ResponseHelper;
 import com.vulner.common.utils.StringUtils;
@@ -154,10 +156,14 @@ public class AuthenticateService {
                         Double percent = 100D * (laNum - startInt + 1) / (endInt - startInt + 1);
                         System.out.println("进度：" + String.format("%.2f", percent));
 
+                        JSONObject jsonMsg = new JSONObject();
+                        jsonMsg.put("scan_percent", String.format("%.2f", percent));
+                        jsonMsg.put("user_uuid", "user_uuid");  // TODO
+                        WebSocketServer.broadcastAssetInfo(SockMsgTypeEnum.SCAN_ASSET_INFO, jsonMsg);
+
                         String assetIp = frontIp + laNum;
                         if(verifyIp(assetIp)){  // 网络通畅为true
                             AssetsPo assetsPo = assetsMapper.getAssetsByIp(assetIp);
-                            System.out.println("============");
                             if (assetsPo == null) {
                                 String assetUuid = StringUtils.generateUuid();
                                 assetsPo = new AssetsPo();
