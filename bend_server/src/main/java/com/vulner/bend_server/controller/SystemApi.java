@@ -98,4 +98,9 @@ public class SystemApi {
         return systemService.setResourcesData(assetUuid, datas);
     }
 
+    @GetMapping(value = "/sysinfo/about")
+    @ResponseBody
+    public Object getSystemAboutInfo() {
+        return systemService.getHostSystemInfo();
+    }
 }

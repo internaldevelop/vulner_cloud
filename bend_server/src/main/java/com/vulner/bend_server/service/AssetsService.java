@@ -48,7 +48,8 @@ public class AssetsService {
 
         Page<AssetAuthenticateDto> page = null;
         if (pageNum == null || pageSize == null) {
-            page = new Page<>(1, totalCount);
+            int pageSizeNum = (pageSize == null) ? 10 : pageSize;
+            page = new Page<>(1, pageSizeNum);
         } else {
             params.put("start", Page.getStartPosition(pageNum, pageSize));
             params.put("count", pageSize);

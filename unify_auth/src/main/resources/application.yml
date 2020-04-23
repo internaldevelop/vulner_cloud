@@ -3,11 +3,11 @@ myprops:
   defaultZone: http://localhost:10100/eureka/
   port: 10114
   mysql:
-    ip: 192.168.1.41
-    port: 3306
+    ip: 192.168.182.88
+    port: 13306
   redis:
-    ip: 192.168.1.41
-    port: 6379
+    ip: 192.168.182.88
+    port: 16379
 
 spring:
   application:
