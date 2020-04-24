@@ -47,6 +47,10 @@ zuul:
       path: /unified-auth/**
       serviceId: unified-auth
       sensitiveHeaders: "*"
+    embed_terminal:
+      path: /embed_terminal/**
+      serviceId: embed_terminal
+      sensitiveHeaders: "*"
   retryable: false
   ignored-services: "*"
   ribbon:

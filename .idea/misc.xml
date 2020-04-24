@@ -18,6 +18,7 @@
         <option value="$PROJECT_DIR$/bend_server/pom.xml" />
         <option value="$PROJECT_DIR$/common/pom.xml" />
         <option value="$PROJECT_DIR$/gateway_zuul/pom.xml" />
+        <option value="$PROJECT_DIR$/embed_terminal/pom.xml" />
       </list>
     </option>
   </component>
