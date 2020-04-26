@@ -16,10 +16,10 @@ import org.springframework.web.client.RestTemplate;
 @EnableDiscoveryClient
 @EnableFeignClients
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class EembedTerminalApplication {
+public class EmbedTerminalApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(EembedTerminalApplication.class, args);
+        SpringApplication.run(EmbedTerminalApplication.class, args);
     }
 
     @Bean
