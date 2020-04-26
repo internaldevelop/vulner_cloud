@@ -45,6 +45,13 @@ public class SystemService {
         return ResponseHelper.success();
     }
 
+    public Object setFirmwareData(String taskUuid, String datas) {
+        JSONObject jsonMsg = JSONObject.parseObject(datas);
+        jsonMsg.put("task_uuid", taskUuid);
+        WebSocketServer.broadcastAssetInfo(SockMsgTypeEnum.FIRMWARE_INFO, jsonMsg);
+        return ResponseHelper.success();
+    }
+
     public Object startTaskResources(String assetUuid, String types, String secondTime) {
 
         String assetIp = "localhost";

@@ -98,6 +98,12 @@ public class SystemApi {
         return systemService.setResourcesData(assetUuid, datas);
     }
 
+    @GetMapping(value = "/firmware/setdata")
+    @ResponseBody
+    public Object setFirmwareData(@RequestParam("task_uuid") String taskUuid, @RequestParam("datas") String datas) {
+        return systemService.setFirmwareData(taskUuid, datas);
+    }
+
     @GetMapping(value = "/sysinfo/about")
     @ResponseBody
     public Object getSystemAboutInfo() {
