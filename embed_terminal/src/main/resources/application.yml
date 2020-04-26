@@ -4,18 +4,23 @@ myprops:
   defaultZone: http://localhost:10100/eureka/
   gateway: http://localhost:10110/
   port: 10902
+  #  devEnvIP: 192.168.1.41
+  devEnvIP: 192.168.182.88
   mysql:
-    ip: 192.168.1.41
-    port: 3306
+    ip: ${myprops.devEnvIP}
+    port: 13306
+  rabbitmq:
+    ip: ${myprops.devEnvIP}
+    port: 5672
 
 spring:
   application:
     name: embed_terminal
   rabbitmq:
-    host: 192.168.1.41
-    port: 5672
-    username: guest
-    password: 123456
+    host: ${myprops.rabbitmq.ip}
+    port: ${myprops.rabbitmq.port}
+    username: admin
+    password: admin
   cloud:
     bus:
       enabled: true
@@ -23,7 +28,7 @@ spring:
       enabled: true
   data:
     mongodb:
-      uri: mongodb://admin:123456@192.168.1.41:27017/exploit_db_tiny?authSource=admin&authMechanism=SCRAM-SHA-1
+      uri: mongodb://admin:123456@${myprops.devEnvIP}:27017/exploit_db_tiny?authSource=admin&authMechanism=SCRAM-SHA-1
   datasource:
     # mysql database config
     driver-class-name: com.mysql.cj.jdbc.Driver

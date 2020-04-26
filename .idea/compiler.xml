@@ -7,25 +7,20 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="system_log" />
+        <module name="embed_terminal" />
         <module name="common" />
         <module name="system_code" />
         <module name="firmware_analyze" />
+        <module name="register_server" />
         <module name="aqmp_bus" />
-        <module name="embed_terminal" />
         <module name="firmware_fetch" />
         <module name="gateway_zuul" />
         <module name="bend_server" />
+        <module name="system_log" />
         <module name="unify_auth" />
-        <module name="register_server" />
         <module name="gateway_server" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="baseconfig" target="1.8" />
-      <module name="gateway_server" target="1.8" />
-      <module name="vulner_eureka_server" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
@@ -35,7 +30,6 @@
       <module name="embed_terminal" options="-parameters" />
       <module name="firmware_analyze" options="-parameters" />
       <module name="firmware_fetch" options="-parameters" />
-      <module name="gateway_server" options="-parameters" />
       <module name="gateway_zuul" options="-parameters" />
       <module name="register_server" options="-parameters" />
       <module name="system_code" options="-parameters" />
