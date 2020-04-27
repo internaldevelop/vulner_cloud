@@ -63,6 +63,14 @@ zuul:
       path: /system-log-dev/**
       serviceId: system-log-dev
       sensitiveHeaders: "*"
+    system-code:
+      path: /system-code/**
+      serviceId: system-code
+      sensitiveHeaders: "*"
+    system-code-dev:
+      path: /system-code-dev/**
+      serviceId: system-code-dev
+      sensitiveHeaders: "*"
     unified-auth:
       path: /unified-auth/**
       serviceId: unified-auth
