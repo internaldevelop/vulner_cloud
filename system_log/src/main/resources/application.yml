@@ -3,8 +3,10 @@ myprops:
   defaultZone: http://localhost:10100/eureka/
   port: 10116
   mysql:
-    ip: 192.168.182.88
-    port: 13306
+    ip: 192.168.1.41
+    port: 3306
+#    ip: 192.168.182.88
+#    port: 13306
 
 server:
   port: ${myprops.port}

@@ -27,29 +27,57 @@ zuul:
       path: /fw-bend-server/**
       serviceId: fw-bend-server
       sensitiveHeaders: "*"
+    fw-bend-server-dev:
+      path: /fw-bend-server-dev/**
+      serviceId: fw-bend-server-dev
+      sensitiveHeaders: "*"
     aqmp-bus:
       path: /aqmp-bus/**
       serviceId: aqmp-bus
+      sensitiveHeaders: "*"
+    aqmp-bus-dev:
+      path: /aqmp-bus-dev/**
+      serviceId: aqmp-bus-dev
       sensitiveHeaders: "*"
     firmware-analyze:
       path: /firmware-analyze/**
       serviceId: firmware-analyze
       sensitiveHeaders: "*"
+    firmware-analyze-dev:
+      path: /firmware-analyze-dev/**
+      serviceId: firmware-analyze-dev
+      sensitiveHeaders: "*"
     firmware-fetch:
       path: /firmware-fetch/**
       serviceId: firmware-fetch
+      sensitiveHeaders: "*"
+    firmware-fetch-dev:
+      path: /firmware-fetch-dev/**
+      serviceId: firmware-fetch-dev
       sensitiveHeaders: "*"
     system-log:
       path: /system-log/**
       serviceId: system-log
       sensitiveHeaders: "*"
+    system-log-dev:
+      path: /system-log-dev/**
+      serviceId: system-log-dev
+      sensitiveHeaders: "*"
     unified-auth:
       path: /unified-auth/**
       serviceId: unified-auth
       sensitiveHeaders: "*"
+    unified-auth-dev:
+      path: /unified-auth-dev/**
+      serviceId: unified-auth-dev
+      sensitiveHeaders: "*"
     embed_terminal:
-      path: /embed_terminal/**
-      serviceId: embed_terminal
+      path: /embed-terminal/**
+      serviceId: embed-terminal
+      sensitiveHeaders: "*"
+    embed_terminal-dev:
+      path: /embed-terminal-dev/**
+      serviceId: embed-terminal-dev
       sensitiveHeaders: "*"
   retryable: false
   ignored-services: "*"

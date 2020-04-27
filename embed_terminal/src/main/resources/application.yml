@@ -1,11 +1,17 @@
 
 # 后台服务
 myprops:
-  defaultZone: http://localhost:10100/eureka/
-  gateway: http://localhost:10110/
-  port: 10902
-  #  devEnvIP: 192.168.1.41
-  devEnvIP: 192.168.182.88
+#  defaultZone: http://localhost:10100/eureka/
+#  gateway: http://localhost:10110/
+#  port: 10902
+#  devEnvIP: 192.168.182.88
+  type:
+  defaultZone: http://192.168.1.100:10100/eureka/
+  gateway: http://192.168.1.100:10110/
+  port: 20902
+  devEnvIP: 192.168.1.100
+#  type: -dev
+
   mysql:
     ip: ${myprops.devEnvIP}
     port: 13306
@@ -15,7 +21,7 @@ myprops:
 
 spring:
   application:
-    name: embed_terminal
+    name: embed-terminal${myprops.type}
   rabbitmq:
     host: ${myprops.rabbitmq.ip}
     port: ${myprops.rabbitmq.port}
@@ -32,7 +38,7 @@ spring:
   datasource:
     # mysql database config
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${myprops.mysql.ip}:${myprops.mysql.port}/vulner_cloud?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&useSSL=false
+    url: jdbc:mysql://${myprops.mysql.ip}:${myprops.mysql.port}/embed_terminal?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&useSSL=false
     username: root
     password: 123456
 
@@ -68,8 +74,9 @@ eureka:
 security:
   oauth2:
     resource:
-      id: embed_terminal
-      user-info-uri: http://localhost:10110/unified-auth/account_auth/current
+      id: embed-terminal${myprops.type}
+#      user-info-uri: http://localhost:10110/unified-auth/account_auth/current
+      user-info-uri: http://192.168.1.100:10110/unified-auth/account_auth/current
 #      user-info-uri: http://localhost:1203/api/member
       prefer-token-info: false
 
