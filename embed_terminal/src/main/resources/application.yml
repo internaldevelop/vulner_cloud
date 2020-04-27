@@ -5,12 +5,12 @@ myprops:
 #  gateway: http://localhost:10110/
 #  port: 10902
 #  devEnvIP: 192.168.182.88
-  type:
+#  type:
   defaultZone: http://192.168.1.100:10100/eureka/
   gateway: http://192.168.1.100:10110/
   port: 20902
   devEnvIP: 192.168.1.100
-#  type: -dev
+  type: -dev
 
   mysql:
     ip: ${myprops.devEnvIP}
