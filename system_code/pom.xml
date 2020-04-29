@@ -25,6 +25,28 @@
             <artifactId>easyexcel</artifactId>
             <version>2.1.3</version>
         </dependency>
+        <dependency>
+            <groupId>com.vulner</groupId>
+            <artifactId>common</artifactId>       <!--加上common的依赖-->
+            <version>0.1</version>
+        </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+<!--    <distributionManagement>-->
+<!--        <repository>-->
+<!--            <id>localRepository</id>-->
+<!--            &lt;!&ndash; 本地仓库地址&ndash;&gt;-->
+<!--            <url>file:C:/Users/Administrator/.m2/repository</url>-->
+<!--        </repository>-->
+<!--    </distributionManagement>-->
 
 </project>

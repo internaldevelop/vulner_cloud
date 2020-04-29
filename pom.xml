@@ -34,11 +34,11 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>com.vulner</groupId>
-            <artifactId>common</artifactId>       <!--加上common的依赖-->
-            <version>0.1</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.vulner</groupId>-->
+<!--            <artifactId>common</artifactId>       &lt;!&ndash;加上common的依赖&ndash;&gt;-->
+<!--            <version>0.1</version>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -124,14 +124,14 @@
         </dependencies>
     </dependencyManagement>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
+<!--    <build>-->
+<!--        <plugins>-->
+<!--            <plugin>-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--            </plugin>-->
+<!--        </plugins>-->
+<!--    </build>-->
 
 
 </project>

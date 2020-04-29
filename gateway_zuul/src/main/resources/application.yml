@@ -10,6 +10,9 @@ spring:
     name: gateway-zuul
 
 eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
   client:
     service-url:
       defaultZone: ${myprops.defaultZone}
