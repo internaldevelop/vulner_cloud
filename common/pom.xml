@@ -80,21 +80,21 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
+<!--    <build>-->
+<!--        <plugins>-->
 <!--            <plugin>-->
 <!--                <groupId>org.springframework.boot</groupId>-->
 <!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
 <!--            </plugin>-->
-        </plugins>
-    </build>
+<!--        </plugins>-->
+<!--    </build>-->
 
-    <distributionManagement>
-        <repository>
-            <id>localRepository</id>
-            <!-- 本地仓库地址-->
-            <url>file:C:/Users/Administrator/.m2/repository</url>
-        </repository>
-    </distributionManagement>
+<!--    <distributionManagement>-->
+<!--        <repository>-->
+<!--            <id>localRepository</id>-->
+<!--            &lt;!&ndash; 本地仓库地址&ndash;&gt;-->
+<!--            <url>file:C:/Users/Administrator/.m2/repository</url>-->
+<!--        </repository>-->
+<!--    </distributionManagement>-->
 
 </project>

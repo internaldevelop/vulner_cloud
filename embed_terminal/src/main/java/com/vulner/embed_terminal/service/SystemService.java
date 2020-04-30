@@ -3,7 +3,9 @@ package com.vulner.embed_terminal.service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.vulner.embed_terminal.bean.po.AssetsPo;
+import com.vulner.embed_terminal.bean.po.NetworkPo;
 import com.vulner.embed_terminal.dao.AssetsMapper;
+import com.vulner.embed_terminal.dao.NetworkMapper;
 import com.vulner.embed_terminal.global.websocket.SockMsgTypeEnum;
 import com.vulner.embed_terminal.global.websocket.WebSocketServer;
 import com.vulner.common.response.ResponseHelper;
@@ -15,7 +17,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class SystemService {
@@ -25,6 +30,9 @@ public class SystemService {
 
     @Autowired
     AssetsMapper assetsMapper;
+
+    @Autowired
+    NetworkMapper networkMapper;
 
     @Bean(name="remoteRestTemplate")
     public RestTemplate restTemplate() {
@@ -109,13 +117,32 @@ public class SystemService {
     public Object setNetworkData(String assetUuid, String datas) {
         if (!StringUtils.isValid(assetUuid) || !StringUtils.isValid(datas))
             return ResponseHelper.error("ERROR_GENERAL_ERROR");
+
         JSONArray jsonArray = JSONArray.parseArray(datas);
         for(Object obj : jsonArray) {
             JSONObject jsonMsg = (JSONObject)JSONObject.toJSON(obj);
-            System.out.println(jsonMsg);
-//            jsonMsg.put("asset_uuid", assetUuid);   TODO
-        }
+            NetworkPo networkPo = new NetworkPo();
+            networkPo.setUuid(StringUtils.generateUuid());
+            networkPo.setAsset_uuid(assetUuid);
+            networkPo.setName("" + jsonMsg.get("netWorkName"));
+            networkPo.setMac_address("" + jsonMsg.get("macAddress"));
+            networkPo.setIpv4("" + jsonMsg.get("IPv4"));
+            networkPo.setIpv6("" + jsonMsg.get("IPv6"));
+            networkPo.setPackets_recv("" + jsonMsg.get("packetsRecv"));
+            networkPo.setBytes_recv("" + jsonMsg.get("bytesRecv"));
+            networkPo.setPackets_sent("" + jsonMsg.get("packetsSent"));
+            networkPo.setSpeed("" + jsonMsg.get("speed"));
+            networkPo.setMtu("" + jsonMsg.get("mtu"));
 
+            long lt = new Long("" + jsonMsg.get("timeStamp"));
+            networkPo.setCreate_time(new Timestamp(lt));
+
+            networkMapper.addNetwork(networkPo);
+        }
+        Map<String, Object> mpMsg = new HashMap<>();
+        mpMsg.put("asset_uuid", assetUuid);
+        mpMsg.put("net_datas", jsonArray);
+        WebSocketServer.broadcastAssetInfo(SockMsgTypeEnum.ASSET_NETWORK_INFO, mpMsg);
 
         return ResponseHelper.success();
     }

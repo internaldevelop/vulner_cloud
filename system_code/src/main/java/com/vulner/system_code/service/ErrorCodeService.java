@@ -6,7 +6,9 @@ import com.vulner.common.response.ResponseBean;
 import com.vulner.common.response.ResponseHelper;
 import com.vulner.common.utils.FileUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ClassUtils;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +18,11 @@ public class ErrorCodeService {
     public List<ErrorCodeDto> loadErrorCodes() {
         try {
 
-            String fileName = FileUtils.getClassRootPath() + "ErrorCode.xlsx";
-            List<ErrorCodeDto> errorCodeList = EasyExcel.read(fileName).head(ErrorCodeDto.class).sheet().doReadSync();
+//            String fileName = FileUtils.getClassRootPath() + "ErrorCode.xlsx";
+//            List<ErrorCodeDto> errorCodeList = EasyExcel.read(fileName).head(ErrorCodeDto.class).sheet().doReadSync();
+
+            InputStream inputStream = ClassUtils.class.getClassLoader().getResourceAsStream("ErrorCode.xlsx");
+            List<ErrorCodeDto> errorCodeList = EasyExcel.read(inputStream).head(ErrorCodeDto.class).sheet().doReadSync();
 
             return errorCodeList;
 

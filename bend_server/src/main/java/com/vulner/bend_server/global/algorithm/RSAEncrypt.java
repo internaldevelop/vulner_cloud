@@ -1,6 +1,6 @@
 package com.vulner.bend_server.global.algorithm;
 
-import com.sun.org.apache.xml.internal.security.utils.Base64;
+//import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 import java.security.*;
 import java.security.interfaces.RSAPrivateKey;
@@ -95,7 +95,8 @@ public class RSAEncrypt {
             signature.initSign(privateKey);
             signature.update(content.getBytes(CHARSETTING));
 
-            result = Base64.encode(signature.sign());
+//            result = Base64.encode(signature.sign());
+            result = Base64Coding.encode(signature.sign());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -122,7 +123,7 @@ public class RSAEncrypt {
             signature.update(src.getBytes(CHARSETTING));
 
             // 验证签名是否正常
-            verfy = signature.verify(Base64.decode(sign));
+            verfy = signature.verify(Base64Coding.decode(sign));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -144,8 +145,8 @@ public class RSAEncrypt {
         //byte[] publicKey = b;
         //私钥
         byte[] privateKey = RSAEncrypt.getPrivateKey(keyMap);
-        System.out.println("公钥："+ Base64.encode(publicKey));
-        System.out.println("私钥："+ Base64.encode(privateKey));
+        System.out.println("公钥："+ Base64Coding.encode(publicKey));
+        System.out.println("私钥："+ Base64Coding.encode(privateKey));
 
 //        byte[] publicKey = new BASE64Decoder().decodeBuffer(puKey);
 //        byte[] privateKey = new BASE64Decoder().decodeBuffer(prKey);

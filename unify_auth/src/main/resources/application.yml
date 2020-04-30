@@ -50,6 +50,9 @@ server:
   port: ${myprops.port}
 
 eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
   client:
     serviceUrl:
       defaultZone: ${myprops.defaultZone}

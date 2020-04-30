@@ -5,9 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * 审核
+ */
 @RestController
 @RequestMapping(value = "authenticate", produces = MediaType.APPLICATION_JSON_VALUE)
-public class AuthenticateApi {
+public class ReviewApi {
 
     @Autowired
     AuthenticateService authenticateService;
