@@ -16,6 +16,8 @@ public class AssetsPo {
     private String os_ver;  // 操作系统的版本
     private String create_user_uuid;  // 创建资产的用户 UUID
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    private java.sql.Timestamp expire_time;  // 到期时间
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private java.sql.Timestamp update_time;
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private java.sql.Timestamp create_time;

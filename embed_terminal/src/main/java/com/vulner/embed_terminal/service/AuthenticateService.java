@@ -1,6 +1,7 @@
 package com.vulner.embed_terminal.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.vulner.common.utils.DateFormat;
 import com.vulner.embed_terminal.bean.po.AssetAuthenticatePo;
 import com.vulner.embed_terminal.bean.po.AssetsPo;
 import com.vulner.embed_terminal.dao.AssetsMapper;
@@ -21,6 +22,7 @@ import sun.misc.BASE64Decoder;
 
 import java.net.InetAddress;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -115,8 +117,14 @@ public class AuthenticateService {
             return ResponseHelper.error("ERROR_GENERAL_ERROR");
         }
 
+        Timestamp now = TimeUtils.getCurrentSystemTimestamp();
         assetsPo.setClassify(classify);
-        assetsPo.setUpdate_time(TimeUtils.getCurrentSystemTimestamp());
+        assetsPo.setUpdate_time(now);
+        if (classify == 1) {  // 审核通过
+            Date date = DateFormat.addMonth(now, 12);  // 有效期一年
+            assetsPo.setExpire_time(new Timestamp(date.getTime()));
+        }
+
         assetsMapper.updAssets(assetsPo);
 
         return ResponseHelper.success();
@@ -277,11 +285,17 @@ public class AuthenticateService {
             Object payload = respBean.getPayload();
             if (payload != null){
                 JSONObject jsonObj = (JSONObject) JSONObject.toJSON(payload);
-                Object fingerprint = jsonObj.get("device_fingerprint");
-                if (fingerprint != null){
-                    fingerprintStr = fingerprint.toString();
+//                Object fingerprint = jsonObj.get("device_fingerprint");
+//                if (fingerprint != null){
+//                    fingerprintStr = fingerprint.toString();
+//                    symKey = SHAEncrypt.SHA256(fingerprintStr);
+//                }
+
+                if (url.indexOf("get-fingerprint") > 0) {
+                    fingerprintStr = payload.toString();
                     symKey = SHAEncrypt.SHA256(fingerprintStr);
                 }
+
                 Object pKey = jsonObj.get("public_key");
                 if (pKey != null)
                     publicKey = pKey.toString();

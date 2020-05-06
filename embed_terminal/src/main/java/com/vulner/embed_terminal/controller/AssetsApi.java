@@ -21,6 +21,7 @@ public class AssetsApi {
      * @param osType
      * @param classify
      * @param authenticateFlag
+     * @param flag 1:不展示指纹; 2:展示指纹
      * @return
      */
     @GetMapping(value = "/get-assets")
@@ -31,8 +32,9 @@ public class AssetsApi {
                             @RequestParam(value = "ip", required = false) String ip,
                             @RequestParam(value = "os_type", required = false)String osType,
                             @RequestParam(value = "classify", required = false) String classify,
-                            @RequestParam(value = "authenticate_flag", required = false) String authenticateFlag) {
-        return assetsService.getAssets(pageNum, pageSize, name, ip, osType, classify, authenticateFlag);
+                            @RequestParam(value = "authenticate_flag", required = false) String authenticateFlag,
+                            @RequestParam(value = "flag", required = false) String flag) {
+        return assetsService.getAssets(pageNum, pageSize, name, ip, osType, classify, authenticateFlag, flag);
     }
 
 }

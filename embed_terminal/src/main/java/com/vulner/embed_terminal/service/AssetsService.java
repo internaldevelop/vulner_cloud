@@ -30,7 +30,7 @@ public class AssetsService {
      * @param authenticateFlag
      * @return
      */
-    public Object getAssets(Integer pageNum, Integer pageSize, String name, String ip, String osType, String classify, String authenticateFlag) {
+    public Object getAssets(Integer pageNum, Integer pageSize, String name, String ip, String osType, String classify, String authenticateFlag, String flag) {
 
         Map<String, Object> params = new HashMap<>();
         if (StringUtils.isValid(name))
@@ -43,6 +43,10 @@ public class AssetsService {
             params.put("classify", classify);
         if (StringUtils.isValid(authenticateFlag))
             params.put("authenticate_flag", authenticateFlag);
+        if (!StringUtils.isValid(flag))
+            flag = "1";
+        params.put("flag", flag);
+
 
         int totalCount = assetsMapper.getAssetAuthCount(params);
 
