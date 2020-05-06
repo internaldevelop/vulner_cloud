@@ -26,11 +26,11 @@ public class AssetsService {
      * @param name
      * @param ip
      * @param osType
-     * @param empowerFlag
+     * @param classify
      * @param authenticateFlag
      * @return
      */
-    public Object getAssets(Integer pageNum, Integer pageSize, String name, String ip, String osType, String empowerFlag, String authenticateFlag) {
+    public Object getAssets(Integer pageNum, Integer pageSize, String name, String ip, String osType, String classify, String authenticateFlag) {
 
         Map<String, Object> params = new HashMap<>();
         if (StringUtils.isValid(name))
@@ -39,8 +39,8 @@ public class AssetsService {
             params.put("ip", ip);
         if (StringUtils.isValid(osType))
             params.put("os_type", osType);
-        if (StringUtils.isValid(empowerFlag))
-            params.put("empower_flag", empowerFlag);
+        if (StringUtils.isValid(classify))
+            params.put("classify", classify);
         if (StringUtils.isValid(authenticateFlag))
             params.put("authenticate_flag", authenticateFlag);
 

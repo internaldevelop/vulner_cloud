@@ -16,17 +16,17 @@ import java.util.Map;
 public interface AssetsMapper {
 
     @Insert(" INSERT INTO assets \n" +
-            "	(uuid, empower_flag, code, name, " +
+            "	(uuid, classify, code, name, " +
             "   ip, port, os_type, os_ver, " +
             "   update_time, create_time) \n" +
             " VALUES \n" +
-            "	(#{uuid}, #{empower_flag}, #{code}, #{name}, " +
+            "	(#{uuid}, #{classify}, #{code}, #{name}, " +
             "   #{ip}, #{port}, #{os_type}, #{os_ver}, " +
             "   #{update_time}, #{create_time})")
     int addAssets(AssetsPo assetsPo);
 
     @Select(" SELECT\n" +
-            "	id, uuid, empower_flag,\n" +
+            "	id, uuid, classify,\n" +
             "	CODE, NAME, ip, PORT, os_type,\n" +
             "	os_ver, update_time, create_time \n" +
             " FROM\n" +
@@ -35,7 +35,7 @@ public interface AssetsMapper {
     List<AssetsPo> getAssets();
 
     @Select(" SELECT\n" +
-            "	id, uuid, empower_flag,\n" +
+            "	id, uuid, classify,\n" +
             "	CODE, NAME, ip, PORT, os_type,\n" +
             "	os_ver, update_time, create_time \n" +
             " FROM\n" +
@@ -47,7 +47,7 @@ public interface AssetsMapper {
     AssetsPo getAssetsByUuid(@Param("uuid") String uuid);
 
     @Select(" SELECT\n" +
-            "	id, uuid, empower_flag,\n" +
+            "	id, uuid, classify,\n" +
             "	CODE, NAME, ip, PORT, os_type,\n" +
             "	os_ver, update_time, create_time \n" +
             " FROM\n" +
@@ -60,7 +60,7 @@ public interface AssetsMapper {
 
 
     @Update(" UPDATE assets \n" +
-            "	SET empower_flag = #{empower_flag},\n" +
+            "	SET classify = #{classify},\n" +
             "	CODE = #{code},\n" +
             "	NAME = #{name},\n" +
             "	ip = #{ip},\n" +
@@ -76,7 +76,7 @@ public interface AssetsMapper {
 
     @Select("<script>" +
             "SELECT\n" +
-            "	a.id, a.uuid, a.empower_flag,\n" +
+            "	a.id, a.uuid, a.classify,\n" +
             "	a.CODE, a.NAME, a.ip, a.PORT,\n" +
             "	a.os_type, a.os_ver, a.update_time,\n" +
             "	a.create_time, aa.uuid AS auth_uuid,\n" +
@@ -89,7 +89,7 @@ public interface AssetsMapper {
             " <when test='name!=null'> AND a.name=#{name} </when>"+
             " <when test='ip!=null'> AND a.ip=#{ip} </when>"+
             " <when test='os_type!=null'> AND a.os_type=#{os_type} </when>"+
-            " <when test='empower_flag!=null'> AND a.empower_flag=#{empower_flag} </when>"+
+            " <when test='classify!=null'> AND a.classify=#{classify} </when>"+
             " <when test='authenticate_flag!=null'> AND aa.authenticate_flag=#{authenticate_flag} </when>"+
             " ORDER BY a.id DESC" +
             " <when test='start!=null and count != null'> LIMIT #{start}, #{count} </when>"+
@@ -105,13 +105,13 @@ public interface AssetsMapper {
             " <when test='name!=null'> AND a.name=#{name} </when>"+
             " <when test='ip!=null'> AND a.ip=#{ip} </when>"+
             " <when test='os_type!=null'> AND a.os_type=#{os_type} </when>"+
-            " <when test='empower_flag!=null'> AND a.empower_flag=#{empower_flag} </when>"+
+            " <when test='classify!=null'> AND a.classify=#{classify} </when>"+
             " <when test='authenticate_flag!=null'> AND aa.authenticate_flag=#{authenticate_flag} </when>"+
             "</script>")
     int getAssetAuthCount(Map<String, Object> params);
 
     @Select(" SELECT\n" +
-            "	a.id, a.uuid, a.empower_flag,\n" +
+            "	a.id, a.uuid, a.classify,\n" +
             "	a.CODE, a.NAME, a.ip, a.PORT,\n" +
             "	a.os_type, a.os_ver, a.update_time,\n" +
             "	a.create_time, aa.uuid AS auth_uuid,\n" +

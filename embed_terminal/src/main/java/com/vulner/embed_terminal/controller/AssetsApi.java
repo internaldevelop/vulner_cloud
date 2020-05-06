@@ -19,7 +19,7 @@ public class AssetsApi {
      * @param name
      * @param ip
      * @param osType
-     * @param empowerFlag
+     * @param classify
      * @param authenticateFlag
      * @return
      */
@@ -30,9 +30,9 @@ public class AssetsApi {
                             @RequestParam(value = "name", required = false) String name,
                             @RequestParam(value = "ip", required = false) String ip,
                             @RequestParam(value = "os_type", required = false)String osType,
-                            @RequestParam(value = "empower_flag", required = false) String empowerFlag,
+                            @RequestParam(value = "classify", required = false) String classify,
                             @RequestParam(value = "authenticate_flag", required = false) String authenticateFlag) {
-        return assetsService.getAssets(pageNum, pageSize, name, ip, osType, empowerFlag, authenticateFlag);
+        return assetsService.getAssets(pageNum, pageSize, name, ip, osType, classify, authenticateFlag);
     }
 
 }

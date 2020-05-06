@@ -92,6 +92,12 @@ public class SystemApi {
         return systemService.startTaskResources(assetUuid, types, secondTime);
     }
 
+    @GetMapping(value = "/stoptask/resources")
+    @ResponseBody
+    public Object stopTaskResources(@RequestParam("asset_uuid") String assetUuid) {
+        return systemService.stopTaskResources(assetUuid);
+    }
+
     @GetMapping(value = "/resources/setdata")
     @ResponseBody
     public Object setResourcesData(@RequestParam("asset_uuid") String assetUuid, @RequestParam("datas") String datas) {

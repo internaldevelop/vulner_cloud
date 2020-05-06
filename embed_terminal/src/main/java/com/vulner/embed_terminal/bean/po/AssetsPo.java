@@ -7,7 +7,7 @@ import lombok.Data;
 public class AssetsPo {
     private int id;
     private String uuid;
-    private int empower_flag;  // 授权标识默认值0: (1:通过; -1:拒绝)
+    private int classify;  // 审核分类0: (1:通过(白名单); -1:拒绝(黑名单))
     private String code;  // 资产代号
     private String name;  // 资产名称
     private String ip;  // 资产的IP地址

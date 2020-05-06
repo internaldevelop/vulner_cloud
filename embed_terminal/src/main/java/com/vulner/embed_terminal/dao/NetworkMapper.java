@@ -26,7 +26,7 @@ public interface NetworkMapper {
     int addNetwork(NetworkPo networkPo);
 
     @Select(" SELECT\n" +
-            "	id, uuid, empower_flag,\n" +
+            "	id, uuid, classify,\n" +
             "	CODE, NAME, ip, PORT, os_type,\n" +
             "	os_ver, update_time, create_time \n" +
             " FROM\n" +
@@ -35,7 +35,7 @@ public interface NetworkMapper {
     List<AssetsPo> getAssets();
 
     @Select(" SELECT\n" +
-            "	id, uuid, empower_flag,\n" +
+            "	id, uuid, classify,\n" +
             "	CODE, NAME, ip, PORT, os_type,\n" +
             "	os_ver, update_time, create_time \n" +
             " FROM\n" +
@@ -47,7 +47,7 @@ public interface NetworkMapper {
     AssetsPo getAssetsByUuid(@Param("uuid") String uuid);
 
     @Select(" SELECT\n" +
-            "	id, uuid, empower_flag,\n" +
+            "	id, uuid, classify,\n" +
             "	CODE, NAME, ip, PORT, os_type,\n" +
             "	os_ver, update_time, create_time \n" +
             " FROM\n" +

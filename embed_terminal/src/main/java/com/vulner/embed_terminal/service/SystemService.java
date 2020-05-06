@@ -109,6 +109,42 @@ public class SystemService {
     }
 
     /**
+     * 停止任务获取系统资源
+     * @param assetUuid
+     * @return
+     */
+    public Object stopTaskResources(String assetUuid) {
+
+        if (!StringUtils.isValid(assetUuid))
+            return ResponseHelper.error("ERROR_GENERAL_ERROR");
+
+        AssetsPo assetsPo = assetsMapper.getAssetsByUuid(assetUuid);
+        if (assetsPo == null || !StringUtils.isValid(assetsPo.getIp()))
+            return ResponseHelper.error("ERROR_GENERAL_ERROR");
+
+        // 构造URL
+        String url = "http://" + assetsPo.getIp() + ":8191/asset-info/stop-task-acquire?asset_uuid={asset_uuid}";
+
+        // 构造参数map
+        HashMap<String, String> map = new HashMap<>();
+        map.put("asset_uuid", assetUuid);
+
+        try {
+            // 向节点发送请求，并返回节点的响应结果
+            ResponseEntity<Boolean> responseEntity = restTemplate.getForEntity(url, Boolean.class, map);
+
+            if (responseEntity.getBody()) {
+                return ResponseHelper.success();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ResponseHelper.error("ERROR_GENERAL_ERROR");
+    }
+
+    /**
      * 保存流量数据
      * @param assetUuid
      * @param datas

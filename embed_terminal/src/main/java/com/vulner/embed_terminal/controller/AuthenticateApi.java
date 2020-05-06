@@ -5,12 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * 审核
- */
 @RestController
 @RequestMapping(value = "authenticate", produces = MediaType.APPLICATION_JSON_VALUE)
-public class ReviewApi {
+public class AuthenticateApi {
 
     @Autowired
     AuthenticateService authenticateService;
@@ -28,15 +25,15 @@ public class ReviewApi {
     }
 
     /**
-     * 授权
+     * 审核
      * @param assetUuid
-     * @param empowerFlag
+     * @param classify
      * @return
      */
-    @GetMapping(value = "/to-authorizate")
+    @GetMapping(value = "/to-review")
     @ResponseBody
-    public Object toAuthorizate(@RequestParam("asset_uuid") String assetUuid, @RequestParam("empower_flag") int empowerFlag) {
-        return authenticateService.toAuthorizate(assetUuid, empowerFlag);
+    public Object toReview(@RequestParam("asset_uuid") String assetUuid, @RequestParam("classify") int classify) {
+        return authenticateService.toReview(assetUuid, classify);
     }
 
     /**

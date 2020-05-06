@@ -96,12 +96,12 @@ public class AuthenticateService {
 
 
     /**
-     * 授权
+     * 审核
      * @param assetUuid
-     * @param empowerFlag 1:通过; -1:拒绝
+     * @param classify 1:白名单; -1:黑名单
      * @return
      */
-    public Object toAuthorizate(String assetUuid, int empowerFlag) {
+    public Object toReview(String assetUuid, int classify) {
         // 1、返回sym_key  2、获取公钥  3、保存公钥修并改授权状态
         AssetsPo assetsPo = assetsMapper.getAssetsByUuid(assetUuid);
         if (assetsPo == null || !StringUtils.isValid(assetsPo.getIp())) {
@@ -115,7 +115,7 @@ public class AuthenticateService {
             return ResponseHelper.error("ERROR_GENERAL_ERROR");
         }
 
-        assetsPo.setEmpower_flag(empowerFlag);
+        assetsPo.setClassify(classify);
         assetsPo.setUpdate_time(TimeUtils.getCurrentSystemTimestamp());
         assetsMapper.updAssets(assetsPo);
 
@@ -170,7 +170,7 @@ public class AuthenticateService {
 
                                 assetsPo.setIp(assetIp);
                                 assetsPo.setUuid(assetUuid);
-                                assetsPo.setEmpower_flag(0);
+                                assetsPo.setClassify(0);
                                 assetsPo.setCreate_time(now);
 
                                 if (getFingerprintBoolen(assetUuid, assetIp)) {
