@@ -37,4 +37,15 @@ public class AssetsApi {
         return assetsService.getAssets(pageNum, pageSize, name, ip, osType, classify, authenticateFlag, flag);
     }
 
+    /**
+     * 获取设备详细信息
+     * @param assetUuid
+     * @return
+     */
+    @GetMapping(value = "/get-asset-info")
+    @ResponseBody
+    public Object getAssetInfo(@RequestParam(value = "asset_uuid") String assetUuid) {
+        return assetsService.getAssetInfo(assetUuid);
+    }
+
 }

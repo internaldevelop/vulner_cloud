@@ -15,6 +15,7 @@ public class AssetsPo {
     private String os_type;  // 操作系统的类型或系列(1:windows; 2:linux)
     private String os_ver;  // 操作系统的版本
     private String create_user_uuid;  // 创建资产的用户 UUID
+    private String on_line;  // 在线状态 0:不在线; 1:在线
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private java.sql.Timestamp expire_time;  // 到期时间
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")

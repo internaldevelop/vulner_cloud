@@ -48,6 +48,30 @@ public class AuthenticateApi {
     }
 
     /**
+     * 认证记录
+     * @param assetUuid
+     * @return
+     */
+    @GetMapping(value = "/authenticate-record")
+    @ResponseBody
+    public Object authenticateRecord(@RequestParam(value = "page_num", required = false)Integer pageNum,
+                                     @RequestParam(value = "page_size", required = false)Integer pageSize,
+                                     @RequestParam(required = false, value = "asset_uuid") String assetUuid) {
+        return authenticateService.authenticateRecord(pageNum, pageSize, assetUuid);
+    }
+
+    /**
+     * 认证记录详情
+     * @param authUuid
+     * @return
+     */
+    @GetMapping(value = "/authenticate-record-info")
+    @ResponseBody
+    public Object authenticateRecordInfo(@RequestParam(required = false, value = "auth_uuid") String authUuid) {
+        return authenticateService.authenticateRecordInfo(authUuid);
+    }
+
+    /**
      * 获取设备指纹生成对称秘钥 sym_key
      * @param assetUuid
      * @return

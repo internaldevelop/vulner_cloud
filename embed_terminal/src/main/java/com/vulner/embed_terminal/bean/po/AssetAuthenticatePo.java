@@ -12,6 +12,8 @@ public class AssetAuthenticatePo {
     private String sym_key;  // 对称秘钥
     private String public_key;  // 公钥
     private String dev_fingerprint;  // 指纹
+    private String plaintext;  // 明文
+    private String ciphertext;  // 密文
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private java.sql.Timestamp update_time;
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")

@@ -1,8 +1,10 @@
 package com.vulner.embed_terminal.service;
 
 import com.vulner.embed_terminal.bean.dto.AssetAuthenticateDto;
+import com.vulner.embed_terminal.bean.dto.AssetAuthenticateRecordDto;
 import com.vulner.embed_terminal.bean.po.ExploitInfoTinyPo;
 import com.vulner.embed_terminal.dao.AssetsMapper;
+import com.vulner.embed_terminal.dao.AuthenticateMapper;
 import com.vulner.embed_terminal.global.Page;
 import com.vulner.common.response.ResponseHelper;
 import com.vulner.common.utils.StringUtils;
@@ -18,6 +20,9 @@ public class AssetsService {
 
     @Autowired
     AssetsMapper assetsMapper;
+
+    @Autowired
+    AuthenticateService authenticateService;
 
     /**
      * 获取设备列表
@@ -66,5 +71,20 @@ public class AssetsService {
         page.setTotalResults(totalCount);
 
         return ResponseHelper.success(page);
+    }
+
+    /**
+     * 获取设备详细信息
+     * @param assetUuid
+     * @return
+     */
+    public Object getAssetInfo(String assetUuid) {
+        AssetAuthenticateDto aaDto = assetsMapper.assetAuthenticateInfo(assetUuid);
+
+        AssetAuthenticateRecordDto aarDto = new AssetAuthenticateRecordDto();
+        if (aaDto != null)
+            authenticateService.changeDto("1", aarDto, aaDto);
+
+        return ResponseHelper.success(aarDto);
     }
 }

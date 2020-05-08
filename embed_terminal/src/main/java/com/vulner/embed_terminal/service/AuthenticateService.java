@@ -2,10 +2,13 @@ package com.vulner.embed_terminal.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.vulner.common.utils.DateFormat;
+import com.vulner.embed_terminal.bean.dto.AssetAuthenticateDto;
+import com.vulner.embed_terminal.bean.dto.AssetAuthenticateRecordDto;
 import com.vulner.embed_terminal.bean.po.AssetAuthenticatePo;
 import com.vulner.embed_terminal.bean.po.AssetsPo;
 import com.vulner.embed_terminal.dao.AssetsMapper;
 import com.vulner.embed_terminal.dao.AuthenticateMapper;
+import com.vulner.embed_terminal.global.Page;
 import com.vulner.embed_terminal.global.RestTemplateUtil;
 import com.vulner.embed_terminal.global.algorithm.AESEncrypt;
 import com.vulner.embed_terminal.global.algorithm.RSAEncrypt;
@@ -22,8 +25,7 @@ import sun.misc.BASE64Decoder;
 
 import java.net.InetAddress;
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -49,6 +51,21 @@ public class AuthenticateService {
      * @return
      */
     public Object scanGetEquipment(String startIp, String endIp) {
+
+        // 验证原有设备是否在线
+        List<AssetsPo> assetList = assetsMapper.getAssets();
+        if (assetList != null && assetList.size() > 0) {
+            for (AssetsPo assetsPo : assetList) {
+                String ip = assetsPo.getIp();
+                if(verifyIp(ip) && verifyNetwork(ip)) {
+                    assetsPo.setOn_line("1");  // 不在线// 在线
+                } else {
+                    assetsPo.setOn_line("0");  // 不在线
+                }
+                assetsMapper.updAssets(assetsPo);
+            }
+        }
+
         if (StringUtils.isValid(startIp) && StringUtils.isValid(endIp)) {
 
             int startInt = getLastNum(startIp);
@@ -93,6 +110,23 @@ public class AuthenticateService {
             this.sendOutSymKey(assetIp, assetUuid);  // 返回sym_key  TODO
             return true;
         }
+        return false;
+    }
+
+    /**
+     * 判断是否在线
+     * @param assetIp
+     * @return
+     */
+    public boolean verifyNetwork (String assetIp) {
+
+        // 构造URL
+        String url = "http://" + assetIp + ":8191/asset-info/verify-network";
+        ResponseBean respBean = RestTemplateUtil.reqData(url);
+        if (respBean != null && "OK".equals(respBean.getError())) {
+            return true;
+        }
+
         return false;
     }
 
@@ -183,7 +217,7 @@ public class AuthenticateService {
 
                                 if (getFingerprintBoolen(assetUuid, assetIp)) {
                                     String sysType = SYSTYPE.toLowerCase();
-                                    assetsPo.setOs_type(sysType.indexOf("windows") > -1 ? "1" : "-1");
+                                    assetsPo.setOs_type(sysType.indexOf("windows") > -1 ? "1" : "2"); // 1:windows; 2:linux
                                     assetsPo.setOs_ver(SYSVERSION);
                                     assetsPo.setName(SYSNAME);
 
@@ -367,35 +401,162 @@ public class AuthenticateService {
                 return ResponseHelper.error(errorCode);
             Object payload = respBean.getPayload();
             JSONObject jsonObj = (JSONObject) JSONObject.toJSON(payload);
-            Object orgData = jsonObj.get("org_data");
+            Object plainData = jsonObj.get("plain_data");  // 明文
+            Object cipherData = jsonObj.get("cipher_data");  // 密文
+
             Object sign = jsonObj.get("sign");
             String publicKey = aaPo.getPublic_key();
 
-            if (orgData != null && sign != null && StringUtils.isValid(publicKey)) {
-                String oData = orgData.toString();
-                boolean checkSign = RSAEncrypt.verifySignature(oData, sign.toString(), new BASE64Decoder().decodeBuffer(publicKey));
-                if (checkSign) {
-                    String decrypt = AESEncrypt.decrypt(oData, aaPo.getSym_key());
+            if (plainData != null && cipherData != null && sign != null && StringUtils.isValid(publicKey)) {
+                String plainDataStr = plainData.toString();
+                String cipherDataStr = cipherData.toString();
 
-                    boolean authenticateFlag = false;
-                    if (StringUtils.isValid(decrypt) && decrypt.indexOf("success") > -1){
-                        aaPo.setAuthenticate_flag(1);
+                boolean authenticateFlag = false;
+                boolean checkSign = RSAEncrypt.verifySignature(cipherDataStr, sign.toString(), new BASE64Decoder().decodeBuffer(publicKey));
+                if (checkSign) {
+                    String encrypt = AESEncrypt.encrypt(plainDataStr, aaPo.getSym_key());
+
+                    if (StringUtils.isValid(encrypt) && encrypt.equals(cipherDataStr)){
+                        aaPo.setAuthenticate_flag(3);  // 1:验签成功; 2:验签失败; 3:解密成功; 4:解密失败
                         authenticateFlag = true;
                     } else {
-                        aaPo.setAuthenticate_flag(-1);
+                        aaPo.setAuthenticate_flag(4);  // 1:验签成功; 2:验签失败; 3:解密成功; 4:解密失败
                     }
-                    aaPo.setUpdate_time(TimeUtils.getCurrentSystemTimestamp());
-                    authenticateMapper.updAuthenticate(aaPo);
-                    if (authenticateFlag)
-                        return ResponseHelper.success();
+                } else {
+                    aaPo.setAuthenticate_flag(2);  // 1:验签成功; 2:验签失败; 3:解密成功; 4:解密失败
                 }
 
+                aaPo.setUpdate_time(TimeUtils.getCurrentSystemTimestamp());
+                aaPo.setPlaintext(plainDataStr);  // 明文
+                aaPo.setCiphertext(cipherDataStr);  // 密文
+                authenticateMapper.updAuthenticate(aaPo);
+
+                AssetAuthenticatePo aaRecordPo = new AssetAuthenticatePo();
+                aaRecordPo.setPlaintext(plainDataStr);  // 明文
+                aaRecordPo.setCiphertext(cipherDataStr);  // 密文
+
+                changePo(aaPo, aaRecordPo);
+                authenticateMapper.addAuthenticateRecord(aaRecordPo);
+
+                if (authenticateFlag)
+                    return ResponseHelper.success();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return ResponseHelper.error(errorCode);
+    }
+
+    public void changePo (AssetAuthenticatePo aaPo, AssetAuthenticatePo aaRecordPo) {
+        aaRecordPo.setUuid(aaPo.getUuid());
+        aaRecordPo.setAsset_uuid(aaPo.getAsset_uuid());
+        aaRecordPo.setAuthenticate_flag(aaPo.getAuthenticate_flag());
+        aaRecordPo.setSym_key(aaPo.getSym_key());
+        aaRecordPo.setPublic_key(aaPo.getPublic_key());
+        aaRecordPo.setDev_fingerprint(aaPo.getDev_fingerprint());
+        aaRecordPo.setCreate_time(aaPo.getCreate_time());
+    }
+
+    /**
+     * 认证记录
+     * @param assetUuid
+     * @return
+     */
+    public Object authenticateRecord(Integer pageNum, Integer pageSize, String assetUuid) {
+
+        Map<String, Object> params = new HashMap<>();
+        if (StringUtils.isValid(assetUuid))
+            params.put("asset_uuid", assetUuid);
+        int totalCount = authenticateMapper.getRecordCount(params);
+
+        Page<AssetAuthenticateRecordDto> page = null;
+        if (pageNum == null || pageSize == null) {
+            pageSize = (pageSize == null) ? 10 : totalCount;
+            page = new Page<>(1, pageSize);
+        } else {
+            params.put("start", Page.getStartPosition(pageNum, pageSize));
+            params.put("count", pageSize);
+            page = new Page<>(pageNum, pageSize);
+        }
+
+        List<AssetAuthenticateDto> origRecordList = authenticateMapper.getRecord(params);
+
+        List<AssetAuthenticateRecordDto> recordList = new ArrayList<>();
+
+        if (origRecordList != null && origRecordList.size() > 0) {
+            for (AssetAuthenticateDto origDto : origRecordList) {
+                AssetAuthenticateRecordDto aarDto = new AssetAuthenticateRecordDto();
+
+                changeDto("0", aarDto, origDto);
+
+                recordList.add(aarDto);
+            }
+        }
+
+        page.setData(recordList);
+        page.setTotalResults(totalCount);
+
+        return ResponseHelper.success(page);
+    }
+
+    /**
+     * 认证记录详情
+     * @param authUuid
+     * @return
+     */
+    public Object authenticateRecordInfo(String authUuid) {
+
+        Map<String, Object> params = new HashMap<>();
+        if (!StringUtils.isValid(authUuid))
+            return ResponseHelper.error("ERROR_INVALID_PARAMETER");
+
+        AssetAuthenticateDto aaDto = authenticateMapper.authenticateRecordInfo(authUuid);
+
+        AssetAuthenticateRecordDto aaRecordDto = new AssetAuthenticateRecordDto();
+        if (aaDto != null){
+            changeDto("1", aaRecordDto, aaDto);
+        }
+
+        return ResponseHelper.success(aaRecordDto);
+    }
+
+    public void changeDto(String infoLevel, AssetAuthenticateRecordDto aarDto, AssetAuthenticateDto origDto) {
+
+        if (origDto != null) {
+            String authUuid = origDto.getUuid();
+
+            aarDto.setAsset_uuid(authUuid);
+            aarDto.setAuth_uuid(origDto.getAuth_uuid());
+            aarDto.setAuthenticate_flag(origDto.getAuthenticate_flag());  // 设备状态  1:验签成功; 2:验签失败; 3:解密成功; 4:解密失败
+            aarDto.setAuth_time(origDto.getAuth_time());
+
+            AssetsPo assetsPo = new AssetsPo();
+            assetsPo.setUuid(authUuid);
+            assetsPo.setName(origDto.getName());
+            assetsPo.setExpire_time(origDto.getExpire_time());
+            assetsPo.setIp(origDto.getIp());
+            assetsPo.setClassify(origDto.getClassify());
+            assetsPo.setCode(origDto.getCode());
+            assetsPo.setCreate_time(origDto.getCreate_time());
+            assetsPo.setUpdate_time(origDto.getUpdate_time());
+            assetsPo.setOn_line(origDto.getOn_line());
+
+            if ("1".equals(infoLevel)) {
+                aarDto.setSym_key(origDto.getSym_key());
+                aarDto.setPublic_key(origDto.getPublic_key());
+                aarDto.setDev_fingerprint(origDto.getDev_fingerprint());
+                aarDto.setPlaintext(origDto.getPlaintext());  // 明文
+                aarDto.setCiphertext(origDto.getCiphertext());  // 密文
+
+                assetsPo.setPort(origDto.getPort());  // 资产的IP地址
+                assetsPo.setOs_type(origDto.getOs_type());  // 操作系统的类型或系列(1:windows; 2:linux)
+                assetsPo.setOs_ver(origDto.getOs_ver());  // 操作系统的版本
+            }
+
+            aarDto.setAsset(assetsPo);
+
+        }
     }
 
 }

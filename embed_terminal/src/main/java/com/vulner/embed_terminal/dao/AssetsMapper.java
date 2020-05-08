@@ -28,7 +28,7 @@ public interface AssetsMapper {
     @Select(" SELECT\n" +
             "	id, uuid, classify,\n" +
             "	CODE, NAME, ip, PORT, os_type,\n" +
-            "	os_ver, expire_time, update_time, create_time \n" +
+            "	os_ver, on_line, expire_time, update_time, create_time \n" +
             " FROM\n" +
             "	assets \n" +
             " ORDER BY id DESC")
@@ -37,7 +37,7 @@ public interface AssetsMapper {
     @Select(" SELECT\n" +
             "	id, uuid, classify,\n" +
             "	CODE, NAME, ip, PORT, os_type,\n" +
-            "	os_ver, expire_time, update_time, create_time \n" +
+            "	os_ver, on_line, expire_time, update_time, create_time \n" +
             " FROM\n" +
             "	assets \n" +
             " WHERE\n" +
@@ -49,7 +49,7 @@ public interface AssetsMapper {
     @Select(" SELECT\n" +
             "	id, uuid, classify,\n" +
             "	CODE, NAME, ip, PORT, os_type,\n" +
-            "	os_ver, expire_time, update_time, create_time \n" +
+            "	os_ver, on_line, expire_time, update_time, create_time \n" +
             " FROM\n" +
             "	assets \n" +
             " WHERE\n" +
@@ -67,6 +67,7 @@ public interface AssetsMapper {
             "	PORT = #{port},\n" +
             "	os_type = #{os_type},\n" +
             "	os_ver = #{os_ver},\n" +
+            "   on_line = #{on_line},\n" +
             "	expire_time = #{expire_time},\n" +
             "	update_time = #{update_time},\n" +
             "	create_time = #{create_time} \n" +
@@ -79,7 +80,7 @@ public interface AssetsMapper {
             "SELECT\n" +
             "	a.id, a.uuid, a.classify,\n" +
             "	a.CODE, a.NAME, a.ip, a.PORT,\n" +
-            "	a.os_type, a.os_ver, a.expire_time, a.update_time,\n" +
+            "	a.os_type, a.os_ver, a.on_line, a.expire_time, a.update_time,\n" +
             "	a.create_time, aa.uuid AS auth_uuid,\n" +
             "	aa.authenticate_flag, aa.sym_key, aa.public_key \n" +
             "   <when test='flag==2'>, aa.dev_fingerprint </when> \n" +
@@ -111,19 +112,19 @@ public interface AssetsMapper {
             "</script>")
     int getAssetAuthCount(Map<String, Object> params);
 
-    @Select(" SELECT\n" +
+    @Select("SELECT\n" +
             "	a.id, a.uuid, a.classify,\n" +
             "	a.CODE, a.NAME, a.ip, a.PORT,\n" +
-            "	a.os_type, a.os_ver, a.expire_time, a.update_time,\n" +
+            "	a.os_type, a.os_ver, a.on_line, a.expire_time, a.update_time,\n" +
             "	a.create_time, aa.uuid AS auth_uuid,\n" +
-            "	aa.authenticate_flag, aa.sym_key,\n" +
-            "	aa.public_key, aa.dev_fingerprint \n" +
-            " FROM\n" +
+            "	aa.authenticate_flag, aa.sym_key, aa.public_key, \n" +
+            "	aa.dev_fingerprint, aa.ciphertext, aa.plaintext, \n" +
+            "   aa.create_time AS auth_time \n" +
+            " FROM \n" +
             "	assets a INNER JOIN asset_authenticate aa ON a.uuid = aa.asset_uuid \n" +
-            " WHERE\n" +
-            "	a.uuid = #{uuid} \n" +
-            " ORDER BY a.id DESC")
-    List<AssetAuthenticateDto> getAssetAuthByUuid(Map<String, Object> params);
+            " WHERE a.uuid = #{assetUuid} \n" +
+            " LIMIT 1")
+    AssetAuthenticateDto assetAuthenticateInfo(String assetUuid);
 
 
 }
