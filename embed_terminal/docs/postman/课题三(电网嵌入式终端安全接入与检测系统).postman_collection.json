@@ -29,7 +29,8 @@
 							"query": [
 								{
 									"key": "types",
-									"value": null
+									"value": null,
+									"description": "Displays,SoundCards,CPU,Memory,Sensors,Power,Disks,Network,NetworkParam,USB"
 								},
 								{
 									"key": "asset_uuid",
@@ -75,10 +76,10 @@
 			]
 		},
 		{
-			"name": "2. 节点",
+			"name": "2. 设备",
 			"item": [
 				{
-					"name": "1. 设备指纹信息采集",
+					"name": "1. 扫描设备",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -87,17 +88,22 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{agent}}authenticate/get-fingerprint?types=CPU,Network,SoundCards,Disks",
+							"raw": "{{gateway_url100}}embed-terminal/authenticate/scan-get-equipment?start_ip=192.168.1.40&end_ip=192.168.1.40",
 							"host": [
-								"{{agent}}authenticate"
+								"{{gateway_url100}}embed-terminal"
 							],
 							"path": [
-								"get-fingerprint"
+								"authenticate",
+								"scan-get-equipment"
 							],
 							"query": [
 								{
-									"key": "types",
-									"value": "CPU,Network,SoundCards,Disks"
+									"key": "start_ip",
+									"value": "192.168.1.40"
+								},
+								{
+									"key": "end_ip",
+									"value": "192.168.1.40"
 								}
 							]
 						}
@@ -105,7 +111,7 @@
 					"response": []
 				},
 				{
-					"name": "2. 获取系统资源",
+					"name": "2. 获取设备列表",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -114,17 +120,75 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{agent}}asset-info/get-resources?types",
+							"raw": "{{gateway_url100}}embed-terminal/assets/get-assets?page_num=1&page_size=10&name&ip&os_type&classify&authenticate_flag&flag=1",
 							"host": [
-								"{{agent}}asset-info"
+								"{{gateway_url100}}embed-terminal"
 							],
 							"path": [
-								"get-resources"
+								"assets",
+								"get-assets"
 							],
 							"query": [
 								{
-									"key": "types",
+									"key": "page_num",
+									"value": "1"
+								},
+								{
+									"key": "page_size",
+									"value": "10"
+								},
+								{
+									"key": "name",
 									"value": null
+								},
+								{
+									"key": "ip",
+									"value": null
+								},
+								{
+									"key": "os_type",
+									"value": null
+								},
+								{
+									"key": "classify",
+									"value": null
+								},
+								{
+									"key": "authenticate_flag",
+									"value": null
+								},
+								{
+									"key": "flag",
+									"value": "1",
+									"description": "1:不展示指纹; 2:展示指纹"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. 获取设备详细信息",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{gateway_url100}}embed-terminal/assets/get-asset-info?asset_uuid=12aae60b-7812-4155-8d1e-bab6ac5f5349",
+							"host": [
+								"{{gateway_url100}}embed-terminal"
+							],
+							"path": [
+								"assets",
+								"get-asset-info"
+							],
+							"query": [
+								{
+									"key": "asset_uuid",
+									"value": "12aae60b-7812-4155-8d1e-bab6ac5f5349"
 								}
 							]
 						}
@@ -137,35 +201,7 @@
 			"name": "3. 审核认证",
 			"item": [
 				{
-					"name": "1. 获取设备指纹",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{gateway_url100}}embed-terminal/authenticate/get-fingerprint?asset_uuid=12aae60b-7812-4155-8d1e-bab6ac5f5349",
-							"host": [
-								"{{gateway_url100}}embed-terminal"
-							],
-							"path": [
-								"authenticate",
-								"get-fingerprint"
-							],
-							"query": [
-								{
-									"key": "asset_uuid",
-									"value": "12aae60b-7812-4155-8d1e-bab6ac5f5349"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "2. 审核",
+					"name": "1. 审核",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -189,7 +225,8 @@
 								},
 								{
 									"key": "classify",
-									"value": "1"
+									"value": "1",
+									"description": "(1:通过(白名单); -1:拒绝(黑名单))"
 								}
 							]
 						}
@@ -197,7 +234,7 @@
 					"response": []
 				},
 				{
-					"name": "3. 认证",
+					"name": "2. 认证",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -218,6 +255,70 @@
 								{
 									"key": "asset_uuid",
 									"value": "12aae60b-7812-4155-8d1e-bab6ac5f5349"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. 认证记录查询",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{gateway_url100}}embed-terminal-dev/authenticate/authenticate-record?page_num=1&page_size=10&asset_uuid=12aae60b-7812-4155-8d1e-bab6ac5f5349",
+							"host": [
+								"{{gateway_url100}}embed-terminal-dev"
+							],
+							"path": [
+								"authenticate",
+								"authenticate-record"
+							],
+							"query": [
+								{
+									"key": "page_num",
+									"value": "1"
+								},
+								{
+									"key": "page_size",
+									"value": "10"
+								},
+								{
+									"key": "asset_uuid",
+									"value": "12aae60b-7812-4155-8d1e-bab6ac5f5349"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4. 查看认证记录详细信息",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{gateway_url100}}embed-terminal/authenticate/authenticate-record-info?auth_uuid=ad4b4f65-c7ff-4e47-8830-fbff354f4126",
+							"host": [
+								"{{gateway_url100}}embed-terminal"
+							],
+							"path": [
+								"authenticate",
+								"authenticate-record-info"
+							],
+							"query": [
+								{
+									"key": "auth_uuid",
+									"value": "ad4b4f65-c7ff-4e47-8830-fbff354f4126"
 								}
 							]
 						}
@@ -296,10 +397,10 @@
 			]
 		},
 		{
-			"name": "5. 设备",
+			"name": "5. 节点",
 			"item": [
 				{
-					"name": "1. 获取设备列表",
+					"name": "1. 设备指纹信息采集",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -308,48 +409,66 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{gateway_url100}}embed-terminal/assets/get-assets?page_num=1&page_size=10&name&ip&os_type&classify&authenticate_flag&flag=1",
+							"raw": "{{agent}}authenticate/get-fingerprint?types=CPU,Network,SoundCards,Disks",
 							"host": [
-								"{{gateway_url100}}embed-terminal"
+								"{{agent}}authenticate"
 							],
 							"path": [
-								"assets",
-								"get-assets"
+								"get-fingerprint"
 							],
 							"query": [
 								{
-									"key": "page_num",
-									"value": "1"
-								},
-								{
-									"key": "page_size",
-									"value": "10"
-								},
-								{
-									"key": "name",
-									"value": null
-								},
-								{
-									"key": "ip",
-									"value": null
-								},
-								{
-									"key": "os_type",
-									"value": null
-								},
-								{
-									"key": "classify",
-									"value": null
-								},
-								{
-									"key": "authenticate_flag",
-									"value": null
-								},
-								{
-									"key": "flag",
-									"value": "1",
-									"description": "1:不展示指纹; 2:展示指纹"
+									"key": "types",
+									"value": "CPU,Network,SoundCards,Disks"
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2. 获取系统资源",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{agent}}asset-info/get-resources?types",
+							"host": [
+								"{{agent}}asset-info"
+							],
+							"path": [
+								"get-resources"
+							],
+							"query": [
+								{
+									"key": "types",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. 获取认证数据",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{agent}}authenticate/authenticate",
+							"host": [
+								"{{agent}}authenticate"
+							],
+							"path": [
+								"authenticate"
 							]
 						}
 					},
