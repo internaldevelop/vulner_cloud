@@ -195,13 +195,13 @@ public class AuthenticateService {
             public Boolean call(){
                 try {
                     for (int laNum = startInt; laNum <= endInt; laNum++) {
-                        Double percent = 100D * (laNum - startInt + 1) / (endInt - startInt + 1);
-                        System.out.println("进度：" + String.format("%.2f", percent));
-
-                        JSONObject jsonMsg = new JSONObject();
-                        jsonMsg.put("scan_percent", String.format("%.2f", percent));
-                        jsonMsg.put("user_uuid", "user_uuid");  // TODO
-                        WebSocketServer.broadcastAssetInfo(SockMsgTypeEnum.SCAN_ASSET_INFO, jsonMsg);
+//                        Double percent = 100D * (laNum - startInt + 1) / (endInt - startInt + 1);
+//                        System.out.println("进度：" + String.format("%.2f", percent));
+//
+//                        JSONObject jsonMsg = new JSONObject();
+//                        jsonMsg.put("scan_percent", String.format("%.2f", percent));
+//                        jsonMsg.put("user_uuid", "user_uuid");  // TODO
+//                        WebSocketServer.broadcastAssetInfo(SockMsgTypeEnum.SCAN_ASSET_INFO, jsonMsg);
 
                         String assetIp = frontIp + laNum;
                         if(verifyIp(assetIp)){  // 网络通畅为true
@@ -407,14 +407,21 @@ public class AuthenticateService {
             Object sign = jsonObj.get("sign");
             String publicKey = aaPo.getPublic_key();
 
+            System.out.println("sign:" + sign);
+            System.out.println("publicKey:" + publicKey);
+
             if (plainData != null && cipherData != null && sign != null && StringUtils.isValid(publicKey)) {
                 String plainDataStr = plainData.toString();
                 String cipherDataStr = cipherData.toString();
+                System.out.println("plainData:" + plainDataStr);
+                System.out.println("cipherData:" + cipherDataStr);
 
                 boolean authenticateFlag = false;
                 boolean checkSign = RSAEncrypt.verifySignature(cipherDataStr, sign.toString(), new BASE64Decoder().decodeBuffer(publicKey));
+                System.out.println("checkSign:" + checkSign);
                 if (checkSign) {
                     String encrypt = AESEncrypt.encrypt(plainDataStr, aaPo.getSym_key());
+                    System.out.println("encrypt:" + encrypt);
 
                     if (StringUtils.isValid(encrypt) && encrypt.equals(cipherDataStr)){
                         aaPo.setAuthenticate_flag(3);  // 1:验签成功; 2:验签失败; 3:解密成功; 4:解密失败
