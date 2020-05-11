@@ -17,11 +17,11 @@ public interface AssetsMapper {
 
     @Insert(" INSERT INTO assets \n" +
             "	(uuid, classify, code, name, " +
-            "   ip, port, os_type, os_ver, " +
+            "   ip, port, os_type, os_ver, on_line, " +
             "   update_time, create_time) \n" +
             " VALUES \n" +
             "	(#{uuid}, #{classify}, #{code}, #{name}, " +
-            "   #{ip}, #{port}, #{os_type}, #{os_ver}, " +
+            "   #{ip}, #{port}, #{os_type}, #{os_ver}, #{on_line}, " +
             "   #{update_time}, #{create_time})")
     int addAssets(AssetsPo assetsPo);
 

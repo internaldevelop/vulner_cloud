@@ -93,4 +93,10 @@ public class AuthenticateApi {
         return authenticateService.getPublicKey(assetUuid);
     }
 
+    @GetMapping(value = "/again-generate-data")
+    @ResponseBody
+    public Object againGenerateData(@RequestParam("asset_uuid") String assetUuid) {
+        return authenticateService.againGenerateData(assetUuid);
+    }
+
 }

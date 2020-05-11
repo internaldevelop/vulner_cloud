@@ -55,15 +55,22 @@ public class AuthenticateService {
         // 验证原有设备是否在线
         List<AssetsPo> assetList = assetsMapper.getAssets();
         if (assetList != null && assetList.size() > 0) {
-            for (AssetsPo assetsPo : assetList) {
-                String ip = assetsPo.getIp();
-                if(verifyIp(ip) && verifyNetwork(ip)) {
-                    assetsPo.setOn_line("1");  // 不在线// 在线
-                } else {
-                    assetsPo.setOn_line("0");  // 不在线
+            ExecutorService executor = Executors.newFixedThreadPool(1);
+            Future<Boolean> future = executor.submit(new Callable<Boolean>() {
+                @Override
+                public Boolean call(){
+                    for (AssetsPo assetsPo : assetList) {
+                        String ip = assetsPo.getIp();
+                        if(verifyIp(ip) && verifyNetwork(ip)) {
+                            assetsPo.setOn_line("1");  // 不在线// 在线
+                        } else {
+                            assetsPo.setOn_line("0");  // 不在线
+                        }
+                        assetsMapper.updAssets(assetsPo);
+                    }
+                    return true;
                 }
-                assetsMapper.updAssets(assetsPo);
-            }
+            });
         }
 
         if (StringUtils.isValid(startIp) && StringUtils.isValid(endIp)) {
@@ -177,8 +184,6 @@ public class AuthenticateService {
         return retNum;
     }
 
-
-
     /**
      * 异步扫描设备
      * @param frontIp
@@ -195,13 +200,13 @@ public class AuthenticateService {
             public Boolean call(){
                 try {
                     for (int laNum = startInt; laNum <= endInt; laNum++) {
-//                        Double percent = 100D * (laNum - startInt + 1) / (endInt - startInt + 1);
-//                        System.out.println("进度：" + String.format("%.2f", percent));
-//
-//                        JSONObject jsonMsg = new JSONObject();
-//                        jsonMsg.put("scan_percent", String.format("%.2f", percent));
-//                        jsonMsg.put("user_uuid", "user_uuid");  // TODO
-//                        WebSocketServer.broadcastAssetInfo(SockMsgTypeEnum.SCAN_ASSET_INFO, jsonMsg);
+                        Double percent = 100D * (laNum - startInt + 1) / (endInt - startInt + 1);
+                        System.out.println("进度：" + String.format("%.2f", percent));
+
+                        JSONObject jsonMsg = new JSONObject();
+                        jsonMsg.put("scan_percent", String.format("%.2f", percent));
+                        jsonMsg.put("user_uuid", "user_uuid");  // TODO
+                        WebSocketServer.broadcastAssetInfo(SockMsgTypeEnum.SCAN_ASSET_INFO, jsonMsg);
 
                         String assetIp = frontIp + laNum;
                         if(verifyIp(assetIp)){  // 网络通畅为true
@@ -213,6 +218,7 @@ public class AuthenticateService {
                                 assetsPo.setIp(assetIp);
                                 assetsPo.setUuid(assetUuid);
                                 assetsPo.setClassify(0);
+                                assetsPo.setOn_line("1");  // 在线状态 0:不在线; 1:在线
                                 assetsPo.setCreate_time(now);
 
                                 if (getFingerprintBoolen(assetUuid, assetIp)) {
@@ -391,8 +397,9 @@ public class AuthenticateService {
         // 构造URL
         String url = "http://" + assetIp + ":8191/authenticate/authenticate";
 
+
         AssetAuthenticatePo aaPo = authenticateMapper.getAuthenticate(assetUuid);
-        if (aaPo == null)
+        if (!verifyIp(assetIp) || aaPo == null)
             return ResponseHelper.error(errorCode);
 
         try {
@@ -407,21 +414,14 @@ public class AuthenticateService {
             Object sign = jsonObj.get("sign");
             String publicKey = aaPo.getPublic_key();
 
-            System.out.println("sign:" + sign);
-            System.out.println("publicKey:" + publicKey);
-
             if (plainData != null && cipherData != null && sign != null && StringUtils.isValid(publicKey)) {
                 String plainDataStr = plainData.toString();
                 String cipherDataStr = cipherData.toString();
-                System.out.println("plainData:" + plainDataStr);
-                System.out.println("cipherData:" + cipherDataStr);
 
                 boolean authenticateFlag = false;
                 boolean checkSign = RSAEncrypt.verifySignature(cipherDataStr, sign.toString(), new BASE64Decoder().decodeBuffer(publicKey));
-                System.out.println("checkSign:" + checkSign);
                 if (checkSign) {
                     String encrypt = AESEncrypt.encrypt(plainDataStr, aaPo.getSym_key());
-                    System.out.println("encrypt:" + encrypt);
 
                     if (StringUtils.isValid(encrypt) && encrypt.equals(cipherDataStr)){
                         aaPo.setAuthenticate_flag(3);  // 1:验签成功; 2:验签失败; 3:解密成功; 4:解密失败
@@ -566,4 +566,19 @@ public class AuthenticateService {
         }
     }
 
+    public Object againGenerateData(String assetUuid) {
+        AssetsPo assetsPo = assetsMapper.getAssetsByUuid(assetUuid);
+        if (assetsPo == null) {
+            return ResponseHelper.error("ERROR_INVALID_PARAMETER");
+        }
+
+        // 构造URL
+        String url = "http://" + assetsPo.getIp() + ":8191/authenticate/get-public-key?sym_key={sym_key}";
+
+        if (!this.uptData(assetUuid, url)) {
+            return ResponseHelper.error("ERROR_GENERAL_ERROR");
+        }
+
+        return ResponseHelper.success();
+    }
 }

@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.vulner.embed_terminal.bean.po.AssetsPo;
 import com.vulner.embed_terminal.bean.po.NetworkPo;
 import com.vulner.embed_terminal.dao.AssetsMapper;
+import com.vulner.embed_terminal.dao.AuthenticateMapper;
 import com.vulner.embed_terminal.dao.NetworkMapper;
 import com.vulner.embed_terminal.global.websocket.SockMsgTypeEnum;
 import com.vulner.embed_terminal.global.websocket.WebSocketServer;
@@ -20,7 +21,12 @@ import org.springframework.web.client.RestTemplate;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 @Component
 public class SystemService {
@@ -33,6 +39,9 @@ public class SystemService {
 
     @Autowired
     NetworkMapper networkMapper;
+
+    @Autowired
+    AuthenticateService authenticateService;
 
     @Bean(name="remoteRestTemplate")
     public RestTemplate restTemplate() {
@@ -257,5 +266,89 @@ public class SystemService {
         }
         return ResponseHelper.error("ERROR_GENERAL_ERROR");
 
+    }
+
+    /**
+     * 启动定时任务
+     * @param types
+     * @param secondTime
+     * @return
+     */
+    public Object startTaskResourcesAll(String types, String secondTime) {
+        if (!StringUtils.isValid(types)) {
+            types = "CPU,Memory,Disks,Network";
+        }
+
+        List<AssetsPo> assetList = assetsMapper.getAssets();
+
+        if (assetList == null || assetList.size() < 1)
+            return ResponseHelper.error("ERROR_INVALID_PARAMETER");
+
+        ExecutorService executor = Executors.newFixedThreadPool(1);
+        String finalTypes = types;
+        Future<Boolean> future = executor.submit(new Callable<Boolean>() {
+            @Override
+            public Boolean call(){
+                for (AssetsPo assetPo: assetList) {
+                    String assetIp = assetPo.getIp();
+                    String assetUuid = assetPo.getUuid();
+
+                    if(authenticateService.verifyIp(assetIp)) {
+                        // 构造URL
+                        String url = "http://" + assetIp + ":8191/asset-info/start-task-acquire?asset_uuid={asset_uuid}&types={types}&second_time={second_time}";
+
+                        // 构造参数map
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put("types", finalTypes);
+                        map.put("second_time", secondTime);
+                        map.put("asset_uuid", assetUuid);
+
+                        try {
+                            restTemplate.getForEntity(url, Boolean.class, map);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                return true;
+            }
+        });
+
+        return ResponseHelper.success();
+    }
+
+    public Object stopTaskResourcesAll() {
+        List<AssetsPo> assetList = assetsMapper.getAssets();
+
+        if (assetList == null || assetList.size() < 1)
+            return ResponseHelper.error("ERROR_INVALID_PARAMETER");
+
+        ExecutorService executor = Executors.newFixedThreadPool(1);
+        Future<Boolean> future = executor.submit(new Callable<Boolean>() {
+            @Override
+            public Boolean call(){
+                for (AssetsPo assetPo: assetList) {
+                    String assetIp = assetPo.getIp();
+                    String assetUuid = assetPo.getUuid();
+
+                    if(authenticateService.verifyIp(assetIp)) {
+                        // 构造URL
+                        String url = "http://" + assetIp + ":8191/asset-info/stop-task-acquire?asset_uuid={asset_uuid}";
+                        // 构造参数map
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put("asset_uuid", assetUuid);
+
+                        try {
+                            restTemplate.getForEntity(url, Boolean.class, map);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                return true;
+            }
+        });
+
+        return ResponseHelper.success();
     }
 }

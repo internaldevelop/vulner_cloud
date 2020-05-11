@@ -86,6 +86,13 @@ public class SystemApi {
         return systemService.getHostSystemInfo();
     }
 
+    /**
+     * 定时获取系统资源
+     * @param assetUuid
+     * @param types
+     * @param secondTime
+     * @return
+     */
     @GetMapping(value = "/starttask/resources")
     @ResponseBody
     public Object startTaskResources(@RequestParam("asset_uuid") String assetUuid, @RequestParam("types") String types, @RequestParam( value = "second_time", required = false) String secondTime) {
@@ -102,6 +109,18 @@ public class SystemApi {
     @ResponseBody
     public Object setResourcesData(@RequestParam("asset_uuid") String assetUuid, @RequestParam("datas") String datas) {
         return systemService.setResourcesData(assetUuid, datas);
+    }
+
+    @GetMapping(value = "/starttask/resources-all")
+    @ResponseBody
+    public Object startTaskResourcesAll(@RequestParam("types") String types, @RequestParam( value = "second_time", required = false) String secondTime) {
+        return systemService.startTaskResourcesAll(types, secondTime);
+    }
+
+    @GetMapping(value = "/stoptask/resources-all")
+    @ResponseBody
+    public Object stopTaskResourcesAll() {
+        return systemService.stopTaskResourcesAll();
     }
 
 }
