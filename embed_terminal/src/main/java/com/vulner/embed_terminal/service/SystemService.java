@@ -2,8 +2,11 @@ package com.vulner.embed_terminal.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.vulner.common.utils.TimeUtils;
+import com.vulner.embed_terminal.bean.po.AssetPerfPo;
 import com.vulner.embed_terminal.bean.po.AssetsPo;
 import com.vulner.embed_terminal.bean.po.NetworkPo;
+import com.vulner.embed_terminal.dao.AssetPerfMapper;
 import com.vulner.embed_terminal.dao.AssetsMapper;
 import com.vulner.embed_terminal.dao.AuthenticateMapper;
 import com.vulner.embed_terminal.dao.NetworkMapper;
@@ -43,6 +46,9 @@ public class SystemService {
     @Autowired
     AuthenticateService authenticateService;
 
+    @Autowired
+    AssetPerfMapper assetPerfMapper;
+
     @Bean(name="remoteRestTemplate")
     public RestTemplate restTemplate() {
         return new RestTemplate();
@@ -71,10 +77,103 @@ public class SystemService {
     public Object setResourcesData(String assetUuid, String datas) {
         if (!StringUtils.isValid(assetUuid) || !StringUtils.isValid(datas))
             return ResponseHelper.error("ERROR_GENERAL_ERROR");
+
+        AssetsPo assetsPo = assetsMapper.getAssetsByUuid(assetUuid);
+        if (assetsPo == null || !StringUtils.isValid(assetsPo.getIp()))
+            return ResponseHelper.error("ERROR_GENERAL_ERROR");
+
         JSONObject jsonMsg = JSONObject.parseObject(datas);
         jsonMsg.put("asset_uuid", assetUuid);
+
+        AssetPerfPo assetPerfPo = new AssetPerfPo();
+
+        boolean addDataFlag = false;
+        Object cpuObj = jsonMsg.get("CPU");
+        if (cpuObj != null) {
+            addCPUData(assetPerfPo, cpuObj);
+            addDataFlag = true;
+        }
+
+        Object memoryObj = jsonMsg.get("Memory");
+        if (memoryObj != null) {
+            addMemoryData(assetPerfPo, memoryObj);
+            addDataFlag = true;
+        }
+        Object disksObj = jsonMsg.get("Disks");
+        if (disksObj != null) {
+            addDisksData(assetPerfPo, disksObj);
+            addDataFlag = true;
+        }
+        addNetworkData(assetPerfPo, jsonMsg, assetsPo.getIp());
+
+        if (addDataFlag) {
+            assetPerfPo.setUuid(StringUtils.generateUuid());
+            assetPerfPo.setAsset_uuid(assetUuid);
+            assetPerfPo.setCreate_time(TimeUtils.getCurrentSystemTimestamp());
+            assetPerfMapper.addAssetPerfData(assetPerfPo);
+        }
+
         WebSocketServer.broadcastAssetInfo(SockMsgTypeEnum.ASSET_REAL_TIME_INFO, jsonMsg);
         return ResponseHelper.success();
+    }
+
+    public void addCPUData (AssetPerfPo assetPerfPo, Object cpuObj) {
+        JSONObject jsonMsg = (JSONObject)JSONObject.toJSON(cpuObj);
+        assetPerfPo.setCpu_free_percent("" + jsonMsg.get("freePercentTotal"));
+        assetPerfPo.setCpu_used_percent("" + jsonMsg.get("usedPercentTotal"));
+    }
+
+    public void addMemoryData (AssetPerfPo assetPerfPo, Object memoryObj) {
+        JSONObject jsonMsg = (JSONObject)JSONObject.toJSON(memoryObj);
+        assetPerfPo.setMemory_free_percent("" + jsonMsg.get("freePercentTotal"));
+        assetPerfPo.setMemory_used_percent("" + jsonMsg.get("usedPercentTotal"));
+    }
+
+    public void addDisksData (AssetPerfPo assetPerfPo, Object disksObj) {
+        JSONObject jsonMsg = (JSONObject)JSONObject.toJSON(disksObj);
+        assetPerfPo.setDisk_free_percent("" + jsonMsg.get("freePercentTotal"));
+        assetPerfPo.setDisk_used_percent("" + jsonMsg.get("usedPercentTotal"));
+    }
+
+    public void addNetworkData (AssetPerfPo assetPerfPo, JSONObject jsonMsg, String assetIp) {
+        Object networkObj = jsonMsg.get("Network");
+        if (networkObj != null) {
+            JSONArray jsonArray = (JSONArray)networkObj;
+
+            for(Object obj : jsonArray) {
+                JSONObject jsonNet = (JSONObject)JSONObject.toJSON(obj);
+                NetworkPo networkPo = new NetworkPo();
+                setNetworkPo(networkPo, jsonNet);
+                networkMapper.addNetwork(networkPo);
+
+                String ip = "" + jsonNet.get("IPv4");
+                if (ip.indexOf(assetIp) < 0)
+                    continue;
+
+                assetPerfPo.setPackets_recv("" + jsonNet.get("packetsRecv"));
+                assetPerfPo.setBytes_recv("" + jsonNet.get("bytesRecv"));
+                assetPerfPo.setPackets_sent("" + jsonNet.get("packetsSent"));
+                assetPerfPo.setBytes_sent("" + jsonNet.get("bytesSent"));
+                jsonMsg.put("NewworkObj", jsonNet);
+            }
+        }
+    }
+
+    public void setNetworkPo (NetworkPo networkPo, JSONObject jsonMsg) {
+        networkPo.setUuid(StringUtils.generateUuid());
+        networkPo.setName("" + jsonMsg.get("netWorkName"));
+        networkPo.setMac_address("" + jsonMsg.get("macAddress"));
+        networkPo.setIpv4("" + jsonMsg.get("IPv4"));
+        networkPo.setIpv6("" + jsonMsg.get("IPv6"));
+        networkPo.setPackets_recv("" + jsonMsg.get("packetsRecv"));
+        networkPo.setBytes_recv("" + jsonMsg.get("bytesRecv"));
+        networkPo.setPackets_sent("" + jsonMsg.get("packetsSent"));
+        networkPo.setSpeed("" + jsonMsg.get("speed"));
+        networkPo.setMtu("" + jsonMsg.get("mtu"));
+
+        long lt = new Long("" + jsonMsg.get("timeStamp"));
+        networkPo.setCreate_time(new Timestamp(lt));
+
     }
 
     /**
@@ -94,13 +193,14 @@ public class SystemService {
             return ResponseHelper.error("ERROR_GENERAL_ERROR");
 
         // 构造URL
-        String url = "http://" + assetsPo.getIp() + ":8191/asset-info/start-task-acquire?asset_uuid={asset_uuid}&types={types}&second_time={second_time}";
+        String url = "http://" + assetsPo.getIp() + ":8191/asset-info/start-task-acquire?asset_uuid={asset_uuid}&types={types}&second_time={second_time}&detail={detail}";
 
         // 构造参数map
         HashMap<String, String> map = new HashMap<>();
         map.put("types", types);
         map.put("second_time", secondTime);
         map.put("asset_uuid", assetUuid);
+        map.put("detail", "1");
 
         try {
             // 向节点发送请求，并返回节点的响应结果
@@ -165,23 +265,11 @@ public class SystemService {
 
         JSONArray jsonArray = JSONArray.parseArray(datas);
         for(Object obj : jsonArray) {
-            JSONObject jsonMsg = (JSONObject)JSONObject.toJSON(obj);
+            JSONObject jsonNet = (JSONObject)JSONObject.toJSON(obj);
             NetworkPo networkPo = new NetworkPo();
-            networkPo.setUuid(StringUtils.generateUuid());
             networkPo.setAsset_uuid(assetUuid);
-            networkPo.setName("" + jsonMsg.get("netWorkName"));
-            networkPo.setMac_address("" + jsonMsg.get("macAddress"));
-            networkPo.setIpv4("" + jsonMsg.get("IPv4"));
-            networkPo.setIpv6("" + jsonMsg.get("IPv6"));
-            networkPo.setPackets_recv("" + jsonMsg.get("packetsRecv"));
-            networkPo.setBytes_recv("" + jsonMsg.get("bytesRecv"));
-            networkPo.setPackets_sent("" + jsonMsg.get("packetsSent"));
-            networkPo.setSpeed("" + jsonMsg.get("speed"));
-            networkPo.setMtu("" + jsonMsg.get("mtu"));
 
-            long lt = new Long("" + jsonMsg.get("timeStamp"));
-            networkPo.setCreate_time(new Timestamp(lt));
-
+            setNetworkPo(networkPo, jsonNet);
             networkMapper.addNetwork(networkPo);
         }
         Map<String, Object> mpMsg = new HashMap<>();
@@ -295,13 +383,14 @@ public class SystemService {
 
                     if(authenticateService.verifyIp(assetIp)) {
                         // 构造URL
-                        String url = "http://" + assetIp + ":8191/asset-info/start-task-acquire?asset_uuid={asset_uuid}&types={types}&second_time={second_time}";
+                        String url = "http://" + assetIp + ":8191/asset-info/start-task-acquire?asset_uuid={asset_uuid}&types={types}&second_time={second_time}&detail={detail}";
 
                         // 构造参数map
                         HashMap<String, String> map = new HashMap<>();
                         map.put("types", finalTypes);
                         map.put("second_time", secondTime);
                         map.put("asset_uuid", assetUuid);
+                        map.put("detail","0");
 
                         try {
                             restTemplate.getForEntity(url, Boolean.class, map);

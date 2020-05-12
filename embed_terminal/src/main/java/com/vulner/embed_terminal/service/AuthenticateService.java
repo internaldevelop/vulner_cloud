@@ -59,12 +59,15 @@ public class AuthenticateService {
             Future<Boolean> future = executor.submit(new Callable<Boolean>() {
                 @Override
                 public Boolean call(){
+                    boolean onLine = false;
                     for (AssetsPo assetsPo : assetList) {
                         String ip = assetsPo.getIp();
-                        if(verifyIp(ip) && verifyNetwork(ip)) {
-                            assetsPo.setOn_line("1");  // 不在线// 在线
+                        if(onLine || (verifyIp(ip) && verifyNetwork(ip))) {
+                            assetsPo.setOn_line("1");  // 在线
+                            onLine = false;
                         } else {
                             assetsPo.setOn_line("0");  // 不在线
+                            onLine = true;
                         }
                         assetsMapper.updAssets(assetsPo);
                     }
@@ -164,6 +167,8 @@ public class AuthenticateService {
         if (classify == 1) {  // 审核通过
             Date date = DateFormat.addMonth(now, 12);  // 有效期一年
             assetsPo.setExpire_time(new Timestamp(date.getTime()));
+
+            authenticate(assetUuid);
         }
 
         assetsMapper.updAssets(assetsPo);
@@ -380,17 +385,11 @@ public class AuthenticateService {
         return retFlag;
     }
 
-    /**
-     * 认证
-     * @param assetUuid
-     * @return
-     */
-    public Object authenticate(String assetUuid) {
-        String errorCode = "ERROR_AUTHENTICATE_FAIL";
+    public boolean getVerifyData(String assetUuid){
 
         AssetsPo AssetsPo = assetsMapper.getAssetsByUuid(assetUuid);
         if (AssetsPo == null || !StringUtils.isValid(AssetsPo.getIp())) {
-            return ResponseHelper.error("ERROR_AUTHENTICATE_FAIL");
+            return false;
         }
         String assetIp = AssetsPo.getIp();
 
@@ -400,12 +399,12 @@ public class AuthenticateService {
 
         AssetAuthenticatePo aaPo = authenticateMapper.getAuthenticate(assetUuid);
         if (!verifyIp(assetIp) || aaPo == null)
-            return ResponseHelper.error(errorCode);
+            return false;
 
         try {
             ResponseBean respBean = RestTemplateUtil.reqData(url);
             if (respBean == null)
-                return ResponseHelper.error(errorCode);
+                return false;
             Object payload = respBean.getPayload();
             JSONObject jsonObj = (JSONObject) JSONObject.toJSON(payload);
             Object plainData = jsonObj.get("plain_data");  // 明文
@@ -446,13 +445,27 @@ public class AuthenticateService {
                 authenticateMapper.addAuthenticateRecord(aaRecordPo);
 
                 if (authenticateFlag)
-                    return ResponseHelper.success();
+                    return true;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return ResponseHelper.error(errorCode);
+        return false;
+    }
+
+    /**
+     * 认证
+     * @param assetUuid
+     * @return
+     */
+    public Object authenticate(String assetUuid) {
+
+        boolean verifyFlag = getVerifyData(assetUuid);
+        if (verifyFlag) {
+            return ResponseHelper.success();
+        }
+        return ResponseHelper.error("ERROR_AUTHENTICATE_FAIL");
     }
 
     public void changePo (AssetAuthenticatePo aaPo, AssetAuthenticatePo aaRecordPo) {

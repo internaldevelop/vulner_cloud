@@ -72,6 +72,60 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "3. 启动获取所有设备资源任务",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{gateway_url100}}embed-terminal/starttask/resources-all?types=&second_time",
+							"host": [
+								"{{gateway_url100}}embed-terminal"
+							],
+							"path": [
+								"starttask",
+								"resources-all"
+							],
+							"query": [
+								{
+									"key": "types",
+									"value": ""
+								},
+								{
+									"key": "second_time",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4. 关闭获取所有设备资源任务",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{gateway_url100}}embed-terminal/stoptask/resources-all",
+							"host": [
+								"{{gateway_url100}}embed-terminal"
+							],
+							"path": [
+								"stoptask",
+								"resources-all"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -194,6 +248,42 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "4. 获取设备资源历史数据",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{gateway_url100}}embed-terminal/assets/get-his-resources?page_num=1&page_size=10&asset_uuid=1db0a9c5-730e-466f-aeb2-39de298825f3",
+							"host": [
+								"{{gateway_url100}}embed-terminal"
+							],
+							"path": [
+								"assets",
+								"get-his-resources"
+							],
+							"query": [
+								{
+									"key": "page_num",
+									"value": "1"
+								},
+								{
+									"key": "page_size",
+									"value": "10"
+								},
+								{
+									"key": "asset_uuid",
+									"value": "1db0a9c5-730e-466f-aeb2-39de298825f3"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -201,7 +291,7 @@
 			"name": "3. 审核认证",
 			"item": [
 				{
-					"name": "1. 审核",
+					"name": "1. 审核(包含自动认证)",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -271,9 +361,9 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{gateway_url100}}embed-terminal-dev/authenticate/authenticate-record?page_num=1&page_size=10&asset_uuid=12aae60b-7812-4155-8d1e-bab6ac5f5349",
+							"raw": "{{gateway_url100}}embed-terminal/authenticate/authenticate-record?page_num=1&page_size=10&asset_uuid=12aae60b-7812-4155-8d1e-bab6ac5f5349",
 							"host": [
-								"{{gateway_url100}}embed-terminal-dev"
+								"{{gateway_url100}}embed-terminal"
 							],
 							"path": [
 								"authenticate",
@@ -319,6 +409,34 @@
 								{
 									"key": "auth_uuid",
 									"value": "ad4b4f65-c7ff-4e47-8830-fbff354f4126"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5. 重新生成公钥",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{gateway_url100}}embed-terminal/authenticate/again-generate-data?asset_uuid=12aae60b-7812-4155-8d1e-bab6ac5f5349",
+							"host": [
+								"{{gateway_url100}}embed-terminal"
+							],
+							"path": [
+								"authenticate",
+								"again-generate-data"
+							],
+							"query": [
+								{
+									"key": "asset_uuid",
+									"value": "12aae60b-7812-4155-8d1e-bab6ac5f5349"
 								}
 							]
 						}
@@ -436,7 +554,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{agent}}asset-info/get-resources?types",
+							"raw": "{{agent}}asset-info/get-resources?types=CPU&detail=0",
 							"host": [
 								"{{agent}}asset-info"
 							],
@@ -446,7 +564,12 @@
 							"query": [
 								{
 									"key": "types",
-									"value": null
+									"value": "CPU",
+									"description": "CPU,Memory,Disks,Network"
+								},
+								{
+									"key": "detail",
+									"value": "0"
 								}
 							]
 						}

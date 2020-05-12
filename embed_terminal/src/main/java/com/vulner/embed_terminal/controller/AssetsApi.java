@@ -48,4 +48,19 @@ public class AssetsApi {
         return assetsService.getAssetInfo(assetUuid);
     }
 
+    /**
+     * 获取设备资产 资源历史数据
+     * @param assetUuid
+     * @return
+     */
+    @GetMapping(value = "/get-his-resources")
+    @ResponseBody
+    public Object getHisResources(@RequestParam(value = "page_num", required = false)Integer pageNum,
+                                  @RequestParam(value = "page_size", required = false)Integer pageSize,
+                                  @RequestParam(value = "asset_uuid") String assetUuid) {
+        return assetsService.getHisResources(pageNum, pageSize, assetUuid);
+    }
+
+
+
 }

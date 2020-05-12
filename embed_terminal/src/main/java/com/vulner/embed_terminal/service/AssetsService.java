@@ -2,7 +2,9 @@ package com.vulner.embed_terminal.service;
 
 import com.vulner.embed_terminal.bean.dto.AssetAuthenticateDto;
 import com.vulner.embed_terminal.bean.dto.AssetAuthenticateRecordDto;
+import com.vulner.embed_terminal.bean.po.AssetPerfPo;
 import com.vulner.embed_terminal.bean.po.ExploitInfoTinyPo;
+import com.vulner.embed_terminal.dao.AssetPerfMapper;
 import com.vulner.embed_terminal.dao.AssetsMapper;
 import com.vulner.embed_terminal.dao.AuthenticateMapper;
 import com.vulner.embed_terminal.global.Page;
@@ -23,6 +25,9 @@ public class AssetsService {
 
     @Autowired
     AuthenticateService authenticateService;
+
+    @Autowired
+    AssetPerfMapper assetPerfMapper;
 
     /**
      * 获取设备列表
@@ -86,5 +91,33 @@ public class AssetsService {
             authenticateService.changeDto("1", aarDto, aaDto);
 
         return ResponseHelper.success(aarDto);
+    }
+
+    /**
+     * 获取设备资产 资源历史数据
+     * @param assetUuid
+     * @return
+     */
+    public Object getHisResources(Integer pageNum, Integer pageSize, String assetUuid) {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("asset_uuid", assetUuid);
+        int totalCount = assetPerfMapper.getDataByAssetUuidCount(params);
+
+        Page<AssetPerfPo> page = null;
+        if (pageNum == null || pageSize == null) {
+            pageSize = (pageSize == null) ? 10 : totalCount;
+            page = new Page<>(1, pageSize);
+        } else {
+            params.put("start", Page.getStartPosition(pageNum, pageSize));
+            params.put("count", pageSize);
+            page = new Page<>(pageNum, pageSize);
+        }
+        List<AssetPerfPo> assetPerfList = assetPerfMapper.getDataByAssetUuid(params);
+
+        page.setData(assetPerfList);
+        page.setTotalResults(totalCount);
+
+        return ResponseHelper.success(page);
     }
 }
