@@ -59,15 +59,12 @@ public class AuthenticateService {
             Future<Boolean> future = executor.submit(new Callable<Boolean>() {
                 @Override
                 public Boolean call(){
-                    boolean onLine = false;
                     for (AssetsPo assetsPo : assetList) {
                         String ip = assetsPo.getIp();
-                        if(onLine || (verifyIp(ip) && verifyNetwork(ip))) {
+                        if(verifyIp(ip) && verifyNetwork(ip)) {
                             assetsPo.setOn_line("1");  // 在线
-                            onLine = false;
                         } else {
                             assetsPo.setOn_line("0");  // 不在线
-                            onLine = true;
                         }
                         assetsMapper.updAssets(assetsPo);
                     }
