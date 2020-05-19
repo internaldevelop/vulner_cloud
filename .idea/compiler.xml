@@ -11,13 +11,13 @@
         <module name="common" />
         <module name="system_code" />
         <module name="firmware_analyze" />
-        <module name="unify_auth" />
+        <module name="register_server" />
         <module name="aqmp_bus" />
         <module name="firmware_fetch" />
         <module name="gateway_zuul" />
         <module name="bend_server" />
         <module name="system_log" />
-        <module name="register_server" />
+        <module name="unify_auth" />
         <module name="gateway_server" />
       </profile>
     </annotationProcessing>
