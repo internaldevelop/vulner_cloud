@@ -3,13 +3,12 @@ package com.vulner.embed_terminal.service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.vulner.common.utils.TimeUtils;
+import com.vulner.embed_terminal.bean.po.AssetDataPacketPo;
 import com.vulner.embed_terminal.bean.po.AssetPerfPo;
 import com.vulner.embed_terminal.bean.po.AssetsPo;
 import com.vulner.embed_terminal.bean.po.NetworkPo;
-import com.vulner.embed_terminal.dao.AssetPerfMapper;
-import com.vulner.embed_terminal.dao.AssetsMapper;
-import com.vulner.embed_terminal.dao.AuthenticateMapper;
-import com.vulner.embed_terminal.dao.NetworkMapper;
+import com.vulner.embed_terminal.dao.*;
+import com.vulner.embed_terminal.global.Page;
 import com.vulner.embed_terminal.global.websocket.SockMsgTypeEnum;
 import com.vulner.embed_terminal.global.websocket.WebSocketServer;
 import com.vulner.common.response.ResponseHelper;
@@ -48,6 +47,9 @@ public class SystemService {
 
     @Autowired
     AssetPerfMapper assetPerfMapper;
+
+    @Autowired
+    AssetDataPacketMapper assetDataPacketMapper;
 
     @Bean(name="remoteRestTemplate")
     public RestTemplate restTemplate() {
@@ -439,5 +441,71 @@ public class SystemService {
         });
 
         return ResponseHelper.success();
+    }
+
+    public Object setPacketData(String assetUuid, String datas) {
+        if (!StringUtils.isValid(assetUuid)) {
+            return ResponseHelper.error("ERROR_INVALID_PARAMETER");
+        }
+        AssetsPo assetsPo = assetsMapper.getAssetsByUuid(assetUuid);
+        if (assetsPo == null || !StringUtils.isValid(assetsPo.getIp())) {
+            return ResponseHelper.error("ERROR_INVALID_PARAMETER");
+        }
+
+        String assetIp = assetsPo.getIp();
+
+        JSONObject jsonObject = JSONObject.parseObject(datas);
+        String sourceIp = "" + jsonObject.get("source_ip");
+
+        AssetDataPacketPo assetDataPacketPo = new AssetDataPacketPo();
+        assetDataPacketPo.setUuid(StringUtils.generateUuid());
+        assetDataPacketPo.setAsset_uuid(assetUuid);
+        assetDataPacketPo.setCreate_time(TimeUtils.getCurrentSystemTimestamp());
+
+        assetDataPacketPo.setSrc_data("" + jsonObject.get("src_data"));
+        assetDataPacketPo.setSource_ip("" + jsonObject.get("source_ip"));
+        assetDataPacketPo.setSource_port("" + jsonObject.get("source_port"));
+        assetDataPacketPo.setDest_ip("" + jsonObject.get("dest_ip"));
+        assetDataPacketPo.setDest_port("" + jsonObject.get("dest_port"));
+        assetDataPacketPo.setTransport_protocol("" + jsonObject.get("transport_protocol"));
+        assetDataPacketPo.setDirection((sourceIp.indexOf(assetIp) > -1) ? "1":"2");  // 方向 1:上行; 2:下行
+
+        assetDataPacketMapper.addAssetDataPacketData(assetDataPacketPo);
+
+        return ResponseHelper.success();
+    }
+
+    /**
+     * 获取数据包数据
+     * @param assetUuid
+     * @return
+     */
+    public Object getPacketDatas(Integer pageNum, Integer pageSize, String assetUuid, String transportProtocol, String startTime, String endTime) {
+
+        Map<String, Object> params = new HashMap<>();
+        if (StringUtils.isValid(assetUuid))
+            params.put("asset_uuid", assetUuid);
+        if (StringUtils.isValid(transportProtocol))
+            params.put("transport_protocol", transportProtocol);
+        if (StringUtils.isValid(startTime))
+            params.put("start_time", startTime);
+        if (StringUtils.isValid(endTime))
+            params.put("end_time", endTime);
+
+        int totalCount = assetDataPacketMapper.getPacketDataCount(params);
+
+        Page<AssetPerfPo> page = null;
+        if (pageNum == null || pageSize == null) {
+            pageSize = (pageSize == null) ? 10 : totalCount;
+            page = new Page<>(1, pageSize);
+        } else {
+            params.put("start", Page.getStartPosition(pageNum, pageSize));
+            params.put("count", pageSize);
+            page = new Page<>(pageNum, pageSize);
+        }
+
+        List<AssetDataPacketPo> assetdatapacketlist = assetDataPacketMapper.getPacketDataList(params);
+
+        return ResponseHelper.success(assetdatapacketlist);
     }
 }

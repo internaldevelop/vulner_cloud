@@ -32,8 +32,10 @@ public class AuthenticateApi {
      */
     @GetMapping(value = "/to-review")
     @ResponseBody
-    public Object toReview(@RequestParam("asset_uuid") String assetUuid, @RequestParam("classify") int classify) {
-        return authenticateService.toReview(assetUuid, classify);
+    public Object toReview(@RequestParam("asset_uuid") String assetUuid,
+                           @RequestParam("classify") int classify,
+                           @RequestParam(required = false, value = "asset_name") String assetName) {
+        return authenticateService.toReview(assetUuid, classify, assetName);
     }
 
     /**
