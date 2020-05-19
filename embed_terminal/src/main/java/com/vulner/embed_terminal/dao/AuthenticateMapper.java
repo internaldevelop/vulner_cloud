@@ -44,6 +44,7 @@ public interface AuthenticateMapper {
             "dev_fingerprint = #{dev_fingerprint}, \n" +
             "plaintext = #{plaintext}, \n" +
             "ciphertext = #{ciphertext}, \n" +
+            "signature = #{signature}, \n" +
             "update_time = #{update_time} \n" +
             "WHERE uuid = #{uuid}")
     int updAuthenticate(AssetAuthenticatePo assetAuthenticatePo);
@@ -51,11 +52,11 @@ public interface AuthenticateMapper {
     @Insert("INSERT INTO asset_authenticate_record ( \n" +
             "   uuid, asset_uuid, authenticate_flag, \n" +
             "   sym_key, public_key, dev_fingerprint, \n" +
-            "   plaintext, ciphertext, create_time) \n" +
+            "   plaintext, ciphertext, signature, create_time) \n" +
             " VALUES \n" +
             "   (#{uuid}, #{asset_uuid}, #{authenticate_flag}, \n" +
             "   #{sym_key}, #{public_key}, #{dev_fingerprint}, \n" +
-            "   #{plaintext}, #{ciphertext}, #{create_time})")
+            "   #{plaintext}, #{ciphertext}, #{signature}, #{create_time})")
     int addAuthenticateRecord(AssetAuthenticatePo assetAuthenticatePo);
 
     @Select("<script>" +

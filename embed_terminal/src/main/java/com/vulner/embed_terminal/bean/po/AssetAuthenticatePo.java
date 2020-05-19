@@ -14,6 +14,7 @@ public class AssetAuthenticatePo {
     private String dev_fingerprint;  // 指纹
     private String plaintext;  // 明文
     private String ciphertext;  // 密文
+    private String signature;  // 签名
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private java.sql.Timestamp update_time;
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")

@@ -147,13 +147,33 @@ public class AuthenticateService {
      * @param classify 1:白名单; -1:黑名单
      * @return
      */
-    public Object toReview(String assetUuid, int classify) {
+    public Object toReview(String assetUuid, int classify, String assetName) {
+
+        Map<String, String> params = new HashMap<>();
+
+        if (StringUtils.isValid(assetUuid))
+            params.put("asset_uuid", assetUuid);
+
         // 1、返回sym_key  2、获取公钥  3、保存公钥修并改授权状态
-        AssetsPo assetsPo = assetsMapper.getAssetsByUuid(assetUuid);
+        AssetsPo assetsPo = assetsMapper.getAssetPo(params);
         if (assetsPo == null || !StringUtils.isValid(assetsPo.getIp())) {
             return ResponseHelper.error("ERROR_GENERAL_ERROR");
         }
+
+        Timestamp now = TimeUtils.getCurrentSystemTimestamp();
+
+        if (StringUtils.isValid(assetName)) {
+            assetsPo.setUpdate_time(now);
+            assetsPo.setName(assetName);
+            assetsMapper.updAssets(assetsPo);
+        }
+
         String assetIp = assetsPo.getIp();
+        String onLine = assetsPo.getOn_line();
+        if (!"1".equals(onLine) || !verifyIp(assetIp)) {
+            return ResponseHelper.error("ERROR_NOT_ONLINE");
+        }
+
         // 构造URL
         String url = "http://" + assetIp + ":8191/authenticate/get-public-key?sym_key={sym_key}";
 
@@ -161,7 +181,7 @@ public class AuthenticateService {
             return ResponseHelper.error("ERROR_GENERAL_ERROR");
         }
 
-        Timestamp now = TimeUtils.getCurrentSystemTimestamp();
+
         assetsPo.setClassify(classify);
         assetsPo.setUpdate_time(now);
         if (classify == 1) {  // 审核通过
@@ -337,7 +357,7 @@ public class AuthenticateService {
 //                }
 
                 if (url.indexOf("get-fingerprint") > 0) {
-                    fingerprintStr = payload.toString();
+                    fingerprintStr = JSONObject.toJSONString(jsonObj);
                     symKey = SHAEncrypt.SHA256(fingerprintStr);
                 }
 
@@ -413,12 +433,15 @@ public class AuthenticateService {
             Object sign = jsonObj.get("sign");
             String publicKey = aaPo.getPublic_key();
 
+
             if (plainData != null && cipherData != null && sign != null && StringUtils.isValid(publicKey)) {
                 String plainDataStr = plainData.toString();
                 String cipherDataStr = cipherData.toString();
+                String signature = sign.toString();
 
+                aaPo.setSignature(signature);
                 boolean authenticateFlag = false;
-                boolean checkSign = RSAEncrypt.verifySignature(cipherDataStr, sign.toString(), new BASE64Decoder().decodeBuffer(publicKey));
+                boolean checkSign = RSAEncrypt.verifySignature(cipherDataStr, signature, new BASE64Decoder().decodeBuffer(publicKey));
                 if (checkSign) {
                     String encrypt = AESEncrypt.encrypt(plainDataStr, aaPo.getSym_key());
 
@@ -440,8 +463,10 @@ public class AuthenticateService {
                 AssetAuthenticatePo aaRecordPo = new AssetAuthenticatePo();
                 aaRecordPo.setPlaintext(plainDataStr);  // 明文
                 aaRecordPo.setCiphertext(cipherDataStr);  // 密文
+                aaRecordPo.setSignature(signature);
 
                 changePo(aaPo, aaRecordPo);
+                aaRecordPo.setUuid(StringUtils.generateUuid());
                 authenticateMapper.addAuthenticateRecord(aaRecordPo);
 
                 if (authenticateFlag)
@@ -469,7 +494,6 @@ public class AuthenticateService {
     }
 
     public void changePo (AssetAuthenticatePo aaPo, AssetAuthenticatePo aaRecordPo) {
-        aaRecordPo.setUuid(aaPo.getUuid());
         aaRecordPo.setAsset_uuid(aaPo.getAsset_uuid());
         aaRecordPo.setAuthenticate_flag(aaPo.getAuthenticate_flag());
         aaRecordPo.setSym_key(aaPo.getSym_key());

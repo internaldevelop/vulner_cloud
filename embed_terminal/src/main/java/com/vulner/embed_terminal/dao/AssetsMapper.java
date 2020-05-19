@@ -46,6 +46,21 @@ public interface AssetsMapper {
             " LIMIT 1")
     AssetsPo getAssetsByUuid(@Param("uuid") String uuid);
 
+    @Select("<script>" +
+            " SELECT\n" +
+            "	id, uuid, classify,\n" +
+            "	CODE, NAME, ip, PORT, os_type,\n" +
+            "	os_ver, on_line, expire_time, update_time, create_time \n" +
+            " FROM\n" +
+            "	assets \n" +
+            " WHERE 1 = 1 \n" +
+            "   <when test='asset_uuid!=null'> AND uuid = #{asset_uuid} </when> " +
+            "   <when test='asset_name!=null'> AND name = #{asset_name} </when> " +
+            " ORDER BY id DESC \n" +
+            " LIMIT 1" +
+            "</script>")
+    AssetsPo getAssetPo(Map<String, String> params);
+
     @Select(" SELECT\n" +
             "	id, uuid, classify,\n" +
             "	CODE, NAME, ip, PORT, os_type,\n" +
@@ -125,6 +140,5 @@ public interface AssetsMapper {
             " WHERE a.uuid = #{assetUuid} \n" +
             " LIMIT 1")
     AssetAuthenticateDto assetAuthenticateInfo(String assetUuid);
-
 
 }
