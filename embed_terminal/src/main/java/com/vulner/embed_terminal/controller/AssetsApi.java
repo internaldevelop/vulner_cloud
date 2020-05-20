@@ -61,6 +61,19 @@ public class AssetsApi {
         return assetsService.getHisResources(pageNum, pageSize, assetUuid);
     }
 
+    /**
+     * 资产统计
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    @GetMapping(value = "/get-statistics")
+    @ResponseBody
+    public Object getStatistics(@RequestParam(required = false, value = "start_time") String startTime,
+                                @RequestParam(required = false, value = "end_time") String endTime) {
+        return assetsService.getStatistics(startTime, endTime);
+    }
+
 
 
 }

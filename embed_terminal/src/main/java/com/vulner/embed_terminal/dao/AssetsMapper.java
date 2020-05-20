@@ -141,4 +141,30 @@ public interface AssetsMapper {
             " LIMIT 1")
     AssetAuthenticateDto assetAuthenticateInfo(String assetUuid);
 
+    @Select("<script>" +
+            "SELECT\n" +
+            "	SUM(c.num) AS all_num,\n" +
+            "	SUM(CASE c.classify WHEN 0 THEN c.num ELSE 0 END) as wei_num,\n" +
+            "	SUM(CASE c.classify WHEN 1 THEN c.num ELSE 0 END) as bai_num,\n" +
+            "	SUM(CASE c.classify WHEN -1 THEN c.num ELSE 0 END) as hei_num,\n" +
+            "	SUM(CASE c.on_line WHEN 1 THEN c.num ELSE 0 END) as on_line_num,\n" +
+            "	SUM(CASE c.authenticate_flag WHEN 3 THEN c.num ELSE 0 END) as auth_num\n" +
+            " FROM (\n" +
+            "	SELECT\n" +
+            "		a.classify,\n" +
+            "		a.on_line,\n" +
+            "		aa.authenticate_flag,\n" +
+            "		COUNT( a.id ) AS num \n" +
+            "	FROM\n" +
+            "		assets a\n" +
+            "		LEFT JOIN asset_authenticate aa ON a.uuid = aa.asset_uuid \n" +
+            "	WHERE 1 = 1 \n" +
+            "   <when test='start_time!=null and end_time!=null'> AND (a.create_time BETWEEN CONCAT(#{start_time}, ' 00:00:00') AND CONCAT(#{end_time}, ' 23:59:59')) </when>" +
+            "	GROUP BY\n" +
+            "		a.classify,\n" +
+            "		a.on_line,\n" +
+            "		aa.authenticate_flag \n" +
+            " ) c" +
+            "</script>")
+    Map<String, Object> getStatistics(Map<String, Object> params);
 }
