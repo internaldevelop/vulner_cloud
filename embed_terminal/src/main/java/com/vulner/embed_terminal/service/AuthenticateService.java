@@ -11,6 +11,7 @@ import com.vulner.embed_terminal.dao.AuthenticateMapper;
 import com.vulner.embed_terminal.global.Page;
 import com.vulner.embed_terminal.global.RestTemplateUtil;
 import com.vulner.embed_terminal.global.algorithm.AESEncrypt;
+import com.vulner.embed_terminal.global.algorithm.Base64Coding;
 import com.vulner.embed_terminal.global.algorithm.RSAEncrypt;
 import com.vulner.embed_terminal.global.algorithm.SHAEncrypt;
 import com.vulner.embed_terminal.global.websocket.SockMsgTypeEnum;
@@ -24,6 +25,8 @@ import org.springframework.stereotype.Component;
 import sun.misc.BASE64Decoder;
 
 import java.net.InetAddress;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.concurrent.Callable;
@@ -111,7 +114,7 @@ public class AuthenticateService {
     public boolean getFingerprintBoolen (String assetUuid, String assetIp) {
 
         // 构造URL
-        String url = "http://" + assetIp + ":8191/authenticate/get-fingerprint";
+        String url = "http://" + assetIp + ":8191/authenticate/get-fingerprint?asset_uuid={asset_uuid}";
 
         if (this.uptData(assetUuid, url)){  // 更新保存数据
             this.sendOutSymKey(assetIp, assetUuid);  // 返回sym_key  TODO
@@ -182,7 +185,7 @@ public class AuthenticateService {
         assetsPo.setClassify(classify);
         assetsPo.setUpdate_time(now);
         if (classify == 1) {  // 审核通过
-            Date date = DateFormat.addMonth(now, 12);  // 有效期一年
+            Date date = DateFormat.addMonth(now, 12);  // 有效期一年 TODO
             assetsPo.setExpire_time(new Timestamp(date.getTime()));
 
             authenticate(assetUuid);
@@ -340,6 +343,7 @@ public class AuthenticateService {
             if (aaPo != null && StringUtils.isValid(aaPo.getSym_key())) {
                 mp.put("sym_key", aaPo.getSym_key());
             }
+            mp.put("asset_uuid", assetUuid);
 
             ResponseBean respBean = RestTemplateUtil.reqData(url, mp);
             if (respBean == null)
@@ -413,9 +417,7 @@ public class AuthenticateService {
         // 构造URL
         String url = "http://" + assetIp + ":8191/authenticate/authenticate";
 
-
-        AssetAuthenticatePo aaPo = authenticateMapper.getAuthenticate(assetUuid);
-        if (!verifyIp(assetIp) || aaPo == null)
+        if (!verifyIp(assetIp))
             return false;
 
         try {
@@ -423,18 +425,42 @@ public class AuthenticateService {
             if (respBean == null)
                 return false;
             Object payload = respBean.getPayload();
-            JSONObject jsonObj = (JSONObject) JSONObject.toJSON(payload);
+            this.processingData(payload, assetUuid);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    /**
+     * 处理认证数据
+     * @param obj
+     * @return
+     */
+    public boolean processingData (Object obj, String assetUuid) {
+
+        try {
+            JSONObject jsonObj = (JSONObject) JSONObject.toJSON(obj);
+            System.out.println(jsonObj);
             Object plainData = jsonObj.get("plain_data");  // 明文
             Object cipherData = jsonObj.get("cipher_data");  // 密文
 
-            Object sign = jsonObj.get("sign");
+            AssetAuthenticatePo aaPo = authenticateMapper.getAuthenticate(assetUuid);
+            AssetsPo assetsPo = assetsMapper.getAssetsByUuid(assetUuid);
+            if (aaPo == null || assetsPo == null) {
+                return false;
+            }
+
+            Object sign = jsonObj.get("sign");  // 签名
+
             String publicKey = aaPo.getPublic_key();
 
-
             if (plainData != null && cipherData != null && sign != null && StringUtils.isValid(publicKey)) {
-                String plainDataStr = plainData.toString();
-                String cipherDataStr = cipherData.toString();
-                String signature = sign.toString();
+                String plainDataStr = plainData.toString();  // 明文
+                String cipherDataStr = cipherData.toString();  // 密文
+                String signature = sign.toString();  // 签名
 
                 aaPo.setSignature(signature);
                 boolean authenticateFlag = false;
@@ -443,16 +469,22 @@ public class AuthenticateService {
                     String encrypt = AESEncrypt.encrypt(plainDataStr, aaPo.getSym_key());
 
                     if (StringUtils.isValid(encrypt) && encrypt.equals(cipherDataStr)){
-                        aaPo.setAuthenticate_flag(3);  // 1:验签成功; 2:验签失败; 3:解密成功; 4:解密失败
+                        aaPo.setAuthenticate_flag(3);  // 1:验签成功; 2:验签失败; 3:解密成功; 4:解密失败; 5:过期
                         authenticateFlag = true;
                     } else {
-                        aaPo.setAuthenticate_flag(4);  // 1:验签成功; 2:验签失败; 3:解密成功; 4:解密失败
+                        aaPo.setAuthenticate_flag(4);  // 1:验签成功; 2:验签失败; 3:解密成功; 4:解密失败; 5:过期
                     }
                 } else {
-                    aaPo.setAuthenticate_flag(2);  // 1:验签成功; 2:验签失败; 3:解密成功; 4:解密失败
+                    aaPo.setAuthenticate_flag(2);  // 1:验签成功; 2:验签失败; 3:解密成功; 4:解密失败; 5:过期
+                }
+                Timestamp now = TimeUtils.getCurrentSystemTimestamp();
+                Timestamp expireTime = assetsPo.getExpire_time();
+
+                if (expireTime != null && expireTime.getTime() < now.getTime()) {
+                    aaPo.setAuthenticate_flag(5);  // 1:验签成功; 2:验签失败; 3:解密成功; 4:解密失败; 5:过期
                 }
 
-                aaPo.setUpdate_time(TimeUtils.getCurrentSystemTimestamp());
+                aaPo.setUpdate_time(now);
                 aaPo.setPlaintext(plainDataStr);  // 明文
                 aaPo.setCiphertext(cipherDataStr);  // 密文
                 authenticateMapper.updAuthenticate(aaPo);
@@ -463,6 +495,7 @@ public class AuthenticateService {
                 aaRecordPo.setSignature(signature);
 
                 changePo(aaPo, aaRecordPo);
+                aaRecordPo.setCreate_time(now);
                 aaRecordPo.setUuid(StringUtils.generateUuid());
                 authenticateMapper.addAuthenticateRecord(aaRecordPo);
 
@@ -472,7 +505,6 @@ public class AuthenticateService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return false;
     }
 
@@ -496,7 +528,6 @@ public class AuthenticateService {
         aaRecordPo.setSym_key(aaPo.getSym_key());
         aaRecordPo.setPublic_key(aaPo.getPublic_key());
         aaRecordPo.setDev_fingerprint(aaPo.getDev_fingerprint());
-        aaRecordPo.setCreate_time(aaPo.getCreate_time());
     }
 
     /**
@@ -589,6 +620,7 @@ public class AuthenticateService {
                 aarDto.setDev_fingerprint(origDto.getDev_fingerprint());
                 aarDto.setPlaintext(origDto.getPlaintext());  // 明文
                 aarDto.setCiphertext(origDto.getCiphertext());  // 密文
+                aarDto.setSignature(origDto.getSignature());  // 签名
 
                 assetsPo.setPort(origDto.getPort());  // 资产的IP地址
                 assetsPo.setOs_type(origDto.getOs_type());  // 操作系统的类型或系列(1:windows; 2:linux)
@@ -614,5 +646,26 @@ public class AuthenticateService {
         }
 
         return ResponseHelper.success();
+    }
+
+    /**
+     * agent调用认证 (agent主动发起认证)
+     * @param assetUuid
+     * @param datas
+     * @return
+     */
+    public Object agentAuthenticate(String assetUuid, String datas) {
+        try {
+            String data1 = new String(Base64Coding.decode(datas), "utf-8");
+            Object parse = JSONObject.parse(data1);
+            boolean authenticateFlag = this.processingData(parse, assetUuid);
+            if (authenticateFlag) {
+                return ResponseHelper.success();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ResponseHelper.error("ERROR_AUTHENTICATE_FAIL");
     }
 }

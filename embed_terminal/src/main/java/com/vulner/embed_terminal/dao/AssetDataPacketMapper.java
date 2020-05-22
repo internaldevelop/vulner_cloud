@@ -49,4 +49,26 @@ public interface AssetDataPacketMapper {
             "   <when test='start_time!=null and end_time!=null'> AND (create_time BETWEEN CONCAT(#{start_time}, ' 00:00:00') AND CONCAT(#{end_time}, ' 23:59:59')) </when>" +
             "</script>")
     int getPacketDataCount(Map<String, Object> params);
+
+    @Select("<script>" +
+            " SELECT\n" +
+            "	asset_uuid,\n" +
+            "	(SELECT name FROM assets WHERE uuid = asset_uuid) asset_name,\n" +
+            "	(SELECT ip FROM assets WHERE uuid = asset_uuid) asset_ip,\n" +
+            "	SUM( CASE a.direction WHEN 1 THEN a.num ELSE 0 END ) AS sent_count,\n" +
+            "	SUM( CASE a.direction WHEN 2 THEN a.num ELSE 0 END ) AS recv_count \n" +
+            " FROM ( \n" +
+            "   SELECT \n" +
+            "       d.asset_uuid, d.direction, COUNT(d.id) num \n" +
+            "   FROM \n" +
+            "       asset_data_packet d \n" +
+            "       INNER JOIN assets e ON d.asset_uuid = e.uuid" +
+            "   WHERE 1 = 1 \n" +
+            "       <when test='start_time!=null and end_time!=null'> AND (d.create_time BETWEEN CONCAT(#{start_time}, ' 00:00:00') AND CONCAT(#{end_time}, ' 23:59:59')) </when>" +
+            "   GROUP BY asset_uuid, direction \n" +
+            "   ) a \n" +
+            " GROUP BY\n" +
+            "	a.asset_uuid\n" +
+            "</script>")
+    List<Map<String, Object>> getPacketStatistics(Map<String, Object> params);
 }

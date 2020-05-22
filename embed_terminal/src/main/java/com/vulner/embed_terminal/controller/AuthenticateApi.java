@@ -39,7 +39,7 @@ public class AuthenticateApi {
     }
 
     /**
-     * 认证
+     * 认证 - 调用agent
      * @param assetUuid
      * @return
      */
@@ -99,6 +99,18 @@ public class AuthenticateApi {
     @ResponseBody
     public Object againGenerateData(@RequestParam("asset_uuid") String assetUuid) {
         return authenticateService.againGenerateData(assetUuid);
+    }
+
+    /**
+     * agent调用认证 (agent主动发起认证)
+     * @param assetUuid
+     * @return
+     */
+    @GetMapping(value = "/agent-authenticate")
+    @ResponseBody
+    public Object agentAuthenticate(@RequestParam("asset_uuid") String assetUuid,
+                                    @RequestParam("datas") String datas) {
+        return authenticateService.agentAuthenticate(assetUuid, datas);
     }
 
 }

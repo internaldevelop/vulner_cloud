@@ -591,6 +591,41 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "4. 流量包统计",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{gateway_url100}}embed-terminal/network/packet/statistics?",
+							"host": [
+								"{{gateway_url100}}embed-terminal"
+							],
+							"path": [
+								"network",
+								"packet",
+								"statistics"
+							],
+							"query": [
+								{
+									"key": "start_time",
+									"value": "2020-05-13",
+									"disabled": true
+								},
+								{
+									"key": "end_time",
+									"value": "2020-05-22",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -707,33 +742,6 @@
 						}
 					},
 					"response": []
-				},
-				{
-					"name": "4. 停止抓取数据包任务",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{agent}}asset-network-info/stop-get-packet?asset_uuid=1db0a9c5-730e-466f-aeb2-39de298825f3",
-							"host": [
-								"{{agent}}asset-network-info"
-							],
-							"path": [
-								"stop-get-packet"
-							],
-							"query": [
-								{
-									"key": "asset_uuid",
-									"value": "1db0a9c5-730e-466f-aeb2-39de298825f3"
-								}
-							]
-						}
-					},
-					"response": []
 				}
 			]
 		}
@@ -762,7 +770,7 @@
 	],
 	"variable": [
 		{
-			"id": "394dd147-cff9-4679-a7cc-42300b7e8a69",
+			"id": "baf61525-b4be-404d-af20-595f0a6d0fee",
 			"key": "gateway_url100",
 			"value": "http://192.168.1.100:10110/",
 			"type": "string"

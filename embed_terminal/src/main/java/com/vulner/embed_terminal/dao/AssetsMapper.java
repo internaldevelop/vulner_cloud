@@ -143,12 +143,13 @@ public interface AssetsMapper {
 
     @Select("<script>" +
             "SELECT\n" +
-            "	SUM(c.num) AS all_num,\n" +
-            "	SUM(CASE c.classify WHEN 0 THEN c.num ELSE 0 END) as wei_num,\n" +
-            "	SUM(CASE c.classify WHEN 1 THEN c.num ELSE 0 END) as bai_num,\n" +
-            "	SUM(CASE c.classify WHEN -1 THEN c.num ELSE 0 END) as hei_num,\n" +
-            "	SUM(CASE c.on_line WHEN 1 THEN c.num ELSE 0 END) as on_line_num,\n" +
-            "	SUM(CASE c.authenticate_flag WHEN 3 THEN c.num ELSE 0 END) as auth_num\n" +
+            "	SUM(c.num) AS all_count,\n" +
+            "	SUM(CASE c.classify WHEN 0 THEN c.num ELSE 0 END) as unprocessed_count,\n" +
+            "	SUM(CASE c.classify WHEN 1 THEN c.num ELSE 0 END) as white_list_count,\n" +
+            "	SUM(CASE c.classify WHEN 2 THEN c.num ELSE 0 END) as blacklist_count,\n" +
+            "	SUM(CASE c.on_line WHEN 1 THEN c.num ELSE 0 END) as on_line_count,\n" +
+            "	SUM(CASE c.authenticate_flag WHEN 3 THEN c.num ELSE 0 END) as auth_success_count,\n" +
+            "	SUM(CASE WHEN c.authenticate_flag = 2 OR c.authenticate_flag = 4 THEN c.num ELSE 0 END) as auth_fail_count\n" +
             " FROM (\n" +
             "	SELECT\n" +
             "		a.classify,\n" +
@@ -167,4 +168,24 @@ public interface AssetsMapper {
             " ) c" +
             "</script>")
     Map<String, Object> getStatistics(Map<String, Object> params);
+
+    @Select("<script>" +
+            "SELECT\n" +
+            "	SUM(CASE c.authenticate_flag WHEN 3 THEN c.num ELSE 0 END) as auth_success_count,\n" +
+            "	SUM(CASE WHEN c.authenticate_flag = 2 OR c.authenticate_flag = 4 THEN c.num ELSE 0 END) as auth_fail_count\n" +
+            " FROM\n" +
+            "	(\n" +
+            "	SELECT\n" +
+            "		aa.authenticate_flag,\n" +
+            "		COUNT(a.id) AS num \n" +
+            "	FROM\n" +
+            "		assets a\n" +
+            "		INNER JOIN asset_authenticate_record aa ON a.uuid = aa.asset_uuid \n" +
+            "	WHERE 1 = 1 \n" +
+            "   <when test='start_time!=null and end_time!=null'> AND (a.create_time BETWEEN CONCAT(#{start_time}, ' 00:00:00') AND CONCAT(#{end_time}, ' 23:59:59')) </when>" +
+            "	GROUP BY\n" +
+            "		aa.authenticate_flag \n" +
+            "	) c" +
+            "</script>")
+    Map<String, Object> getStatisticsRecord(Map<String, Object> params);
 }

@@ -66,7 +66,7 @@ public interface AuthenticateMapper {
             "	a.os_type, a.os_ver, a.expire_time, a.update_time,\n" +
             "	a.create_time, aa.uuid AS auth_uuid,\n" +
             "	aa.authenticate_flag, aa.sym_key, aa.public_key, \n" +
-            "	aa.dev_fingerprint, aa.ciphertext, aa.plaintext, \n" +
+            "	aa.dev_fingerprint, aa.ciphertext, aa.plaintext, aa.signature, \n" +
             "   aa.create_time AS auth_time" +
             " FROM \n" +
             "	assets a INNER JOIN asset_authenticate_record aa ON a.uuid = aa.asset_uuid \n" +
@@ -93,7 +93,7 @@ public interface AuthenticateMapper {
             "	a.os_type, a.os_ver, a.expire_time, a.update_time,\n" +
             "	a.create_time, aa.uuid AS auth_uuid,\n" +
             "	aa.authenticate_flag, aa.sym_key, aa.public_key, \n" +
-            "	aa.dev_fingerprint, aa.ciphertext, aa.plaintext, \n" +
+            "	aa.dev_fingerprint, aa.ciphertext, aa.plaintext, aa.signature, \n" +
             "   aa.create_time AS auth_time \n" +
             " FROM \n" +
             "	assets a INNER JOIN asset_authenticate_record aa ON a.uuid = aa.asset_uuid \n" +
