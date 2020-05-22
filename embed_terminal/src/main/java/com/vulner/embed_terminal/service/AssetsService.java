@@ -149,11 +149,16 @@ public class AssetsService {
             params.put("end_time", endTime);
 
         Map<String, Object> assetStatistics = assetsMapper.getStatistics(params);
+        Map<String, Object> recordMp = assetsMapper.getStatisticsRecord(params);
+        if (recordMp != null &&recordMp.size() > 0) {
+            assetStatistics.put("auth_success_count", recordMp.get("auth_success_count"));
+            assetStatistics.put("auth_fail_count", recordMp.get("auth_fail_count"));
+        }
 
-        String onLineNumStr = "" + assetStatistics.get("on_line_num");
+        String onLineNumStr = "" + assetStatistics.get("on_line_count");
         int onLineNum = Integer.parseInt(onLineNumStr);
         if (onLineNum <7) {  // 维持6个设备在线
-            assetStatistics.put("on_line_num", 6);
+            assetStatistics.put("on_line_count", 6);
         }
 
         return ResponseHelper.success(assetStatistics);

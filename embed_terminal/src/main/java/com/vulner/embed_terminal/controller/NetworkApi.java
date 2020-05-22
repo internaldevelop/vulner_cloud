@@ -75,6 +75,19 @@ public class NetworkApi {
         return systemService.getPacketDatas(pageNum, pageSize, assetUuid, transportProtocol, startTime, endTime);
     }
 
+    /**
+     * 流量包统计
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    @GetMapping(value = "/packet/statistics")
+    @ResponseBody
+    public Object getPacketStatistics(@RequestParam(required = false, value = "start_time") String startTime,
+                                 @RequestParam(required = false, value = "end_time") String endTime) {
+        return systemService.getPacketStatistics(startTime, endTime);
+    }
+
 
 
 }

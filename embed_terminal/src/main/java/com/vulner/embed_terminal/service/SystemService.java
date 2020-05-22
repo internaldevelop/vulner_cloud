@@ -508,4 +508,33 @@ public class SystemService {
 
         return ResponseHelper.success(assetdatapacketlist);
     }
+
+    /**
+     * 流量包统计
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    public Object getPacketStatistics(String startTime, String endTime) {
+
+        Map<String, Object> params = new HashMap<>();
+        if (StringUtils.isValid(startTime))
+            params.put("start_time", startTime);
+        if (StringUtils.isValid(endTime))
+            params.put("end_time", endTime);
+
+        Map<String, Object> retMap = new HashMap<>();
+
+        int allUpCount = 0, alldownCount = 0;
+        List<Map<String, Object>> packetStatistics = assetDataPacketMapper.getPacketStatistics(params);
+        for (Map<String, Object> mp : packetStatistics) {
+            allUpCount += Integer.parseInt(mp.get("sent_count").toString());
+            alldownCount += Integer.parseInt(mp.get("recv_count").toString());
+        }
+        retMap.put("all_sent_count", allUpCount);
+        retMap.put("all_recv_count", alldownCount);
+        retMap.put("details", packetStatistics);
+
+        return ResponseHelper.success(retMap);
+    }
 }
