@@ -8,7 +8,7 @@ public class AssetAuthenticatePo {
     private int id;
     private String uuid;
     private String asset_uuid;
-    private int authenticate_flag;  // 认证标识默认值为0未认证(-1:失败；1:成功)
+    private int authenticate_flag;  // 认证标识 默认值0 (1:验证通过; 2:验签错误; 3:解密错误; 4:授信过期)
     private String sym_key;  // 对称秘钥
     private String public_key;  // 公钥
     private String dev_fingerprint;  // 指纹

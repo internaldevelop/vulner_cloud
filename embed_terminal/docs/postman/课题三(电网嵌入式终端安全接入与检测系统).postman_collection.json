@@ -13,10 +13,6 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{gateway_url100}}embed-terminal/starttask/resources?types&asset_uuid=12aae60b-7812-4155-8d1e-bab6ac5f5349&second_time",
 							"host": [
@@ -50,10 +46,6 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{gateway_url100}}embed-terminal/stoptask/resources?asset_uuid=12aae60b-7812-4155-8d1e-bab6ac5f5349",
 							"host": [
@@ -78,10 +70,6 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{gateway_url100}}embed-terminal/starttask/resources-all?types=&second_time",
 							"host": [
@@ -110,10 +98,6 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{gateway_url100}}embed-terminal/stoptask/resources-all",
 							"host": [
@@ -137,10 +121,6 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{gateway_url100}}embed-terminal/authenticate/scan-get-equipment?start_ip=192.168.1.40&end_ip=192.168.1.40",
 							"host": [
@@ -169,10 +149,6 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{gateway_url100}}embed-terminal/assets/get-assets?page_num=1&page_size=10&name&ip&os_type&classify&authenticate_flag&flag=1",
 							"host": [
@@ -226,10 +202,6 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{gateway_url100}}embed-terminal/assets/get-asset-info?asset_uuid=12aae60b-7812-4155-8d1e-bab6ac5f5349",
 							"host": [
@@ -254,10 +226,6 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{gateway_url100}}embed-terminal/assets/get-his-resources?page_num=1&page_size=10&asset_uuid=1db0a9c5-730e-466f-aeb2-39de298825f3",
 							"host": [
@@ -290,10 +258,6 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{gateway_url100}}embed-terminal/assets/get-statistics",
 							"host": [
@@ -329,10 +293,6 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{gateway_url100}}embed-terminal/authenticate/to-review?asset_uuid=1db0a9c5-730e-466f-aeb2-39de298825f3&classify=1&asset_name=KZG-Manager",
 							"host": [
@@ -366,10 +326,6 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{gateway_url100}}embed-terminal/authenticate/authenticate?asset_uuid=12aae60b-7812-4155-8d1e-bab6ac5f5349",
 							"host": [
@@ -394,10 +350,6 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{gateway_url100}}embed-terminal/authenticate/authenticate-record?page_num=1&page_size=10&asset_uuid=12aae60b-7812-4155-8d1e-bab6ac5f5349",
 							"host": [
@@ -430,10 +382,6 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{gateway_url100}}embed-terminal/authenticate/authenticate-record-info?auth_uuid=ad4b4f65-c7ff-4e47-8830-fbff354f4126",
 							"host": [
@@ -458,10 +406,6 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{gateway_url100}}embed-terminal/authenticate/again-generate-data?asset_uuid=12aae60b-7812-4155-8d1e-bab6ac5f5349",
 							"host": [
@@ -487,35 +431,24 @@
 			"name": "4. 流量审计",
 			"item": [
 				{
-					"name": "1. 启动流量监控",
+					"name": "1. 启动数据包抓取",
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
-							"raw": "{{gateway_url100}}embed-terminal/network/starttask?types=Network&asset_uuid=12aae60b-7812-4155-8d1e-bab6ac5f5349&second_time=3",
+							"raw": "{{gateway_url100}}embed-terminal/network/get-packet/start?asset_uuid=d6adc99a-2dd4-4402-8a86-4a8f0bdcfcd2",
 							"host": [
 								"{{gateway_url100}}embed-terminal"
 							],
 							"path": [
 								"network",
-								"starttask"
+								"get-packet",
+								"start"
 							],
 							"query": [
 								{
-									"key": "types",
-									"value": "Network"
-								},
-								{
 									"key": "asset_uuid",
-									"value": "12aae60b-7812-4155-8d1e-bab6ac5f5349"
-								},
-								{
-									"key": "second_time",
-									"value": "3"
+									"value": "d6adc99a-2dd4-4402-8a86-4a8f0bdcfcd2"
 								}
 							]
 						}
@@ -523,27 +456,24 @@
 					"response": []
 				},
 				{
-					"name": "2. 停止流量监控",
+					"name": "2. 停止数据包抓取",
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
-							"raw": "{{gateway_url100}}embed-terminal/network/stoptask?asset_uuid=12aae60b-7812-4155-8d1e-bab6ac5f5349",
+							"raw": "{{gateway_url100}}embed-terminal/network/get-packet/stop?asset_uuid=d6adc99a-2dd4-4402-8a86-4a8f0bdcfcd2",
 							"host": [
 								"{{gateway_url100}}embed-terminal"
 							],
 							"path": [
 								"network",
-								"stoptask"
+								"get-packet",
+								"stop"
 							],
 							"query": [
 								{
 									"key": "asset_uuid",
-									"value": "12aae60b-7812-4155-8d1e-bab6ac5f5349"
+									"value": "d6adc99a-2dd4-4402-8a86-4a8f0bdcfcd2"
 								}
 							]
 						}
@@ -555,12 +485,8 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
-							"raw": "{{gateway_url100}}embed-terminal/network/packet/get-datas?asset_uuid=1db0a9c5-730e-466f-aeb2-39de298825f3&start_time=2020-05-13&end_time=2020-05-14",
+							"raw": "{{gateway_url100}}embed-terminal/network/packet/get-datas?asset_uuid=128a0a43-b6bc-4434-906c-debfbcb451e4&start_time=2020-06-02&end_time=2020-06-03&page_num=1&page_size=100",
 							"host": [
 								"{{gateway_url100}}embed-terminal"
 							],
@@ -572,7 +498,7 @@
 							"query": [
 								{
 									"key": "asset_uuid",
-									"value": "1db0a9c5-730e-466f-aeb2-39de298825f3"
+									"value": "128a0a43-b6bc-4434-906c-debfbcb451e4"
 								},
 								{
 									"key": "transport_protocol",
@@ -581,11 +507,19 @@
 								},
 								{
 									"key": "start_time",
-									"value": "2020-05-13"
+									"value": "2020-06-02"
 								},
 								{
 									"key": "end_time",
-									"value": "2020-05-14"
+									"value": "2020-06-03"
+								},
+								{
+									"key": "page_num",
+									"value": "1"
+								},
+								{
+									"key": "page_size",
+									"value": "100"
 								}
 							]
 						}
@@ -597,12 +531,8 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
-							"raw": "{{gateway_url100}}embed-terminal/network/packet/statistics?",
+							"raw": "{{gateway_url100}}embed-terminal/network/packet/statistics",
 							"host": [
 								"{{gateway_url100}}embed-terminal"
 							],
@@ -626,6 +556,24 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "5. 读取pcap文件",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url100}}embed-terminal/network/read-packet",
+							"host": [
+								"{{gateway_url100}}embed-terminal"
+							],
+							"path": [
+								"network",
+								"read-packet"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -637,10 +585,6 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{agent}}authenticate/get-fingerprint?types=CPU,Network,SoundCards,Disks,Memory",
 							"host": [
@@ -664,10 +608,6 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{agent}}asset-info/get-resources?types=CPU&detail=0",
 							"host": [
@@ -696,10 +636,6 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "{{agent}}authenticate/authenticate",
 							"host": [
@@ -713,16 +649,12 @@
 					"response": []
 				},
 				{
-					"name": "3. 启动抓取数据包任务",
+					"name": "4. 启动抓取数据包任务",
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
-							"raw": "{{agent}}asset-network-info/start-get-packet?asset_uuid=1db0a9c5-730e-466f-aeb2-39de298825f3&second_time=3",
+							"raw": "{{agent}}asset-network-info/start-get-packet?asset_uuid=d6adc99a-2dd4-4402-8a86-4a8f0bdcfcd2",
 							"host": [
 								"{{agent}}asset-network-info"
 							],
@@ -732,12 +664,25 @@
 							"query": [
 								{
 									"key": "asset_uuid",
-									"value": "1db0a9c5-730e-466f-aeb2-39de298825f3"
-								},
-								{
-									"key": "second_time",
-									"value": "3"
+									"value": "d6adc99a-2dd4-4402-8a86-4a8f0bdcfcd2"
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5. 停止抓取数据包任务",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{agent}}asset-network-info/stop-get-packet",
+							"host": [
+								"{{agent}}asset-network-info"
+							],
+							"path": [
+								"stop-get-packet"
 							]
 						}
 					},
@@ -770,7 +715,7 @@
 	],
 	"variable": [
 		{
-			"id": "baf61525-b4be-404d-af20-595f0a6d0fee",
+			"id": "07e16da1-8246-4cdd-a42e-aea411169b03",
 			"key": "gateway_url100",
 			"value": "http://192.168.1.100:10110/",
 			"type": "string"

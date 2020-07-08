@@ -60,6 +60,28 @@ public class NetworkApi {
     }
 
     /**
+     * 启动数据包抓取
+     * @param assetUuid
+     * @return
+     */
+    @GetMapping(value = "/get-packet/start")
+    @ResponseBody
+    public Object getPacketStart(@RequestParam(value = "asset_uuid") String assetUuid) {
+        return systemService.getPacketStart(assetUuid);
+    }
+
+    /**
+     * 停止数据包抓取
+     * @param assetUuid
+     * @return
+     */
+    @GetMapping(value = "/get-packet/stop")
+    @ResponseBody
+    public Object getPacketStop(@RequestParam(value = "asset_uuid") String assetUuid) {
+        return systemService.getPacketStop(assetUuid);
+    }
+
+    /**
      * 获取数据包数据
      * @param assetUuid
      * @return
@@ -72,7 +94,9 @@ public class NetworkApi {
                                  @RequestParam(required = false, value = "transport_protocol") String transportProtocol,
                                  @RequestParam(required = false, value = "start_time") String startTime,
                                  @RequestParam(required = false, value = "end_time") String endTime) {
-        return systemService.getPacketDatas(pageNum, pageSize, assetUuid, transportProtocol, startTime, endTime);
+        Object packetDatas = systemService.getPacketDatas(pageNum, pageSize, assetUuid, transportProtocol, startTime, endTime);
+
+        return packetDatas;
     }
 
     /**
@@ -86,6 +110,12 @@ public class NetworkApi {
     public Object getPacketStatistics(@RequestParam(required = false, value = "start_time") String startTime,
                                  @RequestParam(required = false, value = "end_time") String endTime) {
         return systemService.getPacketStatistics(startTime, endTime);
+    }
+
+    @GetMapping(value="/read-packet")
+    @ResponseBody
+    public Object readPacket() {
+        return systemService.readPacket();
     }
 
 

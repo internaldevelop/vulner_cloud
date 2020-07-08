@@ -34,7 +34,8 @@ public interface AssetDataPacketMapper {
             "   <when test='asset_uuid!=null'> AND asset_uuid=#{asset_uuid} </when>" +
             "   <when test='transport_protocol!=null'> AND transport_protocol=#{transport_protocol} </when>" +
             "   <when test='start_time!=null and end_time!=null'> AND (create_time BETWEEN CONCAT(#{start_time}, ' 00:00:00') AND CONCAT(#{end_time}, ' 23:59:59')) </when>" +
-
+            "   ORDER BY id DESC \n" +
+            "   <when test='start!=null and count != null'> LIMIT #{start}, #{count} </when>"+
             "</script>")
     List<AssetDataPacketPo> getPacketDataList(Map<String, Object> params);
 

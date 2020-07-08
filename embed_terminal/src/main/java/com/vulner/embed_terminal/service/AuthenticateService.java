@@ -386,7 +386,7 @@ public class AuthenticateService {
             }
             aaPo.setUpdate_time(now);
             aaPo.setAsset_uuid(assetUuid);
-            aaPo.setAuthenticate_flag(0);  //   // 0未认证; -1:失败；1:成功
+            aaPo.setAuthenticate_flag(0);  //  标识默认值0 (1:验证通过; 2:验签错误; 3:解密错误; 4:授信过期)
             if(StringUtils.isValid(fingerprintStr))
                 aaPo.setDev_fingerprint(fingerprintStr);  // 设备指纹
             if (StringUtils.isValid(symKey))
@@ -469,19 +469,19 @@ public class AuthenticateService {
                     String encrypt = AESEncrypt.encrypt(plainDataStr, aaPo.getSym_key());
 
                     if (StringUtils.isValid(encrypt) && encrypt.equals(cipherDataStr)){
-                        aaPo.setAuthenticate_flag(3);  // 1:验签成功; 2:验签失败; 3:解密成功; 4:解密失败; 5:过期
+                        aaPo.setAuthenticate_flag(1);  // 标识默认值0 (1:验证通过; 2:验签错误; 3:解密错误; 4:授信过期)
                         authenticateFlag = true;
                     } else {
-                        aaPo.setAuthenticate_flag(4);  // 1:验签成功; 2:验签失败; 3:解密成功; 4:解密失败; 5:过期
+                        aaPo.setAuthenticate_flag(3);  // 标识默认值0 (1:验证通过; 2:验签错误; 3:解密错误; 4:授信过期)
                     }
                 } else {
-                    aaPo.setAuthenticate_flag(2);  // 1:验签成功; 2:验签失败; 3:解密成功; 4:解密失败; 5:过期
+                    aaPo.setAuthenticate_flag(2);  // 标识默认值0 (1:验证通过; 2:验签错误; 3:解密错误; 4:授信过期)
                 }
                 Timestamp now = TimeUtils.getCurrentSystemTimestamp();
                 Timestamp expireTime = assetsPo.getExpire_time();
 
                 if (expireTime != null && expireTime.getTime() < now.getTime()) {
-                    aaPo.setAuthenticate_flag(5);  // 1:验签成功; 2:验签失败; 3:解密成功; 4:解密失败; 5:过期
+                    aaPo.setAuthenticate_flag(4);  // 标识默认值0 (1:验证通过; 2:验签错误; 3:解密错误; 4:授信过期)
                 }
 
                 aaPo.setUpdate_time(now);

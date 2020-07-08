@@ -13,6 +13,12 @@ import com.vulner.embed_terminal.global.websocket.SockMsgTypeEnum;
 import com.vulner.embed_terminal.global.websocket.WebSocketServer;
 import com.vulner.common.response.ResponseHelper;
 import com.vulner.common.utils.StringUtils;
+import lombok.Data;
+import org.pcap4j.core.PcapHandle;
+import org.pcap4j.core.PcapNativeException;
+import org.pcap4j.core.Pcaps;
+import org.pcap4j.packet.*;
+import org.pcap4j.util.MacAddress;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -20,11 +26,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.Inet4Address;
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -149,14 +153,15 @@ public class SystemService {
                 networkMapper.addNetwork(networkPo);
 
                 String ip = "" + jsonNet.get("IPv4");
-                if (ip.indexOf(assetIp) < 0)
-                    continue;
+                if (ip.indexOf(assetIp) > -1) {
+                    assetPerfPo.setPackets_recv("" + jsonNet.get("packetsRecv"));
+                    assetPerfPo.setBytes_recv("" + jsonNet.get("bytesRecv"));
+                    assetPerfPo.setPackets_sent("" + jsonNet.get("packetsSent"));
+                    assetPerfPo.setBytes_sent("" + jsonNet.get("bytesSent"));
+                    jsonMsg.put("NewworkObj", jsonNet);
+                    break;
+                }
 
-                assetPerfPo.setPackets_recv("" + jsonNet.get("packetsRecv"));
-                assetPerfPo.setBytes_recv("" + jsonNet.get("bytesRecv"));
-                assetPerfPo.setPackets_sent("" + jsonNet.get("packetsSent"));
-                assetPerfPo.setBytes_sent("" + jsonNet.get("bytesSent"));
-                jsonMsg.put("NewworkObj", jsonNet);
             }
         }
     }
@@ -469,6 +474,7 @@ public class SystemService {
         assetDataPacketPo.setDest_port("" + jsonObject.get("dest_port"));
         assetDataPacketPo.setTransport_protocol("" + jsonObject.get("transport_protocol"));
         assetDataPacketPo.setDirection((sourceIp.indexOf(assetIp) > -1) ? "1":"2");  // 方向 1:上行; 2:下行
+        assetDataPacketPo.setApp_protocol("" + jsonObject.get("app_protocol"));
 
         assetDataPacketMapper.addAssetDataPacketData(assetDataPacketPo);
 
@@ -494,7 +500,7 @@ public class SystemService {
 
         int totalCount = assetDataPacketMapper.getPacketDataCount(params);
 
-        Page<AssetPerfPo> page = null;
+        Page<AssetDataPacketPo> page = null;
         if (pageNum == null || pageSize == null) {
             pageSize = (pageSize == null) ? 10 : totalCount;
             page = new Page<>(1, pageSize);
@@ -505,8 +511,10 @@ public class SystemService {
         }
 
         List<AssetDataPacketPo> assetdatapacketlist = assetDataPacketMapper.getPacketDataList(params);
+        page.setData(assetdatapacketlist);
+        page.setTotalResults(totalCount);
 
-        return ResponseHelper.success(assetdatapacketlist);
+        return ResponseHelper.success(page);
     }
 
     /**
@@ -537,4 +545,210 @@ public class SystemService {
 
         return ResponseHelper.success(retMap);
     }
+
+    /**
+     * 启动数据包抓取
+     * @param assetUuid
+     * @return
+     */
+    public Object getPacketStart(String assetUuid) {
+        if (!StringUtils.isValid(assetUuid))
+            return ResponseHelper.error("ERROR_INVALID_PARAMETER");
+
+        AssetsPo assetsPo = assetsMapper.getAssetsByUuid(assetUuid);
+        if (assetsPo == null || !StringUtils.isValid(assetsPo.getIp()))
+            return ResponseHelper.error("ERROR_INVALID_PARAMETER");
+
+        // 构造URL
+        String url = "http://" + assetsPo.getIp() + ":8191/asset-network-info/start-get-packet?asset_uuid={asset_uuid}";
+
+        // 构造参数map
+        HashMap<String, String> map = new HashMap<>();
+        map.put("asset_uuid", assetUuid);
+
+        try {
+            // 向节点发送请求，并返回节点的响应结果
+            ResponseEntity<Boolean> responseEntity = restTemplate.getForEntity(url, Boolean.class, map);
+
+            if (responseEntity.getBody()) {
+                return ResponseHelper.success();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ResponseHelper.error("ERROR_GENERAL_ERROR");
+    }
+
+    /**
+     * 停止数据包抓取
+     * @param assetUuid
+     * @return
+     */
+    public Object getPacketStop(String assetUuid) {
+        if (!StringUtils.isValid(assetUuid))
+            return ResponseHelper.error("ERROR_INVALID_PARAMETER");
+
+        AssetsPo assetsPo = assetsMapper.getAssetsByUuid(assetUuid);
+        if (assetsPo == null || !StringUtils.isValid(assetsPo.getIp()))
+            return ResponseHelper.error("ERROR_INVALID_PARAMETER");
+
+        // 构造URL
+        String url = "http://" + assetsPo.getIp() + ":8191/asset-network-info/stop-get-packet?asset_uuid={asset_uuid}";
+
+        // 构造参数map
+        HashMap<String, String> map = new HashMap<>();
+        map.put("asset_uuid", assetUuid);
+
+        try {
+            // 向节点发送请求，并返回节点的响应结果
+            ResponseEntity<Boolean> responseEntity = restTemplate.getForEntity(url, Boolean.class, map);
+
+            if (responseEntity.getBody()) {
+                return ResponseHelper.success();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ResponseHelper.error("ERROR_GENERAL_ERROR");
+    }
+
+    private static final String PCAP_FILE_KEY = SystemService.class.getName() + ".pcapFile";
+    private static final String PCAP_FILE = System.getProperty(PCAP_FILE_KEY, "./pcap/modbus.pcap");
+    private static final String IEC_PCAP_FILE = System.getProperty(PCAP_FILE_KEY, "./pcap/iec104.pcap");
+    private static final String S7_PCAP_FILE = System.getProperty(PCAP_FILE_KEY, "./pcap/S7.pcap");
+
+    public Object readPacket() {
+        try {
+            PcapHandle handle = Pcaps.openOffline(PCAP_FILE);
+            PacketThread packetThread1 = new PacketThread();
+            packetThread1.setHandle(handle);
+            packetThread1.start();
+
+            PcapHandle handleIec = Pcaps.openOffline(IEC_PCAP_FILE);
+            PacketThread packetThread2 = new PacketThread();
+            packetThread2.setHandle(handleIec);
+            packetThread2.start();
+
+            PcapHandle handleS7 = Pcaps.openOffline(S7_PCAP_FILE);
+            PacketThread packetThread3 = new PacketThread();
+            packetThread3.setHandle(handleS7);
+            packetThread3.start();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ResponseHelper.success();
+    }
+
+    @Data
+    class PacketThread extends Thread {
+        private PcapHandle handle;
+
+        @Override
+        public void run() {
+            try {
+                for (int i = 0; i < 50; i++) {
+
+                    Packet packet = handle.getNextPacketEx();
+                    if(packet == null) {
+                        break;
+                    }
+                    gotPacket(packet);
+                }
+                handle.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public String shortToStr(Short st){
+        return "" + Short.toUnsignedInt(st);
+    }
+    public void gotPacket(org.pcap4j.packet.Packet packet) {
+
+        JSONObject objRet = new JSONObject();
+
+        List<AssetsPo> assetList = assetsMapper.getAssets();
+
+        String sourceIp = "";  // 源IP
+        String sourcePort = "";  // 源端口
+        String destIp = "";  // 目的IP
+        String destPort = "";  // 目的端口
+        String transportProtocol = "";  // 传输协议
+        String appProtocol = "";  // 应用协议
+
+        org.pcap4j.packet.IpV4Packet ipV4Packet = packet.get(org.pcap4j.packet.IpV4Packet.class); // 直接获取IpV4报文
+        if (ipV4Packet != null) {
+            IpV4Packet.IpV4Header header = ipV4Packet.getHeader();
+
+            Inet4Address srcAddr = header.getSrcAddr();
+            Inet4Address dstAddr = header.getDstAddr();
+            sourceIp = "" + srcAddr;
+            destIp = "" + dstAddr;
+            transportProtocol = header.getProtocol().name();
+
+            // 可以直接get你想要的报文类型，只要Pcap4J库原生支持
+            org.pcap4j.packet.EthernetPacket ethernetPacket = packet.get(org.pcap4j.packet.EthernetPacket.class); // 以太网报文
+
+            if ("TCP".equals(transportProtocol)) {
+                org.pcap4j.packet.TcpPacket tcpPacket = packet.get(org.pcap4j.packet.TcpPacket.class); // TCP报文
+
+                TcpPacket.TcpHeader tcpHeader = tcpPacket.getHeader();
+                sourcePort = shortToStr(tcpHeader.getSrcPort().value());  // 源端口
+                destPort = shortToStr(tcpHeader.getDstPort().value());  // 目的端口
+
+                org.pcap4j.packet.Packet tcpPayload = tcpPacket.getPayload();
+                if (tcpPayload != null) {
+                    byte[] data = tcpPayload.getRawData();
+                    if (data != null && data.length > 1) {
+                        byte datum = data[0];
+                        byte datumLen = data[1];
+
+                        if (datum == 0x68 && datumLen >= 0x04 && datumLen <= 0xFD){
+                            appProtocol = "IEC104";  // 应用协议
+                        } else if ("502".equals(sourcePort) || "502".equals(destPort)) {
+                            appProtocol = "Modbus";  // 应用协议
+                        } else if ("102".equals(sourcePort) || "102".equals(destPort)) {
+                            appProtocol = "S7";  // 应用协议
+                        }
+                    }
+
+                    int size = assetList.size();
+                    Random ran = new Random(size);
+
+                    for (int i = 0; i < size; i++) {
+                        AssetsPo asset = assetList.get(ran.nextInt(10));
+
+                        AssetDataPacketPo assetDataPacketPo = new AssetDataPacketPo();
+                        assetDataPacketPo.setUuid(StringUtils.generateUuid());
+                        assetDataPacketPo.setAsset_uuid(asset.getUuid());
+                        assetDataPacketPo.setCreate_time(TimeUtils.getCurrentSystemTimestamp());
+
+                        assetDataPacketPo.setSrc_data("" + packet);
+                        assetDataPacketPo.setSource_ip(sourceIp.replace("/", ""));
+                        assetDataPacketPo.setSource_port(sourcePort);
+                        assetDataPacketPo.setDest_ip(destIp.replace("/", ""));
+                        assetDataPacketPo.setDest_port(destPort);
+                        assetDataPacketPo.setTransport_protocol(transportProtocol);
+                        String direction = "2";  // 方向 1:上行; 2:下行
+                        if ((sourceIp.indexOf("10.20.100.108") > -1) || (sourceIp.indexOf("192.168.25.146") > -1) || (sourceIp.indexOf("192.168.66.235") > -1)) {
+                            direction = "1";
+                        }
+                        assetDataPacketPo.setDirection(direction);  // 方向 1:上行; 2:下行
+                        assetDataPacketPo.setApp_protocol(appProtocol);
+
+                        assetDataPacketMapper.addAssetDataPacketData(assetDataPacketPo);
+                    }
+
+                }
+            }
+        }
+    }
+
 }
