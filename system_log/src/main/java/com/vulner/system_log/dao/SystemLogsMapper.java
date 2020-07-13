@@ -1,9 +1,11 @@
 package com.vulner.system_log.dao;
 
+import com.vulner.system_log.bean.po.SystemLogInfoConfigPo;
 import com.vulner.system_log.bean.po.SystemLogPo;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
@@ -125,4 +127,51 @@ public interface SystemLogsMapper {
                        @Param("title") String title,
                        @Param("timeFrom") Timestamp timeFrom,
                        @Param("timeTo") Timestamp timeTo);
+
+    @Select("<script>" +
+            " SELECT\n" +
+            "	id,\n" +
+            "	uuid,\n" +
+            "	log_field,\n" +
+            "	log_field_desc,\n" +
+            "	is_display,\n" +
+            "	is_default,\n" +
+            "	update_time,\n" +
+            "	create_time \n" +
+            " FROM\n" +
+            "	sys_log_info_config \n" +
+            " WHERE 1=1 " +
+            " <when test='uuid!=null'> AND uuid=#{uuid} </when>" +
+            " <when test='log_field!=null'> AND log_field=#{log_field} </when>" +
+            " ORDER BY id DESC \n" +
+            " LIMIT 1" +
+            "</script>")
+    SystemLogInfoConfigPo getLogInfoConfigInfo(@Param("uuid")String uuid, @Param("log_field")String log_field);
+
+    @Select(" SELECT\n" +
+            "	id,\n" +
+            "	uuid,\n" +
+            "	log_field,\n" +
+            "	log_field_desc,\n" +
+            "	is_display,\n" +
+            "	is_default,\n" +
+            "	update_time,\n" +
+            "	create_time \n" +
+            " FROM\n" +
+            "	sys_log_info_config \n" +
+            " ORDER BY id DESC")
+    List<SystemLogInfoConfigPo> getLogInfoConfig();
+
+    @Insert("INSERT INTO sys_log_info_config( \n" +
+            " uuid, log_field, log_field_desc, is_display, is_default, update_time, create_time) \n" +
+            "VALUES ( \n" +
+            "#{uuid}, #{log_field}, #{log_field_desc}, #{is_display}, #{is_default}, #{update_time, jdbcType=TIMESTAMP}, #{create_time, jdbcType=TIMESTAMP}) ")
+    int addLogInfoConfig(SystemLogInfoConfigPo systemLogInfoConfigPo);
+
+    @Update(" UPDATE sys_log_info_config \n" +
+            "	SET is_display = #{is_display},\n" +
+            "	update_time = #{update_time}\n" +
+            " WHERE\n" +
+            "	uuid = #{uuid}")
+    int uptLogInfoConfig(SystemLogInfoConfigPo slicPo);
 }

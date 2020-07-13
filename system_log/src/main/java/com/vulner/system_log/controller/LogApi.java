@@ -70,4 +70,42 @@ public class LogApi {
         return systemLogService.searchLogsByFilters(type, caller, accountName, accountAlias,
                 title, beginTime, endTime, offset, count);
     }
+
+    /**
+     * 查看日志配置
+     * @return
+     */
+    @GetMapping(value = "/get-log-info-config")
+    @ResponseBody
+    public Object getLogInfoConfig() {
+        return systemLogService.getLogInfoConfig();
+    }
+
+    /**
+     * 添加日志配置
+     * @param logField
+     * @param logFieldDesc
+     * @param isDisplay
+     * @return
+     */
+    @PostMapping(value = "/add-log-info-config")
+    @ResponseBody
+    public Object addLogInfoConfig(@RequestParam("log_field")String logField,
+                                   @RequestParam("log_field_desc")String logFieldDesc,
+                                   @RequestParam("is_display")String isDisplay) {
+        return systemLogService.addLogInfoConfig(logField, logFieldDesc, isDisplay);
+    }
+
+    /**
+     * 修改日志配置
+     * @param uuid
+     * @param isDisplay
+     * @return
+     */
+    @PostMapping(value = "/upt-log-info-config")
+    @ResponseBody
+    public Object uptLogInfoConfig(@RequestParam("uuid")String uuid,
+                                   @RequestParam("is_display")String isDisplay) {
+        return systemLogService.uptLogInfoConfig(uuid, isDisplay);
+    }
 }

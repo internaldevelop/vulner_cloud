@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "0aa0f783-4a6f-4c20-bef9-9ef6c5cec8df",
+		"_postman_id": "0f0d65f3-22f5-4a04-9ada-58cd9b63adf8",
 		"name": "微服务接口",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -493,6 +493,88 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "2.6 查看日志配置",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url100}}system-log/sys_log/get-log-info-config",
+							"host": [
+								"{{gateway_url100}}system-log"
+							],
+							"path": [
+								"sys_log",
+								"get-log-info-config"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.7 添加日志配置",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url100}}system-log/sys_log/add-log-info-config?log_field=account_info&log_field_desc=描述&is_display=1",
+							"host": [
+								"{{gateway_url100}}system-log"
+							],
+							"path": [
+								"sys_log",
+								"add-log-info-config"
+							],
+							"query": [
+								{
+									"key": "log_field",
+									"value": "account_info",
+									"description": "日志字段"
+								},
+								{
+									"key": "log_field_desc",
+									"value": "描述",
+									"description": "日志字段描述"
+								},
+								{
+									"key": "is_display",
+									"value": "1",
+									"description": "是否显示 0:不显示; 1:显示"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.8 修改日志配置",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url100}}system-log/sys_log/upt-log-info-config?uuid=4aef66bd-1d7d-48f4-86c4-acbc0e9981a1&is_display=1",
+							"host": [
+								"{{gateway_url100}}system-log"
+							],
+							"path": [
+								"sys_log",
+								"upt-log-info-config"
+							],
+							"query": [
+								{
+									"key": "uuid",
+									"value": "4aef66bd-1d7d-48f4-86c4-acbc0e9981a1"
+								},
+								{
+									"key": "is_display",
+									"value": "1",
+									"description": "是否显示 0:不显示; 1:显示"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -744,7 +826,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "227d6160-c8b1-4fa4-9c79-e3ff0bc2e610",
+										"id": "17409d7a-eb37-4305-a4c9-46001568cb78",
 										"exec": [
 											"pm.test(\"oauth token\", function () {",
 											"    var jsonData = pm.response.json();",
@@ -945,7 +1027,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "85422a26-3bc8-4579-bd2c-d03b71418dd7",
+										"id": "a33405dd-f51b-474d-8b6f-aecaa46daa82",
 										"exec": [
 											"pm.test(\"register account\", function () {",
 											"    var jsonData = pm.response.json();",
@@ -1579,7 +1661,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "ad2aa068-77e6-4e19-8304-5881a38908d6",
+										"id": "2fe9d218-aa43-4c14-9398-4befa12aa630",
 										"exec": [
 											"pm.test(\"account info\", function () {",
 											"    var jsonData = pm.response.json();",
@@ -1639,7 +1721,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "0e929581-6a0a-4191-8ddc-d0799e6e4ee5",
+										"id": "68a77c27-035b-4b73-8c82-0792c6ba170e",
 										"exec": [
 											"pm.test(\"account uuid\", function () {",
 											"    var jsonData = pm.response.json();",
@@ -1746,7 +1828,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "658c1ee1-a135-4e97-a896-b0294b2f7f72",
+										"id": "7362c4f1-1ed3-49bb-a2b1-b97a7aeaef9b",
 										"exec": [
 											"pm.test(\"role info\", function () {",
 											"    var jsonData = pm.response.json();",
@@ -1808,7 +1890,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "0acedf75-88dd-4ad3-bab0-8b1d290ef504",
+										"id": "5b4dc06c-54fb-4683-8af8-3574b6cde23e",
 										"exec": [
 											"pm.test(\"add role\", function () {",
 											"    var jsonData = pm.response.json();",
@@ -1932,7 +2014,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "0acedf75-88dd-4ad3-bab0-8b1d290ef504",
+										"id": "85f163bc-c796-484e-86b0-511cafae3659",
 										"exec": [
 											""
 										],
@@ -2012,7 +2094,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "658c1ee1-a135-4e97-a896-b0294b2f7f72",
+										"id": "150959e2-1374-4203-b21e-1828acc5b642",
 										"exec": [
 											"pm.test(\"role uuid\", function () {",
 											"    var jsonData = pm.response.json();",
@@ -2396,7 +2478,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "0acedf75-88dd-4ad3-bab0-8b1d290ef504",
+										"id": "631e2b24-0fa0-4180-8d0d-9006e1eb833d",
 										"exec": [
 											"pm.test(\"add permission\", function () {",
 											"    var jsonData = pm.response.json();",
@@ -2520,7 +2602,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "0acedf75-88dd-4ad3-bab0-8b1d290ef504",
+										"id": "a82749f1-2286-4aa5-8248-c0243b6795ee",
 										"exec": [
 											"pm.test(\"add permission\", function () {",
 											"    var jsonData = pm.response.json();",
@@ -2605,7 +2687,7 @@
 								{
 									"listen": "test",
 									"script": {
-										"id": "3cf26214-42c7-4917-afac-252c9757e2b8",
+										"id": "1dabcaf7-4e90-40d8-80c2-d79bca6b2c94",
 										"exec": [
 											"pm.test(\"get permission uuid\", function () {",
 											"    var jsonData = pm.response.json();",
@@ -2988,7 +3070,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "a0487248-a89e-4622-a96a-fe612ce26e5d",
+								"id": "3cf75427-e925-4056-b76b-acece0a8dd66",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -2998,7 +3080,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "116e77ab-1fa9-4e44-8e29-065a4acffed9",
+								"id": "964927c3-d164-4e41-8e5f-7c480091dfa3",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -3017,7 +3099,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "c2c9dab8-eb68-46bf-babe-af666a331b07",
+				"id": "b317995f-4b89-4a05-b47c-81d11c0c9bc5",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -3027,7 +3109,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "81f6fa89-c9ac-4fb4-a882-64294893ca9c",
+				"id": "584dcdeb-4103-469e-9142-e7672d5c937e",
 				"type": "text/javascript",
 				"exec": [
 					""

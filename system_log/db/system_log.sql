@@ -75,4 +75,28 @@ INSERT INTO `sys_logs` VALUES (118, '3b7fccad-7c34-4b26-9aa0-f8454482cc1a', 1, '
 INSERT INTO `sys_logs` VALUES (119, '45060497-464f-4f1a-ae68-d87571b5b19e', 1, 'uni-auth service', '{\"access_token\":\"98ae6061-852a-48d1-a21c-a7c9cb930e8b\",\"account_uuid\":\"df6cdd4a-1cad-11ea-b42f-0242ac110003\",\"account_name\":\"user_1\",\"account_alias\":\"332\"}', '登录', '账号（user_1）登录成功', '', '2020-01-07 10:24:10');
 INSERT INTO `sys_logs` VALUES (120, '3ff62361-f92e-4f6b-afa5-924e0f822a76', 1, 'uni-auth service', '{\"access_token\":\"98ae6061-852a-48d1-a21c-a7c9cb930e8b\",\"account_uuid\":\"df6cdd4a-1cad-11ea-b42f-0242ac110003\",\"account_name\":\"user_1\",\"account_alias\":\"332\"}', '登出', '账号（user_1）登出成功', '', '2020-01-07 10:25:04');
 
+DROP TABLE IF EXISTS `sys_log_info_config`;
+CREATE TABLE `sys_log_info_config`  (
+  `id` int(0) NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `log_field` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '日志字段',
+  `log_field_desc` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '日志字段描述',
+  `is_display` varchar(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '1' COMMENT '是否显示 0:不显示; 1:显示',
+  `is_default` varchar(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '1' COMMENT '显示状态是否可修改 0:不可修改; 1:可修改',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of sys_log_info_config
+-- ----------------------------
+INSERT INTO `sys_log_info_config` VALUES (1, 'eafd8e58-2e27-4e44-8e63-73c8e3166424', 'type', '日志记录', '1', '0', NULL, '2020-07-13 15:29:37');
+INSERT INTO `sys_log_info_config` VALUES (2, 'b75fdb72-9435-4710-a9ce-2e0441d107c5', 'caller', '调用者', '1', '0', NULL, '2020-07-13 15:29:37');
+INSERT INTO `sys_log_info_config` VALUES (3, '4aef66bd-1d7d-48f4-86c4-acbc0e9981a1', 'account_info', '系统或模块的用户账户信息', '1', '1', NULL, '2020-07-13 15:29:37');
+INSERT INTO `sys_log_info_config` VALUES (4, 'b92c50e7-951b-4934-8cd0-e9a3a1cd75f5', 'title', '日志标题', '1', '1', NULL, '2020-07-13 15:29:37');
+INSERT INTO `sys_log_info_config` VALUES (5, 'd8063c89-e891-4e54-a32a-757c4fde2e92', 'contents', '日志内容', '1', '1', NULL, '2020-07-13 15:29:37');
+INSERT INTO `sys_log_info_config` VALUES (6, 'a758c037-3c54-407a-804b-50d58e075e80', 'extra_info', '扩展信息', '1', '1', NULL, '2020-07-13 15:29:37');
+INSERT INTO `sys_log_info_config` VALUES (7, '84ea9301-2ee9-4103-a845-56fc3110ded1', 'create_time', '创建时间', '1', '0', NULL, '2020-07-13 15:29:37');
+
 SET FOREIGN_KEY_CHECKS = 1;

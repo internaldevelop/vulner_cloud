@@ -1,0 +1,57 @@
+# 所有易变配置参数在此定义
+myprops:
+  defaultZone: http://localhost:10100/eureka/
+  port: 10116
+  mysql:
+    ip: 192.168.1.100
+    port: 13306
+#    ip: 192.168.182.88
+#    port: 13306
+
+server:
+  port: ${myprops.port}
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+  client:
+    serviceUrl:
+      defaultZone: ${myprops.defaultZone}
+
+# 日志配置
+logging:
+  file: ./logs/syscall.log
+  level:
+    root: info
+    org:
+      springframework:
+        web: info
+
+spring:
+  application:
+    name: system-log
+  datasource:
+    # mysql database config
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${myprops.mysql.ip}:${myprops.mysql.port}/system_log?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: root
+    password: 123456
+
+    # 下面为连接池的补充设置，应用到上面所有数据源中
+    #自动提交
+    default-auto-commit: true
+    #指定updates是否自动提交
+    auto-commit: true
+    maximum-pool-size: 100
+    max-idle: 10
+    max-wait: 10000
+    min-idle: 5
+    initial-size: 5
+    validation-query: SELECT 1
+    test-on-borrow: false
+    test-while-idle: true
+    # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+    time-between-eviction-runs-millis: 18800
+    # 配置一个连接在池中最小生存的时间，单位是毫秒
+    minEvictableIdleTimeMillis: 300000
