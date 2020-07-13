@@ -29,6 +29,7 @@ public class CnvdSharePo {
     @Data
     public class ProductPo {
         public String product;
+        public String version;
     }
 
     @Data

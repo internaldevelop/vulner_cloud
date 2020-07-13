@@ -7,6 +7,7 @@ import com.mongodb.bulk.BulkWriteResult;
 import com.vulner.bend_server.bean.po.CnvdSharePo;
 import com.vulner.bend_server.global.Page;
 import com.vulner.common.response.ResponseHelper;
+import com.vulner.common.utils.DateFormat;
 import com.vulner.common.utils.StringUtils;
 import lombok.Data;
 import org.bson.Document;
@@ -88,6 +89,8 @@ public class LoopholeDBService {
     public Object addVul(Map<String, Object> params) {
 
         mapToData(params);
+        params.put("submitTime", DateFormat.getCurrentDateStr());
+
         Map<String, Object> exploitInfoMap = mongoTemplate.insert(params, "cnvd_share");
 
         return ResponseHelper.success(exploitInfoMap);
@@ -125,9 +128,13 @@ public class LoopholeDBService {
             String[] productArry = products.split(",");
             List<Map<String, String>> productList = new ArrayList<>();
 
-            for (String product : productArry) {
+            for (String product_info : productArry) {
+                String[] product = product_info.split(":");
+
                 Map<String, String> mp = new HashMap<>();
-                mp.put("product", product);
+                mp.put("product", product[0]);
+                if (product.length > 1)
+                    mp.put("version", product[1]);
                 productList.add(mp);
             }
             params.put("products", productList);

@@ -52,17 +52,18 @@ public class SystemService {
         return ResponseHelper.success();
     }
 
-    public Object startTaskResources(String assetUuid, String types, String secondTime) {
+    public Object startTaskResources(String assetUuid, String types, String secondTime, String detail) {
 
         String assetIp = "localhost";
         // 构造URL
-        String url = "http://" + assetIp + ":8191/asset-info/start-task-acquire?types={types}&second_time={second_time}&asset_uuid={asset_uuid}";
+        String url = "http://" + assetIp + ":8191/asset-info/start-task-acquire?types={types}&second_time={second_time}&asset_uuid={asset_uuid}&detail={detail}";
 
         // 构造参数map
         HashMap<String, String> map = new HashMap<>();
         map.put("types", types);
         map.put("second_time", secondTime);
         map.put("asset_uuid", assetUuid);
+        map.put("detail", detail);
 
         try {
             // 向节点发送请求，并返回节点的响应结果
