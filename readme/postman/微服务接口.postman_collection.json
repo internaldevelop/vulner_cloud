@@ -553,7 +553,7 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{gateway_url100}}system-log/sys_log/upt-log-info-config?log_fields=4aef66bd-1d7d-48f4-86c4-acbc0e9981a1&is_display=1",
+							"raw": "{{gateway_url100}}system-log/sys_log/upt-log-info-config?log_fields=account_info,extra_info,title",
 							"host": [
 								"{{gateway_url100}}system-log"
 							],
@@ -564,12 +564,7 @@
 							"query": [
 								{
 									"key": "log_fields",
-									"value": "4aef66bd-1d7d-48f4-86c4-acbc0e9981a1"
-								},
-								{
-									"key": "is_display",
-									"value": "1",
-									"description": "是否显示 0:不显示; 1:显示"
+									"value": "account_info,extra_info,title"
 								}
 							]
 						}
