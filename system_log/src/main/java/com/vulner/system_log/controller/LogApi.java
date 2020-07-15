@@ -98,14 +98,12 @@ public class LogApi {
 
     /**
      * 修改日志配置
-     * @param uuid
-     * @param isDisplay
+     * @param logFields
      * @return
      */
     @PostMapping(value = "/upt-log-info-config")
     @ResponseBody
-    public Object uptLogInfoConfig(@RequestParam("uuid")String uuid,
-                                   @RequestParam("is_display")String isDisplay) {
-        return systemLogService.uptLogInfoConfig(uuid, isDisplay);
+    public Object uptLogInfoConfig(@RequestParam("log_fields")String logFields) {
+        return systemLogService.uptLogInfoConfig(logFields);
     }
 }

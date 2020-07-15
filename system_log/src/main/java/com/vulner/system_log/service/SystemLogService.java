@@ -197,20 +197,27 @@ public class SystemLogService {
         return ResponseHelper.success();
     }
 
-    public Object uptLogInfoConfig(String uuid, String isDisplay) {
+    public Object uptLogInfoConfig(String logFields) {
 
-        if (!StringUtils.isValid(uuid) || !StringUtils.isValid(isDisplay))
+        if (!StringUtils.isValid(logFields))
             return ResponseHelper.error("ERROR_INVALID_PARAMETER");
-        SystemLogInfoConfigPo slicPo = systemLogsMapper.getLogInfoConfigInfo(uuid, null);
-        if (slicPo == null)
-            return ResponseHelper.error("ERROR_INVALID_PARAMETER");
+        SystemLogInfoConfigPo delPo = new SystemLogInfoConfigPo();
+        delPo.setIs_default("1");
+        delPo.setIs_display("0");
+        delPo.setUpdate_time(TimeUtils.getCurrentSystemTimestamp());
+        systemLogsMapper.delLogInfoConfig(delPo);
 
-        if ("1".equals(slicPo.getIs_default())) {
-            slicPo.setIs_display(isDisplay);
-            slicPo.setUpdate_time(TimeUtils.getCurrentSystemTimestamp());
-            systemLogsMapper.uptLogInfoConfig(slicPo);
-        } else {
-            return ResponseHelper.error("ERROR_GENERAL_ERROR");
+        String[] log_fields = logFields.split(",");
+        for (String logField : log_fields) {
+            SystemLogInfoConfigPo slicPo = systemLogsMapper.getLogInfoConfigInfo(null, logField);
+            if (slicPo == null)
+                continue;
+
+            if ("1".equals(slicPo.getIs_default())) {
+                slicPo.setIs_display("1");
+                slicPo.setUpdate_time(TimeUtils.getCurrentSystemTimestamp());
+                systemLogsMapper.uptLogInfoConfig(slicPo);
+            }
         }
 
         return ResponseHelper.success();

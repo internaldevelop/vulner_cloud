@@ -91,9 +91,9 @@ CREATE TABLE `sys_log_info_config`  (
 -- ----------------------------
 -- Records of sys_log_info_config
 -- ----------------------------
-INSERT INTO `sys_log_info_config` VALUES (1, 'eafd8e58-2e27-4e44-8e63-73c8e3166424', 'type', '日志记录', '1', '0', NULL, '2020-07-13 15:29:37');
+INSERT INTO `sys_log_info_config` VALUES (1, 'eafd8e58-2e27-4e44-8e63-73c8e3166424', 'type', '日志类型', '1', '0', NULL, '2020-07-13 15:29:37');
 INSERT INTO `sys_log_info_config` VALUES (2, 'b75fdb72-9435-4710-a9ce-2e0441d107c5', 'caller', '调用者', '1', '0', NULL, '2020-07-13 15:29:37');
-INSERT INTO `sys_log_info_config` VALUES (3, '4aef66bd-1d7d-48f4-86c4-acbc0e9981a1', 'account_info', '系统或模块的用户账户信息', '1', '1', NULL, '2020-07-13 15:29:37');
+INSERT INTO `sys_log_info_config` VALUES (3, '4aef66bd-1d7d-48f4-86c4-acbc0e9981a1', 'account_info', '账户信息', '1', '1', NULL, '2020-07-13 15:29:37');
 INSERT INTO `sys_log_info_config` VALUES (4, 'b92c50e7-951b-4934-8cd0-e9a3a1cd75f5', 'title', '日志标题', '1', '1', NULL, '2020-07-13 15:29:37');
 INSERT INTO `sys_log_info_config` VALUES (5, 'd8063c89-e891-4e54-a32a-757c4fde2e92', 'contents', '日志内容', '1', '1', NULL, '2020-07-13 15:29:37');
 INSERT INTO `sys_log_info_config` VALUES (6, 'a758c037-3c54-407a-804b-50d58e075e80', 'extra_info', '扩展信息', '1', '1', NULL, '2020-07-13 15:29:37');

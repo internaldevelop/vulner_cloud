@@ -553,7 +553,7 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{gateway_url100}}system-log/sys_log/upt-log-info-config?uuid=4aef66bd-1d7d-48f4-86c4-acbc0e9981a1&is_display=1",
+							"raw": "{{gateway_url100}}system-log/sys_log/upt-log-info-config?log_fields=4aef66bd-1d7d-48f4-86c4-acbc0e9981a1&is_display=1",
 							"host": [
 								"{{gateway_url100}}system-log"
 							],
@@ -563,7 +563,7 @@
 							],
 							"query": [
 								{
-									"key": "uuid",
+									"key": "log_fields",
 									"value": "4aef66bd-1d7d-48f4-86c4-acbc0e9981a1"
 								},
 								{

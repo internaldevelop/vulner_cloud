@@ -174,4 +174,10 @@ public interface SystemLogsMapper {
             " WHERE\n" +
             "	uuid = #{uuid}")
     int uptLogInfoConfig(SystemLogInfoConfigPo slicPo);
+
+    @Update(" UPDATE sys_log_info_config \n" +
+            "	SET is_display = #{is_display},\n" +
+            "	update_time = #{update_time}\n" +
+            " WHERE is_default = #{is_default}")
+    int delLogInfoConfig(SystemLogInfoConfigPo slicPo);
 }
