@@ -88,7 +88,7 @@ public class SystemApi {
 
     @GetMapping(value = "/starttask/resources")
     @ResponseBody
-    public Object startTaskResources(@RequestParam("asset_uuid") String assetUuid,
+    public Object startTaskResources(@RequestParam(value = "asset_uuid", required = false) String assetUuid,
                                      @RequestParam("types") String types,
                                      @RequestParam( value = "second_time", required = false) String secondTime,
                                      @RequestParam( value = "detail", required = false) String detail) {

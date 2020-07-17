@@ -1,9 +1,12 @@
 package com.vulner.bend_server.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.vulner.bend_server.global.RestTemplateUtil;
 import com.vulner.bend_server.global.websocket.SockMsgTypeEnum;
 import com.vulner.bend_server.global.websocket.WebSocketServer;
+import com.vulner.common.response.ResponseBean;
 import com.vulner.common.response.ResponseHelper;
+import com.vulner.common.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -54,9 +57,13 @@ public class SystemService {
 
     public Object startTaskResources(String assetUuid, String types, String secondTime, String detail) {
 
+
         String assetIp = "localhost";
+        if (StringUtils.isValid(assetUuid)) {
+            //  如果有其它资产可以出查询IP
+        }
         // 构造URL
-        String url = "http://" + assetIp + ":8191/asset-info/start-task-acquire?types={types}&second_time={second_time}&asset_uuid={asset_uuid}&detail={detail}";
+        String url = "http://" + assetIp + ":8192/asset-info/start-task-acquire?types={types}&second_time={second_time}&asset_uuid={asset_uuid}&detail={detail}";
 
         // 构造参数map
         HashMap<String, String> map = new HashMap<>();
@@ -70,7 +77,17 @@ public class SystemService {
             ResponseEntity<Boolean> responseEntity = restTemplate.getForEntity(url, Boolean.class, map);
 
             if (responseEntity.getBody()) {
-                return ResponseHelper.success();
+                String resourcesUrl = "http://" + assetIp + ":8192/asset-info/get-resources?types={types}&detail={detail}";
+                HashMap<String, String> mp = new HashMap<>();
+                mp.put("types", "CPU,Network,SoundCards,Disks,Memory");
+                mp.put("detail", "1");
+
+                ResponseBean respBean = RestTemplateUtil.reqData(resourcesUrl, mp);
+
+                if (respBean != null) {
+                    return ResponseHelper.success(respBean.getPayload());
+                }
+
             }
 
         } catch (Exception e) {
