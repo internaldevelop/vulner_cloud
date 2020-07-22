@@ -89,7 +89,7 @@ public class LoopholeDBService {
     public Object addVul(Map<String, Object> params) {
 
         mapToData(params);
-        params.put("submitTime", DateFormat.getCurrentDateStr());
+        params.put("submitTime", DateFormat.getCurrentDateStr(DateFormat.SQL_FORMAT));
 
         Map<String, Object> exploitInfoMap = mongoTemplate.insert(params, "cnvd_share");
 

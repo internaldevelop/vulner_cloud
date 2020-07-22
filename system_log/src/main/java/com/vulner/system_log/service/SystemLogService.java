@@ -1,24 +1,39 @@
 package com.vulner.system_log.service;
 
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.read.builder.ExcelReaderSheetBuilder;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
+import com.vulner.common.bean.dto.ErrorCodeDto;
+import com.vulner.common.bean.dto.ExcelDataDto;
 import com.vulner.common.enumeration.LogTypeEnum;
 import com.vulner.common.global.MyConst;
 import com.vulner.common.response.ResponseBean;
 import com.vulner.common.response.ResponseHelper;
-import com.vulner.common.utils.StringUtils;
-import com.vulner.common.utils.TimeUtils;
+import com.vulner.common.utils.*;
+import com.vulner.system_log.bean.po.SystemLogBackupPo;
+import com.vulner.system_log.bean.po.SystemLogExcelPo;
 import com.vulner.system_log.bean.po.SystemLogInfoConfigPo;
 import com.vulner.system_log.bean.po.SystemLogPo;
 import com.vulner.system_log.dao.SystemLogsMapper;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class SystemLogService {
@@ -163,6 +178,230 @@ public class SystemLogService {
         return ResponseHelper.success(jsonObject);
     }
 
+    /**
+     * 日志删除
+     * @param uuid
+     * @return
+     */
+    public Object delLog(String uuid) {
+        if (!StringUtils.isValid(uuid)) {
+            return ResponseHelper.error("ERROR_INVALID_PARAMETER");
+        }
+
+        systemLogsMapper.uptLog(uuid);
+        return ResponseHelper.success();
+    }
+
+    /**
+     * 导入
+     * @param file
+     * @return
+     */
+    public Object importLogs(MultipartFile file) {
+        try {
+            InputStream inputStream = file.getInputStream();
+            List<SystemLogExcelPo> errorCodeList = EasyExcel.read(inputStream).head(SystemLogExcelPo.class).sheet().doReadSync();
+
+            if (errorCodeList != null && errorCodeList.size() > 0) {
+                for (SystemLogExcelPo sysLogExcelPo : errorCodeList) {
+                    String uuid = sysLogExcelPo.getUuid();
+
+                    HashMap<String, Object> params = new HashMap<>();
+                    params.put("uuid", uuid);
+                    List<SystemLogPo> logList = systemLogsMapper.getLogList(params);
+
+                    if (logList == null || logList.size() < 1) {
+                        SystemLogPo sysLogPo = new SystemLogPo();
+                        sysLogPo.setUuid(uuid);
+                        sysLogPo.setType(sysLogExcelPo.getType());
+                        sysLogPo.setCaller(sysLogExcelPo.getCaller());
+                        sysLogPo.setAccount_info(sysLogExcelPo.getAccount_info());
+                        sysLogPo.setTitle(sysLogExcelPo.getTitle());
+                        sysLogPo.setContents(sysLogExcelPo.getContents());
+                        sysLogPo.setExtra_info(sysLogExcelPo.getExtra_info());
+                        sysLogPo.setCreate_time(TimeUtils.parseTimeFromString(sysLogExcelPo.getCreate_time(), "yyyy-MM-dd HH:mm:ss"));
+                        systemLogsMapper.addLog(sysLogPo);
+                    }
+
+                }
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseHelper.success();
+    }
+
+    /**
+     * 下载
+     * @return
+     */
+    public void downloadLog(HttpServletResponse response, String uuid) {
+        if (StringUtils.isValid(uuid)) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("uuid", uuid);
+            SystemLogBackupPo backupInfo = systemLogsMapper.getBackupInfo(params);
+            if (backupInfo != null) {
+                String fileUrl = backupInfo.getFile_url();
+                String fileName = backupInfo.getFile_name();
+
+                ExcelDataDto excelData = new ExcelDataDto();
+
+                List<String> titles = new ArrayList<>();
+                titles.add("uuid");
+                titles.add("日志类型");
+                titles.add("调用者");
+                titles.add("账户信息");
+                titles.add("日志标题");
+                titles.add("日志内容");
+                titles.add("扩展信息");
+                titles.add("创建时间");
+
+                excelData.setTitles(titles);
+                List<SystemLogExcelPo> sysLogList = EasyExcel.read(fileUrl).head(SystemLogExcelPo.class).sheet().doReadSync();
+
+                List<List<Object>> rows = new ArrayList<>();
+                for (SystemLogExcelPo sysLogPo : sysLogList) {
+                    List<Object> row = new ArrayList<>();
+                    row.add(sysLogPo.getUuid());
+                    row.add(sysLogPo.getType());
+                    row.add(sysLogPo.getCaller());
+                    row.add(sysLogPo.getAccount_info());
+                    row.add(sysLogPo.getTitle());
+                    row.add(sysLogPo.getContents());
+                    row.add(sysLogPo.getExtra_info());
+                    row.add(sysLogPo.getCreate_time());
+
+                    rows.add(row);
+                }
+                excelData.setRows(rows);
+                excelData.setName("日志记录");
+
+                try {
+                    ExcelUtil.exportExcel(response, fileName.substring(0, fileName.lastIndexOf(".")), excelData);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+
+        }
+    }
+
+    /**
+     * 日志备份
+     * @param beginTime
+     * @param endTime
+     * @return
+     */
+    public Object backupLog(String beginTime, String endTime) {
+        if (!StringUtils.isValid(beginTime) || !StringUtils.isValid(endTime)) {
+            return ResponseHelper.error("ERROR_INVALID_PARAMETER");
+        }
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("begin_time", beginTime);
+        params.put("end_time", endTime);
+        params.put("status", 1);
+
+        List<SystemLogPo> sysLogList = systemLogsMapper.getLogList(params);
+        ExcelDataDto excelData = new ExcelDataDto();
+        String fileName = DateFormat.getCurrentDateStr(DateFormat.TIME_STAMP_FORMAT) + "-logs.xlsx";
+        String filePath = "E://" + fileName;
+
+        List<String> titles = new ArrayList<>();
+        titles.add("uuid");
+        titles.add("日志类型");
+        titles.add("调用者");
+        titles.add("账户信息");
+        titles.add("日志标题");
+        titles.add("日志内容");
+        titles.add("扩展信息");
+        titles.add("创建时间");
+
+        excelData.setTitles(titles);
+
+        List<List<Object>> rows = new ArrayList<>();
+        for (SystemLogPo sysLogPo : sysLogList) {
+            List<Object> row = new ArrayList<>();
+            row.add(sysLogPo.getUuid());
+            row.add(sysLogPo.getType());
+            row.add(sysLogPo.getCaller());
+            row.add(sysLogPo.getAccount_info());
+            row.add(sysLogPo.getTitle());
+            row.add(sysLogPo.getContents());
+            row.add(sysLogPo.getExtra_info());
+            row.add(sysLogPo.getCreate_time());
+
+            rows.add(row);
+        }
+        excelData.setRows(rows);
+        excelData.setName("日志记录");
+
+        try {
+            ExcelUtil.generateExcel(excelData, filePath);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        SystemLogBackupPo sysLogBackupPo = new SystemLogBackupPo();
+        sysLogBackupPo.setUuid(StringUtils.generateUuid());
+        sysLogBackupPo.setUser_uuid("");
+        sysLogBackupPo.setUser_name("");
+        sysLogBackupPo.setFile_url(filePath);
+        sysLogBackupPo.setFile_name(fileName);
+        String timeFormat = "yyyy-MM-dd HH:mm:ss";
+        sysLogBackupPo.setBegin_time(TimeUtils.parseTimeFromString(beginTime +" 00:00:00", timeFormat));
+        sysLogBackupPo.setEnd_time(TimeUtils.parseTimeFromString(endTime +" 23:59:59", timeFormat));
+        sysLogBackupPo.setCreate_time(TimeUtils.getCurrentSystemTimestamp());
+        systemLogsMapper.addLogBackup(sysLogBackupPo);
+
+        return ResponseHelper.success();
+
+    }
+
+    /**
+     * 备份列表查询
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    public Object backupListLog(Integer pageNum, Integer pageSize) {
+        Map<String, Object> params = new HashMap<>();
+
+        if (pageNum != null && pageSize != null) {
+
+            int totalCount = systemLogsMapper.getBackupCount(params);
+            Page<SystemLogBackupPo> page = null;
+            if (pageNum == null || pageSize == null ){
+                pageSize = (pageSize == null) ? 10 : pageSize;
+                page = new Page<>(1, pageSize);
+            } else {
+                params.put("start", Page.getStartPosition(pageNum, pageSize));
+                params.put("count", pageSize);
+                page = new Page<>(pageNum, pageSize);
+            }
+            List<SystemLogBackupPo> assetList = systemLogsMapper.getBackupList(params);
+
+            if (assetList == null || assetList.size() < 1) {
+                return ResponseHelper.success();
+            }
+
+            page.setData(assetList);
+            page.setTotalResults(totalCount);
+            return ResponseHelper.success(page);
+        }
+
+        List<SystemLogBackupPo> assetList = systemLogsMapper.getBackupList(params);
+
+        if (assetList == null || assetList.size() < 1) {
+            return ResponseHelper.success();
+        }
+
+        return ResponseHelper.success(assetList);
+    }
+
     public Object getLogInfoConfig() {
         List<SystemLogInfoConfigPo> logInfoConfigList = systemLogsMapper.getLogInfoConfig();
         if (logInfoConfigList != null && logInfoConfigList.size() > 0) {
@@ -222,4 +461,7 @@ public class SystemLogService {
 
         return ResponseHelper.success();
     }
+
+
+
 }

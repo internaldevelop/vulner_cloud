@@ -4,7 +4,9 @@ import com.vulner.common.response.ResponseHelper;
 import com.vulner.system_log.service.SystemLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.sql.Timestamp;
 
 @RestController
@@ -70,6 +72,71 @@ public class LogApi {
         return systemLogService.searchLogsByFilters(type, caller, accountName, accountAlias,
                 title, beginTime, endTime, offset, count);
     }
+
+    /**
+     * 日志删除
+     * @param uuid
+     * @return
+     */
+    @DeleteMapping(value = "/delete")
+    @ResponseBody
+    public Object delLog(@RequestParam("uuid")String uuid) {
+        return systemLogService.delLog(uuid);
+    }
+
+    /**
+     * 日志导入
+     * @param file
+     * @return
+     */
+    @PostMapping(value = "/import-logs")
+    @ResponseBody
+    public Object importLogs(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return ResponseHelper.error("ERROR_INVALID_PARAMETER");
+        }
+
+        return systemLogService.importLogs(file);
+    }
+
+    /**
+     * 日志备份
+     * @param beginTime
+     * @param endTime
+     * @return
+     */
+    @GetMapping(value = "/backup")
+    @ResponseBody
+    public Object backupLog(@RequestParam("begin_time")String beginTime, @RequestParam("end_time")String endTime) {
+        return systemLogService.backupLog(beginTime, endTime);
+    }
+
+    /**
+     * 日志下载
+     * @param response
+     * @param uuid
+     */
+    @GetMapping(value = "/download-log")
+    @ResponseBody
+    public void downloadLog(HttpServletResponse response, @RequestParam("uuid")String uuid) {
+        systemLogService.downloadLog(response, uuid);
+    }
+
+    /**
+     * 备份列表查询
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @GetMapping(value = "/get-backups")
+    @ResponseBody
+    public Object getBackups(@RequestParam(value = "page_num", required = false)Integer pageNum,
+                                @RequestParam(value = "page_size", required = false)Integer pageSize) {
+        return systemLogService.backupListLog(pageNum, pageSize);
+    }
+
+
+
 
     /**
      * 查看日志配置

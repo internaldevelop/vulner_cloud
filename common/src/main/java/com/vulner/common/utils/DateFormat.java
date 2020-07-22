@@ -14,10 +14,8 @@ public class DateFormat {
     public static String UTIL_FORMAT = "yyyy-MM-dd HH:mm:ss";
     /** util工具日期格式，yyyy-MM-dd HH:mm:ss.sss */
     public static String UTIL_DETAIL_FORMAT = "yyyy-MM-dd HH:mm:ss.sss";
-    /** 病人检查时间格式 */
-    public static String PAT_STUDY_TIME_FORMAT = "yyyy-MM-dd HH:mm";
-    /** 病人本地编号时间格式 **/
-    public static String PAT_LOCAL_PAT_ID_TIME_FORMAT = "yyyyMMddHHmmss";
+    /** 编号时间格式 **/
+    public static String TIME_STAMP_FORMAT = "yyyyMMddHHmmss";
 
     /**
      * 将Date按照指定格式转换成String类型
@@ -156,8 +154,8 @@ public class DateFormat {
         return time;
     }
 
-    public static String getCurrentDateStr() {
-        SimpleDateFormat sdf = new SimpleDateFormat(DateFormat.SQL_FORMAT);
+    public static String getCurrentDateStr(String format) {
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
         return sdf.format(new Date());
     }
 
