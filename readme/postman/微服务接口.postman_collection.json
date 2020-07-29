@@ -570,6 +570,138 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "2.9 日志删除",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url100}}system-log/sys_log/delete?uuid=ce5959d3-9272-43a4-bd31-2e27c3118723",
+							"host": [
+								"{{gateway_url100}}system-log"
+							],
+							"path": [
+								"sys_log",
+								"delete"
+							],
+							"query": [
+								{
+									"key": "uuid",
+									"value": "ce5959d3-9272-43a4-bd31-2e27c3118723"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3.0 日志备份",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url100}}system-log-dev/sys_log/backup?begin_time=2020-07-15&end_time=2020-07-17",
+							"host": [
+								"{{gateway_url100}}system-log-dev"
+							],
+							"path": [
+								"sys_log",
+								"backup"
+							],
+							"query": [
+								{
+									"key": "begin_time",
+									"value": "2020-07-15"
+								},
+								{
+									"key": "end_time",
+									"value": "2020-07-17"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3.1 日志备份列表",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url100}}system-log/sys_log/get-backups?page_num=1&page_size=10",
+							"host": [
+								"{{gateway_url100}}system-log"
+							],
+							"path": [
+								"sys_log",
+								"get-backups"
+							],
+							"query": [
+								{
+									"key": "page_num",
+									"value": "1"
+								},
+								{
+									"key": "page_size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3.2 日志导入",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/E:/logs.xlsx"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{gateway_url100}}system-log-dev/sys_log/import-logs",
+							"host": [
+								"{{gateway_url100}}system-log-dev"
+							],
+							"path": [
+								"sys_log",
+								"import-logs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3.3 日志下载",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url100}}system-log/sys_log/download-log?uuid=921ef85c-7228-4002-b396-513ab14f0eff",
+							"host": [
+								"{{gateway_url100}}system-log"
+							],
+							"path": [
+								"sys_log",
+								"download-log"
+							],
+							"query": [
+								{
+									"key": "uuid",
+									"value": "921ef85c-7228-4002-b396-513ab14f0eff"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -3114,22 +3246,19 @@
 	],
 	"variable": [
 		{
-			"id": "237d6aba-dd6d-4823-9ceb-c4714f6b8919",
+			"id": "82883e12-7ec4-4805-bd60-7f30c46e5352",
 			"key": "SYS_CODE_URL",
-			"value": "http://localhost:10113/sys_code",
-			"type": "string"
+			"value": "http://localhost:10113/sys_code"
 		},
 		{
-			"id": "1f14b4f2-3497-4ee2-b10d-3cc17a2db3b9",
+			"id": "7d9e5ada-2ba8-431e-9f1c-9b39040bd0aa",
 			"key": "SYS_LOG_URL",
-			"value": "http://localhost:10116/sys_log",
-			"type": "string"
+			"value": "http://localhost:10116/sys_log"
 		},
 		{
-			"id": "aeea3694-d581-4542-a111-abc23720c3f8",
+			"id": "701207d8-ca5b-4566-a4a0-b14e4951ce0d",
 			"key": "UNI_AUTH_URL",
-			"value": "http://localhost:10114",
-			"type": "string"
+			"value": "http://192.168.1.100:10114"
 		}
 	],
 	"protocolProfileBehavior": {}

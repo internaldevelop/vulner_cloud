@@ -309,7 +309,7 @@ public class SystemLogService {
         List<SystemLogPo> sysLogList = systemLogsMapper.getLogList(params);
         ExcelDataDto excelData = new ExcelDataDto();
         String fileName = DateFormat.getCurrentDateStr(DateFormat.TIME_STAMP_FORMAT) + "-logs.xlsx";
-        String filePath = "E://" + fileName;
+        String filePath = "./system_log/" + fileName;
 
         List<String> titles = new ArrayList<>();
         titles.add("uuid");
